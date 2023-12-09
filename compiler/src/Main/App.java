@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import jflex.anttask.JFlexTask;
+
 
 //Acá se genera el archivo Lexer.java, si se hacen modificaciones en los tokens o en el lexer.flex debería regenerarse el archivo
 public class App {
@@ -17,9 +19,8 @@ public class App {
     }
     
     public static void generar(String pathLexerCup, String[] pathS) throws IOException, Exception{
-        File file;
-        file = new File(pathLexerCup);
-        JFlex.Main.generate(file);
+        String[] paths={pathLexerCup};
+        jflex.Main.generate(paths);
         java_cup.Main.main(pathS);
         
         Path pathSym = Paths.get((System.getProperty("user.dir") + "/src/LexicalAnalizer/sym.java"));

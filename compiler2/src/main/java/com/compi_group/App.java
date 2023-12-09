@@ -1,4 +1,4 @@
-package Main;
+package com.compi_group;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
