@@ -1,0 +1,83 @@
+package LexicalAnalizer;
+
+
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+}
+:};
+
+terminal ReservadaArray, ReservadaBegin, ReservadaBoolean, ReservadaByte, ReservadaCase, 
+ReservadaChar, ReservadaConst, ReservadaDo, ReservadaDownto, ReservadaElse, ReservadaEnd, 
+ReservadaFalse, ReservadaFile, ReservadaFor, ReservadaForward, ReservadaFunction, ReservadaGoto, 
+ReservadaIf, ReservadaIn, ReservadaInline, ReservadaInt, ReservadaLabel, ReservadaLongInt, 
+ReservadaNil, ReservadaOf, ReservadaPacked, ReservadaProcedure, ReservadaProgram, ReservadaRead, 
+ReservadaReal, ReservadaRecord, ReservadaRepeat, ReservadaSet, ReservadaShortInt, ReservadaString, 
+ReservadaThen, ReservadaTo, ReservadaTrue, ReservadaType, ReservadaUntil, ReservadaVar, ReservadaWhile, 
+ReservadaWith, ReservadaWrite, CambioLinea, Caracter, OperadorIgual, OperadorComa, OperadorPuntoYComa, 
+OperadorIncremento, OperadorDecremento, OperadorMayorOIgualQue, OperadorMayorQue, OperadorMenorOIgualQue, 
+OperadorMenorQue, OperadorDiferente, OperadorSuma, OperadorResta, OperadorMultiplicacion, OperadorDivision, 
+OperadorParentesisIzquierdo, OperadorParentesisDerecho, OperadorCorcheteIzquierdo, OperadorCorcheteDerecho, 
+OperadorAsignacion, OperadorPunto, OperadorDosPuntos, OperadorSumaAsignacion, OperadorRestaAsignacion, 
+OperadorMultiplicacionAsignacion, OperadorDivisionAsignacion, OperadorDesplazamientoDerecha, 
+OperadorDesplazamientoIzquierda, OperadorDesplazamientoIzquierdaAsignacion, OperadorDesplazamientoDerechaAsignacion, 
+OperadorNot, OperadorOr, OperadorAnd, OperadorXor, OperadorDiv, OperadorMod, Error, Identificador, Entero, Flotante, String, SeccionFuncionesAux, SeccionProcedures, AritmeticaTerminal, ε;
+
+non terminal Inicio,SeccionConst, LoopConst, ValorConst, ValorNum, OperacionesAritmeticas, SeccionGlobales, SeccionFunciones, 
+ SeccionMain, LoopVar, Tipo, LoopIdentificadores, OpcionesFunciones, ParamsFunciones, ParamsProcedures, Sentencia, LlamadaFuncion,
+ LlamadaFuncionNoParam, Asignacion, AsignacionAritmetica, Definicion, Aritmetica, AritmeticaAux;
+
+start with Inicio;
+/*no terminal inicial*/
+/*Inicio ::= ReservadaProgram Identificador SeccionConst SeccionGlobales SeccionFunciones SeccionMain;*/
+Inicio ::= ReservadaProgram Identificador CambioLinea SeccionConst SeccionGlobales SeccionFunciones;
+
+OperacionesAritmeticas ::= OperadorSuma | OperadorResta | OperadorMultiplicacion | OperadorDivision;
+ValorNum ::= Entero | Flotante;
+
+/*Seccion constantes funcional*/
+SeccionConst ::= ReservadaConst CambioLinea LoopConst | ;
+LoopConst ::= Identificador OperadorIgual ValorConst OperadorPuntoYComa CambioLinea LoopConst | ;
+ValorConst ::= Entero | Flotante | String;
+
+
+/*Seccion de variables globales funcional*/
+SeccionGlobales ::= ReservadaVar CambioLinea LoopVar | ;
+LoopVar ::= LoopIdentificadores OperadorDosPuntos Tipo OperadorPuntoYComa CambioLinea LoopVar | ;
+LoopIdentificadores ::= Identificador OperadorComa LoopIdentificadores | Identificador;
+Tipo ::= ReservadaInt | ReservadaLongInt | ReservadaShortInt | ReservadaChar | ReservadaString | ReservadaBoolean | ReservadaReal;
+
+/*Seccion de funciones*/
+
+ParamsFunciones ::= Tipo Identificador | Tipo Identificador OperadorComa ParamsFunciones| ;
+
+ParamsProcedures ::= Tipo Identificador | Tipo Identificador OperadorComa ParamsProcedures| ;
+
+/*Faltan las sentencias de dentro de las funciones*/
+SeccionFunciones ::= (ReservadaFunction Identificador OperadorParentesisIzquierdo ParamsFunciones OperadorParentesisDerecho OperadorDosPuntos Tipo CambioLinea ReservadaBegin CambioLinea Sentencia ReservadaEnd CambioLinea) SeccionFunciones|(ReservadaProcedure Identificador OperadorParentesisIzquierdo ParamsProcedures OperadorParentesisDerecho CambioLinea ReservadaBegin CambioLinea Sentencia ReservadaEnd CambioLinea) SeccionFunciones| ;
+
+/*Sentencia universal que va dentro de una funcion*/
+Sentencia ::= CambioLinea Sentencia | LlamadaFuncion Sentencia | LlamadaFuncionNoParam Sentencia | Asignacion Sentencia | Definicion Sentencia | Aritmetica Sentencia | AsignacionAritmetica Sentencia | ;
+
+LlamadaFuncionNoParam ::= Identificador OperadorParentesisIzquierdo OperadorParentesisDerecho OperadorPuntoYComa CambioLinea;
+LlamadaFuncion ::= Identificador OperadorParentesisIzquierdo ValorConst OperadorParentesisDerecho OperadorPuntoYComa CambioLinea;
+
+Asignacion ::= Identificador OperadorAsignacion ValorConst OperadorPuntoYComa CambioLinea | Identificador OperadorIncremento OperadorPuntoYComa CambioLinea | Identificador OperadorDecremento OperadorPuntoYComa CambioLinea | Identificador OperadorMultiplicacionAsignacion Entero OperadorPuntoYComa CambioLinea | Identificador OperadorDivisionAsignacion Entero OperadorPuntoYComa CambioLinea ;
+
+AsignacionAritmetica ::= Identificador OperadorAsignacion AritmeticaTerminal;
+
+Definicion ::= Identificador OperadorDosPuntos Tipo OperadorPuntoYComa CambioLinea;
+
+Aritmetica ::= ValorNum OperacionesAritmeticas Aritmetica | ValorNum OperadorPuntoYComa CambioLinea | OperadorParentesisIzquierdo AritmeticaAux OperadorParentesisDerecho OperadorPuntoYComa CambioLinea | OperadorParentesisIzquierdo AritmeticaAux OperadorParentesisDerecho OperacionesAritmeticas Aritmetica;
+AritmeticaAux ::= ValorNum OperacionesAritmeticas AritmeticaAux | ValorNum | OperadorParentesisIzquierdo AritmeticaAux OperadorParentesisDerecho;
+AritmeticaTerminal ::= Aritmetica;
+
