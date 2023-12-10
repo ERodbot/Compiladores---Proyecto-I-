@@ -1,0 +1,90 @@
+package LexicalAnalizer;
+import java_cup.runtime.*;
+
+action code {:
+    public void uno(){
+        System.out.println("123");
+    }
+    public void dos(){
+        System.out.println("456");
+    }
+:}
+
+parser code {:
+  Lexer lex;
+
+  @SuppressWarinings("deprecation")
+  public parser(Lexer lex){
+    this.lex=lex;
+    this.symbolFactory= new DefaultSymbolFactory();
+  }
+:}
+
+init with {: :};
+
+scan with {: return lex.next_token(); :};
+
+// Terminals
+
+// Data Types
+terminal int NOEL, NICOLAS, SANTA, COLACHO, CLAUS;
+
+// Control Structures
+terminal int ELFO, HADA, DUENDE, ENVUELVE, HACE, REVISA, ENVIA, CORTA;
+
+// Input/Output Functions
+terminal int NARRA, ESCUCHA;
+
+// Class Types
+terminal int FESTIVAL, FIESTA, NAVIDAD;
+
+// Relational Operators
+terminal int ALABASTRO, EVERGEEN, UPATREE, MINSTIX, MARY, OPENSLAE;
+
+// Logical Operators
+terminal int GASPAR, MELCHOR, BALTASAR;
+
+// Assignment
+terminal int ENTREGA;
+
+// Boolean Literals
+terminal int l_t_CLAUS, l_f_CLAUS;
+
+// Unary Operators
+terminal int GRINCH, QUIEN;
+
+// Binary Arithmetic Operators
+terminal int RODOLFO, TRUENO, RELAMPAGO, JUGUETON, COMETA, CUPIDO;
+
+// Separator
+terminal int CHIMENEA;
+
+// Identifier
+terminal int PERSONA;
+
+// End of Line
+terminal int FINREGALO;
+
+// Lexical Error
+terminal int ERROR;
+
+// String Literal
+terminal String string_literal;
+
+//no terminal 
+
+non terminal        lenguajeNavidad;
+
+start with lenguajeNavidad
+
+placeHolder :: = {:
+                    uno();
+                 }:
+                 PERSONA
+                 {:
+                    dos();
+                 :}
+                 ;
+
+
+//formato es: terminal {nombreTerminal, nombreTerminal2...};                 
