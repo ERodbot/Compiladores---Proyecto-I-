@@ -1,0 +1,24 @@
+package LexicalAnalizer;
+
+
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    private Symbol s;
+    
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+}
+:};
+
+terminal EQEQ, EQ, IDENTIFIER,PLUS,INTEGER_LITERAL, STRING_LITERAL,BREAK,BOOLEAN, ABSTRACT;
+non terminal Inicio;
+start with Inicio;
+/*no terminal inicial*/
+/*Inicio ::= ReservadaProgram Identificador SeccionConst SeccionGlobales SeccionFunciones SeccionMain;*/
+Inicio ::= EQEQ;
