@@ -24,7 +24,7 @@ public class App {
         String pathLexerCup = System.getProperty("user.dir") + "/src/LexicalAnalizer/LexerCup.flex";
         String[] pathS = { "-parser", "Sintax", (System.getProperty("user.dir") + "/src/LexicalAnalizer/Sintax.cup") };
         generar(pathLexerCup, pathS);
-        testLexer("C:\\Users\\em000\\Desktop\\example.txt");
+        testLexer(System.getProperty("user.dir") +"/testExamples/example.txt");
     }
 
     public static void generar(String pathLexerCup, String[] pathS) throws IOException, Exception {

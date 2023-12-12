@@ -14,7 +14,7 @@ parser code {:
   Lexer lex;
 
   @SuppressWarnings("deprecation")
-  public parser(Lexer lex){
+  public void parser(Lexer lex){
     this.lex=lex;
     this.symbolFactory= new DefaultSymbolFactory();
   }
@@ -82,13 +82,13 @@ terminal l_SANTA;
 
 //no terminal 
 
-non terminal        lenguajeNavidad;
+non terminal        placeHolder;
 
-start with lenguajeNavidad;
+start with placeHolder;
 
 placeHolder ::= {:
                     uno();
-                 }:
+                 :}
                  PERSONA
                  {:
                     dos();
