@@ -1,12 +1,12 @@
 package Main;
 
-import java.io.File;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import jflex.anttask.JFlexTask;
+
 
 //Acá se genera el archivo Lexer.java, si se hacen modificaciones en los tokens o en el lexer.flex debería regenerarse el archivo
 public class App {

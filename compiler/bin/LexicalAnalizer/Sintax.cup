@@ -13,8 +13,8 @@ action code {:
 parser code {:
   Lexer lex;
 
-  @SuppressWarinings("deprecation")
-  public parser(Lexer lex){
+  @SuppressWarnings("deprecation")
+  public void parser(Lexer lex){
     this.lex=lex;
     this.symbolFactory= new DefaultSymbolFactory();
   }
@@ -40,6 +40,9 @@ terminal ELFO, HADA, DUENDE, ENVUELVE, HACE, REVISA, ENVIA, CORTA;
 
 //Literals numbers
 terminal l_NICOLAS, l_NOEL;
+
+//Literal strings
+terminal STRING_LITERAL;
 
 // Input/Output Functions
 terminal NARRA, ESCUCHA;

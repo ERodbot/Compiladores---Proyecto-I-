@@ -843,12 +843,12 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 60: break;
           case 2:
-            { return symbol(sym.FINREGALO)
+            { return symbol(sym.FINREGALO);
             }
           // fall through
           case 61: break;
           case 3:
-            { return symbol(sym.BALTASAR)
+            { return symbol(sym.BALTASAR);
             }
           // fall through
           case 62: break;
@@ -858,82 +858,82 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 63: break;
           case 5:
-            { return symbol(sym.MELCHOR)
+            { return symbol(sym.MELCHOR);
             }
           // fall through
           case 64: break;
           case 6:
-            { return symbol(sym.CUPIDO)
+            { return symbol(sym.CUPIDO);
             }
           // fall through
           case 65: break;
           case 7:
-            { return symbol(sym.ABRECUENTO)
+            { return symbol(sym.ABRECUENTO);
             }
           // fall through
           case 66: break;
           case 8:
-            { return symbol(sym.CIERRACUENTO)
+            { return symbol(sym.CIERRACUENTO);
             }
           // fall through
           case 67: break;
           case 9:
-            { return symbol(sym.RELAMPAGO)
+            { return symbol(sym.RELAMPAGO);
             }
           // fall through
           case 68: break;
           case 10:
-            { return symbol(sym.RODOLFO)
+            { return symbol(sym.RODOLFO);
             }
           // fall through
           case 69: break;
           case 11:
-            { return symbol(sym.CHIMENEA)
+            { return symbol(sym.CHIMENEA);
             }
           // fall through
           case 70: break;
           case 12:
-            { return symbol(sym.TRUENO)
+            { return symbol(sym.TRUENO);
             }
           // fall through
           case 71: break;
           case 13:
-            { return symbol(sym.JUGUETON)
+            { return symbol(sym.JUGUETON);
             }
           // fall through
           case 72: break;
           case 14:
-            { return symbol(sym.l_NOEL)
+            { return symbol(sym.l_NOEL);
             }
           // fall through
           case 73: break;
           case 15:
-            { return symbol(sym.MINSTIX)
+            { return symbol(sym.MINSTIX);
             }
           // fall through
           case 74: break;
           case 16:
-            { return symbol(sym.UPATREE)
+            { return symbol(sym.UPATREE);
             }
           // fall through
           case 75: break;
           case 17:
-            { return symbol(sym.ABREEMPAQUE)
+            { return symbol(sym.ABREEMPAQUE);
             }
           // fall through
           case 76: break;
           case 18:
-            { return symbol(sym.CIERRAEMPAQUE)
+            { return symbol(sym.CIERRAEMPAQUE);
             }
           // fall through
           case 77: break;
           case 19:
-            { return symbol(sym.GASPAR)
+            { return symbol(sym.GASPAR);
             }
           // fall through
           case 78: break;
           case 20:
-            { return symbol(sym.ABREREGALO)
+            { return symbol(sym.ABREREGALO);
             }
           // fall through
           case 79: break;
@@ -949,9 +949,9 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 81: break;
           case 23:
-            { yybegin(yyinitial):
-                                    return symbol(sym.l_SANTA,
-                                    string.tostring());
+            { yybegin(YYINITIAL); 
+                                       return symbol(sym.STRING_LITERAL, 
+                                       string.toString());
             }
           // fall through
           case 82: break;
@@ -961,57 +961,57 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 83: break;
           case 25:
-            { return symbol(sym.EVERGEEN)
+            { return symbol(sym.EVERGEEN);
             }
           // fall through
           case 84: break;
           case 26:
-            { return symbol(sym.COMETA)
+            { return symbol(sym.COMETA);
             }
           // fall through
           case 85: break;
           case 27:
-            { return symbol(sym.QUIEN)
+            { return symbol(sym.QUIEN);
             }
           // fall through
           case 86: break;
           case 28:
-            { return symbol(sym.GRINCH)
+            { return symbol(sym.GRINCH);
             }
           // fall through
           case 87: break;
           case 29:
-            { return symbol(sym.l_NICOLAS)
+            { return symbol(sym.l_NICOLAS);
             }
           // fall through
           case 88: break;
           case 30:
-            { return symbol(sym.ENTREGA)
+            { return symbol(sym.ENTREGA);
             }
           // fall through
           case 89: break;
           case 31:
-            { return symbol(sym.ALABASTRO)
+            { return symbol(sym.ALABASTRO);
             }
           // fall through
           case 90: break;
           case 32:
-            { return symbol(sym.PERSONA)
+            { return symbol(sym.PERSONA);
             }
           // fall through
           case 91: break;
           case 33:
-            { return symbol(sym.HACE)
+            { return symbol(sym.HACE);
             }
           // fall through
           case 92: break;
           case 34:
-            { return symbol(sym.ELFO)
+            { return symbol(sym.ELFO);
             }
           // fall through
           case 93: break;
           case 35:
-            { return symbol(sym.CIERRAREGALO)
+            { return symbol(sym.CIERRAREGALO);
             }
           // fall through
           case 94: break;
@@ -1036,102 +1036,102 @@ public class Lexer implements java_cup.runtime.Scanner {
           // fall through
           case 98: break;
           case 40:
-            { return symbol(sym.OPENSLAE)
+            { return symbol(sym.OPENSLAE);
             }
           // fall through
           case 99: break;
           case 41:
-            { return symbol(sym.MARY)
+            { return symbol(sym.MARY);
             }
           // fall through
           case 100: break;
           case 42:
-            { return symbol(sym.ENVUELVE)
+            { return symbol(sym.ENVUELVE);
             }
           // fall through
           case 101: break;
           case 43:
-            { return symbol(sym.COLACHO)
+            { return symbol(sym.COLACHO);
             }
           // fall through
           case 102: break;
           case 44:
-            { return symbol(sym.HADA)
+            { return symbol(sym.HADA);
             }
           // fall through
           case 103: break;
           case 45:
-            { return symbol(sym.DUENDE)
+            { return symbol(sym.DUENDE);
             }
           // fall through
           case 104: break;
           case 46:
-            { return symbol(sym.ESCUCHA)
+            { return symbol(sym.ESCUCHA);
             }
           // fall through
           case 105: break;
           case 47:
-            { return symbol(sym.l_t_CLAUS)
+            { return symbol(sym.l_t_CLAUS);
             }
           // fall through
           case 106: break;
           case 48:
-            { return symbol(sym.CORTA)
+            { return symbol(sym.CORTA);
             }
           // fall through
           case 107: break;
           case 49:
-            { return symbol(sym.l_f_CLAUS)
+            { return symbol(sym.l_f_CLAUS);
             }
           // fall through
           case 108: break;
           case 50:
-            { return symbol(sym.NICOLAS)
+            { return symbol(sym.NICOLAS);
             }
           // fall through
           case 109: break;
           case 51:
-            { return symbol(sym.NARRA)
+            { return symbol(sym.NARRA);
             }
           // fall through
           case 110: break;
           case 52:
-            { return symbol(sym.REVISA)
+            { return symbol(sym.REVISA);
             }
           // fall through
           case 111: break;
           case 53:
-            { return symbol(sym.FESTIVAL)
+            { return symbol(sym.FESTIVAL);
             }
           // fall through
           case 112: break;
           case 54:
-            { return symbol(sym.ENVIA)
+            { return symbol(sym.ENVIA);
             }
           // fall through
           case 113: break;
           case 55:
-            { return symbol(sym.SANTA)
+            { return symbol(sym.SANTA);
             }
           // fall through
           case 114: break;
           case 56:
-            { return symbol(sym.CLAUS)
+            { return symbol(sym.CLAUS);
             }
           // fall through
           case 115: break;
           case 57:
-            { return symbol(sym.NOEL)
+            { return symbol(sym.NOEL);
             }
           // fall through
           case 116: break;
           case 58:
-            { return symbol(sym.FIESTA)
+            { return symbol(sym.FIESTA);
             }
           // fall through
           case 117: break;
           case 59:
-            { return symbol(sym.NAVIDAD)
+            { return symbol(sym.NAVIDAD);
             }
           // fall through
           case 118: break;

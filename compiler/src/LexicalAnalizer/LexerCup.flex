@@ -85,47 +85,47 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
 //reserved words 
 
 //types
-<YYINITIAL> "integer"              {return symbol(sym.NOEL)}
-<YYINITIAL> "float"                {return symbol(sym.NICOLAS)} 
-<YYINITIAL> "string"               {return symbol(sym.SANTA)}
-<YYINITIAL> "char"                 {return symbol(sym.COLACHO)}
-<YYINITIAL> "boolean"              {return symbol(sym.CLAUS)}
+<YYINITIAL> "integer"              {return symbol(sym.NOEL);}
+<YYINITIAL> "float"                {return symbol(sym.NICOLAS);} 
+<YYINITIAL> "string"               {return symbol(sym.SANTA);}
+<YYINITIAL> "char"                 {return symbol(sym.COLACHO);}
+<YYINITIAL> "boolean"              {return symbol(sym.CLAUS);}
 
 //control structures
-<YYINITIAL> "if"                   {return symbol(sym.ELFO)}                               
-<YYINITIAL> "elif"                 {return symbol(sym.HADA)}  
-<YYINITIAL> "else"                 {return symbol(sym.DUENDE)} 
-<YYINITIAL> "for"                  {return symbol(sym.ENVUELVE)} 
-<YYINITIAL> "do"                   {return symbol(sym.HACE)} 
-<YYINITIAL> "until"                {return symbol(sym.REVISA)} 
-<YYINITIAL> "return"               {return symbol(sym.ENVIA)} 
-<YYINITIAL> "break"                {return symbol(sym.CORTA)} 
+<YYINITIAL> "if"                   {return symbol(sym.ELFO);}                               
+<YYINITIAL> "elif"                 {return symbol(sym.HADA);}  
+<YYINITIAL> "else"                 {return symbol(sym.DUENDE);} 
+<YYINITIAL> "for"                  {return symbol(sym.ENVUELVE);} 
+<YYINITIAL> "do"                   {return symbol(sym.HACE);} 
+<YYINITIAL> "until"                {return symbol(sym.REVISA);} 
+<YYINITIAL> "return"               {return symbol(sym.ENVIA);} 
+<YYINITIAL> "break"                {return symbol(sym.CORTA);} 
 
 //print,read
-"print"                            {return symbol(sym.NARRA)}
-"read"                             {return symbol(sym.ESCUCHA)}
+"print"                            {return symbol(sym.NARRA);}
+"read"                             {return symbol(sym.ESCUCHA);}
 
 //class types
-<YYINITIAL> "public"               {return symbol(sym.FESTIVAL)}
-<YYINITIAL> "private"              {return symbol(sym.FIESTA)}
-<YYINITIAL> "abstract"             {return symbol(sym.NAVIDAD)}
+<YYINITIAL> "public"               {return symbol(sym.FESTIVAL);}
+<YYINITIAL> "private"              {return symbol(sym.FIESTA);}
+<YYINITIAL> "abstract"             {return symbol(sym.NAVIDAD);}
 
 //relational operators
-<YYINITIAL> "=="                   {return symbol(sym.ALABASTRO)}
-<YYINITIAL> "!="                   {return symbol(sym.EVERGEEN)}
-<YYINITIAL> ">"                    {return symbol(sym.UPATREE)}
-<YYINITIAL> "<"                    {return symbol(sym.MINSTIX)}
-<YYINITIAL> ">=="                  {return symbol(sym.MARY)}
-<YYINITIAL> "<=="                  {return symbol(sym.OPENSLAE)}
+<YYINITIAL> "=="                   {return symbol(sym.ALABASTRO);}
+<YYINITIAL> "!="                   {return symbol(sym.EVERGEEN);}
+<YYINITIAL> ">"                    {return symbol(sym.UPATREE);}
+<YYINITIAL> "<"                    {return symbol(sym.MINSTIX);}
+<YYINITIAL> ">=="                  {return symbol(sym.MARY);}
+<YYINITIAL> "<=="                  {return symbol(sym.OPENSLAE);}
 
 //asignation
-"<="                               {return symbol(sym.ENTREGA)}
+"<="                               {return symbol(sym.ENTREGA);}
 
 //literaltrue
-<YYINITIAL> "true"                 {return symbol(sym.l_t_CLAUS)}
+<YYINITIAL> "true"                 {return symbol(sym.l_t_CLAUS);}
 
 //literalfalse
-<YYINITIAL> "false"                {return symbol(sym.l_f_CLAUS)}
+<YYINITIAL> "false"                {return symbol(sym.l_f_CLAUS);}
 
 
 
@@ -141,42 +141,42 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
    {MultipleLineComment}           {/*skip*/}
 
    /*decimal integer literal*/
-   {LiteralDecimalInteger}           {return symbol(sym.l_NOEL)}
+   {LiteralDecimalInteger}           {return symbol(sym.l_NOEL);}
 
    /*decimal float literal*/
-   {LiteralDecimalFloat}             {return symbol(sym.l_NICOLAS)}
+   {LiteralDecimalFloat}             {return symbol(sym.l_NICOLAS);}
 
    /*unarian operators*/
-   {Decrement}                     {return symbol(sym.GRINCH)}
-   {Increment}                     {return symbol(sym.QUIEN)}
+   {Decrement}                     {return symbol(sym.GRINCH);}
+   {Increment}                     {return symbol(sym.QUIEN);}
    
    //arithmetic binary operators     
-    {Sum}                          {return symbol(sym.RODOLFO)}
-    {Subtraction}                  {return symbol(sym.TRUENO)}
-    {Multiplication}               {return symbol(sym.RELAMPAGO)}
-    {Division}                     {return symbol(sym.JUGUETON)}
-    {Exponential}                  {return symbol(sym.COMETA)}
-    {Modulo}                       {return symbol(sym.CUPIDO)}
+    {Sum}                          {return symbol(sym.RODOLFO);}
+    {Subtraction}                  {return symbol(sym.TRUENO);}
+    {Multiplication}               {return symbol(sym.RELAMPAGO);}
+    {Division}                     {return symbol(sym.JUGUETON);}
+    {Exponential}                  {return symbol(sym.COMETA);}
+    {Modulo}                       {return symbol(sym.CUPIDO);}
 
     //separator                    
-    {Separator}                      {return symbol(sym.CHIMENEA)}
+    {Separator}                      {return symbol(sym.CHIMENEA);}
 
     //logical operators
-    {And}                          {return symbol(sym.GASPAR)} 
-    {OrLogical}                    {return symbol(sym.MELCHOR)}
-    {Not}                          {return symbol(sym.BALTASAR)}
+    {And}                          {return symbol(sym.GASPAR);} 
+    {OrLogical}                    {return symbol(sym.MELCHOR);}
+    {Not}                          {return symbol(sym.BALTASAR);}
 
     //parenthesis                 
-    {LineTerminator}               {return symbol(sym.FINREGALO)}
-    {LeftParenthesis}              {return symbol(sym.ABRECUENTO)}
-    {RightParenthesis}             {return symbol(sym.CIERRACUENTO)}
-    {LeftBracket}                  {return symbol(sym.ABREEMPAQUE)}
-    {RightBracket}                 {return symbol(sym.CIERRAEMPAQUE)}
-    {LeftKey}                      {return symbol(sym.ABREREGALO)}
-    {RightKey}                      {return symbol(sym.CIERRAREGALO)}
+    {LineTerminator}               {return symbol(sym.FINREGALO);}
+    {LeftParenthesis}              {return symbol(sym.ABRECUENTO);}
+    {RightParenthesis}             {return symbol(sym.CIERRACUENTO);}
+    {LeftBracket}                  {return symbol(sym.ABREEMPAQUE);}
+    {RightBracket}                 {return symbol(sym.CIERRAEMPAQUE);}
+    {LeftKey}                      {return symbol(sym.ABREREGALO);}
+    {RightKey}                      {return symbol(sym.CIERRAREGALO);}
 
-    //eol(end of line)
-    {LineEnder}                      {return symbol(sym.FINREGALO)} 
+    //eol(end of line);
+    {LineEnder}                      {return symbol(sym.FINREGALO);} 
 
     //whitespace
     {WhiteSpace}                     {/*skip*/}
@@ -185,13 +185,13 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
     {InputCharacter}                 {/*skip*/}
 
     //identifier identifier        
-    {Identifier}                     {return symbol(sym.PERSONA)}
+    {Identifier}                     {return symbol(sym.PERSONA);}
 }
 
 <STRING> {
-    \"                             { yybegin(yyinitial):
-                                    return symbol(sym.l_SANTA,
-                                    string.tostring()); }
+      \"                             { yybegin(YYINITIAL); 
+                                       return symbol(sym.STRING_LITERAL, 
+                                       string.toString()); }
     [^\n\r\"\\]+                   { string.append(yytext()); }
     \\t                            { string.append('\t' ); } 
     \\r                            { string.append('\r' ); }
