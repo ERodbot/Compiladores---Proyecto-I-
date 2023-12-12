@@ -5,7 +5,7 @@
 
 package LexicalAnalizer;
 
-import java_cup.runtime.Symbol;
+import java_cup.runtime.*;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -31,7 +31,7 @@ public class Sintax extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\002\000\002\002\004\000\002\002\003" });
+    "\000\001\000\002\002\004" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -39,9 +39,8 @@ public class Sintax extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\004\000\004\004\005\001\002\000\004\002\006\001" +
-    "\002\000\004\002\000\001\002\000\004\002\001\001\002" +
-    "" });
+    "\000\003\000\002\001\002\000\004\002\005\001\002\000" +
+    "\004\002\001\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -49,8 +48,8 @@ public class Sintax extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\004\000\004\002\003\001\001\000\002\001\001\000" +
-    "\002\001\001\000\002\001\001" });
+    "\000\003\000\004\002\003\001\001\000\002\001\001\000" +
+    "\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -88,21 +87,41 @@ public class Sintax extends java_cup.runtime.lr_parser {
   public int error_sym() {return 1;}
 
 
-
-    private Symbol s;
-    
-    public void syntax_error(Symbol s){
-        this.s = s;
+  /** User initialization code. */
+  public void user_init() throws java.lang.Exception
+    {
+ 
     }
 
-    public Symbol getS(){
-        return this.s;
-}
+  /** Scan to get the next Symbol. */
+  public java_cup.runtime.Symbol scan()
+    throws java.lang.Exception
+    {
+ return lex.next_token(); 
+    }
+
+
+  Lexer lex;
+
+  @SuppressWarinings("deprecation")
+  public parser(Lexer lex){
+    this.lex=lex;
+    this.symbolFactory= new DefaultSymbolFactory();
+  }
 
 
 /** Cup generated class to encapsulate user supplied action code.*/
 @SuppressWarnings({"rawtypes", "unchecked", "unused"})
 class CUP$Sintax$actions {
+
+
+    public void uno(){
+        System.out.println("123");
+    }
+    public void dos(){
+        System.out.println("456");
+    }
+
   private final Sintax parser;
 
   /** Constructor */
@@ -125,7 +144,7 @@ class CUP$Sintax$actions {
       switch (CUP$Sintax$act_num)
         {
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 0: // $START ::= Inicio EOF 
+          case 0: // $START ::= lenguajeNavidad EOF 
             {
               Object RESULT =null;
 		int start_valleft = ((java_cup.runtime.Symbol)CUP$Sintax$stack.elementAt(CUP$Sintax$top-1)).left;
@@ -136,15 +155,6 @@ class CUP$Sintax$actions {
             }
           /* ACCEPT */
           CUP$Sintax$parser.done_parsing();
-          return CUP$Sintax$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 1: // Inicio ::= EQEQ 
-            {
-              Object RESULT =null;
-
-              CUP$Sintax$result = parser.getSymbolFactory().newSymbol("Inicio",0, ((java_cup.runtime.Symbol)CUP$Sintax$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintax$stack.peek()), RESULT);
-            }
           return CUP$Sintax$result;
 
           /* . . . . . .*/

@@ -27,57 +27,63 @@ scan with {: return lex.next_token(); :};
 // Terminals
 
 // Data Types
-terminal int NOEL, NICOLAS, SANTA, COLACHO, CLAUS;
+terminal NOEL, NICOLAS, SANTA, COLACHO, CLAUS;
+
+//Parenthesis
+terminal ABRECUENTO, CIERRACUENTO, ABREEMPAQUE, CIERRAEMPAQUE, ABREREGALO, CIERRAREGALO;
+
+//Separator
+terminal CHIMENEA;
 
 // Control Structures
-terminal int ELFO, HADA, DUENDE, ENVUELVE, HACE, REVISA, ENVIA, CORTA;
+terminal ELFO, HADA, DUENDE, ENVUELVE, HACE, REVISA, ENVIA, CORTA;
+
+//Literals numbers
+terminal l_NICOLAS, l_NOEL;
 
 // Input/Output Functions
-terminal int NARRA, ESCUCHA;
+terminal NARRA, ESCUCHA;
 
 // Class Types
-terminal int FESTIVAL, FIESTA, NAVIDAD;
+terminal FESTIVAL, FIESTA, NAVIDAD;
 
 // Relational Operators
-terminal int ALABASTRO, EVERGEEN, UPATREE, MINSTIX, MARY, OPENSLAE;
+terminal ALABASTRO, EVERGEEN, UPATREE, MINSTIX, MARY, OPENSLAE;
 
 // Logical Operators
-terminal int GASPAR, MELCHOR, BALTASAR;
+terminal GASPAR, MELCHOR, BALTASAR;
 
 // Assignment
-terminal int ENTREGA;
+terminal ENTREGA;
 
 // Boolean Literals
-terminal int l_t_CLAUS, l_f_CLAUS;
+terminal l_t_CLAUS, l_f_CLAUS;
 
 // Unary Operators
-terminal int GRINCH, QUIEN;
+terminal GRINCH, QUIEN;
 
 // Binary Arithmetic Operators
-terminal int RODOLFO, TRUENO, RELAMPAGO, JUGUETON, COMETA, CUPIDO;
-
-// Separator
-terminal int CHIMENEA;
+terminal RODOLFO, TRUENO, RELAMPAGO, JUGUETON, COMETA, CUPIDO;
 
 // Identifier
-terminal int PERSONA;
+terminal PERSONA;
 
 // End of Line
-terminal int FINREGALO;
+terminal FINREGALO;
 
 // Lexical Error
-terminal int ERROR;
+terminal ERROR;
 
 // String Literal
-terminal String string_literal;
+terminal l_SANTA;
 
 //no terminal 
 
 non terminal        lenguajeNavidad;
 
-start with lenguajeNavidad
+start with lenguajeNavidad;
 
-placeHolder :: = {:
+placeHolder ::= {:
                     uno();
                  }:
                  PERSONA
@@ -86,5 +92,3 @@ placeHolder :: = {:
                  :}
                  ;
 
-
-//formato es: terminal {nombreTerminal, nombreTerminal2...};                 
