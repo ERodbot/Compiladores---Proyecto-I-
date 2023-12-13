@@ -15,6 +15,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 
 import java_cup.Lexer;
+import LexicalAnalizer.sym;
 import java_cup.runtime.Symbol;
 import jflex.anttask.JFlexTask;
 
@@ -61,14 +62,22 @@ public class App {
         while(true)
         {
             token = lexer.next_token();
-            if(token.sym !=0){
-                System.out.println("Token"+token.sym+ ", Value: "+(token.value==null?lexer.yytext():token.value.toString()));
-            }else{
-                System.out.println("Total lexemas found: "+i);
-                return;
-            }
 
+            if(token.sym !=0){
+                System.out.println("Tipo de símbolo: "+ sym.terminalNames[token.sym]);
+                System.out.println("Símbolo: "+lexer.yytext());
+                System.out.println("Número de símbolo: "+token.sym);
+                System.out.println("Encontrado en la línea "+token.left+ " y columna "+token.right);
+                i++;
+                System.out.println("Cantidad de lexemas encontrados: "+i);
+                System.out.println("-----------------------------------------------------------");
+                }
+            
+            else{
+                break;
+            }
         }
+
     }
 
 }
