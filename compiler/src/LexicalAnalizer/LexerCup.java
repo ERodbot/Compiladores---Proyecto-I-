@@ -8,7 +8,7 @@ import java_cup.runtime.*;
 
 
 @SuppressWarnings("fallthrough")
-public class Lexer implements java_cup.runtime.Scanner {
+public class LexerCup implements java_cup.runtime.Scanner {
 
   /** This character denotes the end of file. */
   public static final int YYEOF = -1;
@@ -407,11 +407,11 @@ public class Lexer implements java_cup.runtime.Scanner {
     StringBuffer string = new StringBuffer();
 
     private Symbol symbol(int type) {
-        System.out.println(yytext());
+        
         return new Symbol(type, yyline, yycolumn);
     }
     private Symbol symbol(int type, Object value) {
-        System.out.println(yytext());
+        
         return new Symbol(type, yyline, yycolumn, value);
     }
 
@@ -421,7 +421,7 @@ public class Lexer implements java_cup.runtime.Scanner {
    *
    * @param   in  the java.io.Reader to read input from.
    */
-  public Lexer(java.io.Reader in) {
+  public LexerCup(java.io.Reader in) {
     this.zzReader = in;
   }
 

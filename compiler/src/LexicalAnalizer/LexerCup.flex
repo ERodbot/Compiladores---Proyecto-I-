@@ -4,7 +4,7 @@ import java_cup.runtime.*;
 
 %%
 
-%class Lexer
+%class LexerCup
 %public
 %unicode
 %cup
@@ -15,11 +15,11 @@ import java_cup.runtime.*;
     StringBuffer string = new StringBuffer();
 
     private Symbol symbol(int type) {
-        System.out.println(yytext());
+        
         return new Symbol(type, yyline, yycolumn);
     }
     private Symbol symbol(int type, Object value) {
-        System.out.println(yytext());
+        
         return new Symbol(type, yyline, yycolumn, value);
     }
 %}

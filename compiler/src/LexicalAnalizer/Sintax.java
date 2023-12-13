@@ -104,10 +104,10 @@ public class Sintax extends java_cup.runtime.lr_parser {
     }
 
 
-  Lexer lex;
+  LexerCup lex;
 
   @SuppressWarnings("deprecation")
-  public void parser(Lexer lex){
+  public void parser(LexerCup lex){
     this.lex=lex;
     this.symbolFactory= new DefaultSymbolFactory();
   }

@@ -8,6 +8,9 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import LexicalAnalizer.LexerCup;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 
@@ -52,7 +55,7 @@ public class App {
     {
         Reader reader = new BufferedReader(new FileReader(scannerPath));
         reader.read();
-        Lexer lexer= new Lexer(reader);
+        LexerCup lexer= new LexerCup(reader);
         int i = 0;
         Symbol token; 
         while(true)
