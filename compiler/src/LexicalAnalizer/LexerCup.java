@@ -940,7 +940,7 @@ public class LexerCup implements java_cup.runtime.Scanner {
           // fall through
           case 79: break;
           case 21:
-            { string.append(yytext());
+            { string.append( yytext() );
             }
           // fall through
           case 80: break;
@@ -953,12 +953,12 @@ public class LexerCup implements java_cup.runtime.Scanner {
           case 23:
             { yybegin(YYINITIAL); 
                                        return symbol(sym.STRING_LITERAL, 
-                                       string.toString());
+                                       "\""+string.toString()+"\"");
             }
           // fall through
           case 82: break;
           case 24:
-            { string.append( yytext() );
+            { string.append('\\');
             }
           // fall through
           case 83: break;
@@ -1018,22 +1018,22 @@ public class LexerCup implements java_cup.runtime.Scanner {
           // fall through
           case 94: break;
           case 36:
-            { string.append('\"' );
+            { string.append('\"');
             }
           // fall through
           case 95: break;
           case 37:
-            { string.append('\n' );
+            { string.append('\n');
             }
           // fall through
           case 96: break;
           case 38:
-            { string.append('\r' );
+            { string.append('\r');
             }
           // fall through
           case 97: break;
           case 39:
-            { string.append('\t' );
+            { string.append('\t');
             }
           // fall through
           case 98: break;

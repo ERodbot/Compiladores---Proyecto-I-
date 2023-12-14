@@ -64,15 +64,25 @@ public class App {
             token = lexer.next_token();
 
             if(token.sym !=0){
+                if(token.sym ==24){
                 System.out.println("Tipo de símbolo: "+ sym.terminalNames[token.sym]);
-                System.out.println("Símbolo: "+lexer.yytext());
-                System.out.println("Número de símbolo: "+token.sym);
-                System.out.println("Encontrado en la línea "+token.left+ " y columna "+token.right);
-                i++;
-                System.out.println("Cantidad de lexemas encontrados: "+i);
-                System.out.println("-----------------------------------------------------------");
+                    System.out.println("Símbolo: "+token.value);
+                    System.out.println("Número de símbolo: "+token.sym);
+                    System.out.println("Encontrado en la línea "+token.left+ " y columna "+token.right);
+                    i++;
+                    System.out.println("Cantidad de lexemas encontrados: "+i);
+                    System.out.println("-----------------------------------------------------------");
                 }
-            
+                else{
+                    System.out.println("Tipo de símbolo: "+ sym.terminalNames[token.sym]);
+                    System.out.println("Símbolo: "+lexer.yytext());
+                    System.out.println("Número de símbolo: "+token.sym);
+                    System.out.println("Encontrado en la línea "+token.left+ " y columna "+token.right);
+                    i++;
+                    System.out.println("Cantidad de lexemas encontrados: "+i);
+                    System.out.println("-----------------------------------------------------------");
+                }
+            }
             else{
                 break;
             }

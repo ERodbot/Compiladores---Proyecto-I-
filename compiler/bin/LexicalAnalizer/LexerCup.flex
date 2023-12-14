@@ -136,7 +136,7 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
 
 
 <YYINITIAL> {
-   \"                             {string.setLength(0); yybegin(STRING);}
+   \"                             { string.setLength(0); yybegin(STRING); }
 
    {SingleLineComment}             {/*skip*/}
 
@@ -193,14 +193,15 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
 <STRING> {
       \"                             { yybegin(YYINITIAL); 
                                        return symbol(sym.STRING_LITERAL, 
-                                       string.toString()); }
-    [^\n\r\"\\]+                   { string.append(yytext()); }
-    \\t                            { string.append('\t' ); } 
-    \\r                            { string.append('\r' ); }
-    \\n                            { string.append('\n' ); }
-    \\\"                           { string.append('\"' ); }
-    \\                             { string.append( yytext() ); }
-}
+                                       "\""+string.toString()+"\""); }
+      [^\n\r\"\\]+                   { string.append( yytext() ); }
+      \\t                            { string.append('\t'); }
+      \\n                            { string.append('\n'); }
+
+      \\r                            { string.append('\r'); }
+      \\\"                           { string.append('\"'); }
+      \\                             { string.append('\\'); }
+    }
 
 
 /* error fallback */
