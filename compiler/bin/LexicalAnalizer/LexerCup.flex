@@ -63,7 +63,7 @@ Not = \!
 
 
 //Comments//
-SingleLineComment =  \@[^\@\n]*
+SingleLineComment =  \@{WhiteSpace}*[^\@\n]*
 /*MultipleLineComment*/
 MultipleLineComment = \/_([^_]|_+[^_/])*_\/
 
@@ -72,9 +72,6 @@ LineEnder = \n|\r|\r\n
 
 //whitespace
 WhiteSpace = {LineEnder} | [ \t\f]
-
-//inputcharacter
-InputCharacter= [^\t\f]
 
 //identifier
 Identifier= [A-Za-z_][A-Za-z0-9_]*
@@ -143,17 +140,17 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
 
 
 <YYINITIAL> {
-   \"                             { string.setLength(0); yybegin(STRING); }
+   \"                              { string.setLength(0); yybegin(STRING); }
 
    {SingleLineComment}             {/*skip*/}
 
    {MultipleLineComment}           {/*skip*/}
 
    /*decimal integer literal*/
-   {LiteralDecimalInteger}           {return symbol(sym.l_NOEL);}
+   {LiteralDecimalInteger}         {return symbol(sym.l_NOEL);}
 
    /*decimal float literal*/
-   {LiteralDecimalFloat}             {return symbol(sym.l_NICOLAS);}
+   {LiteralDecimalFloat}           {return symbol(sym.l_NICOLAS);}
 
    /*unarian operators*/
    {Decrement}                     {return symbol(sym.GRINCH);}
@@ -168,7 +165,7 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
     {Modulo}                       {return symbol(sym.CUPIDO);}
 
     //separator                    
-    {Separator}                      {return symbol(sym.CHIMENEA);}
+    {Separator}                    {return symbol(sym.CHIMENEA);}
 
     //logical operators
     {And}                          {return symbol(sym.GASPAR);} 
@@ -184,19 +181,16 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
     {LeftKey}                      {return symbol(sym.ABREREGALO);}
     {RightKey}                     {return symbol(sym.CIERRAREGALO);}
 
+     //identifier identifier        
+    {Identifier}                     {return symbol(sym.PERSONA);}
+
     //eol(end of line);
     {LineEnder}                      {/*skip*/} 
 
     //whitespace
     {WhiteSpace}                     {/*skip*/}
 
-    //inputcharacter
-    {InputCharacter}                 {/*skip*/}
-
-    //identifier identifier        
-    {Identifier}                     {return symbol(sym.PERSONA);}
-
-                                    
+                     
 }
 
 <STRING> {
@@ -213,7 +207,7 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
       
 }
 
-[^]                                  {return symbol(sym.ERRORNOTRECOGNIZED);}
+.                                  {return symbol(sym.ERRORNOTRECOGNIZED);}
 
 
 

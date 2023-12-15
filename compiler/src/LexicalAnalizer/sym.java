@@ -11,14 +11,14 @@ public class sym {
   public static final int STRING_LITERAL = 24;
   public static final int NICOLAS = 3;
   public static final int MINSTIX = 37;
-  public static final int l_SANTA = 57;
+  public static final int l_SANTA = 56;
   public static final int CHIMENEA = 13;
   public static final int FINREGALO = 55;
   public static final int HADA = 15;
   public static final int PERSONA = 54;
   public static final int CIERRACUENTO = 8;
   public static final int l_COLACHO = 25;
-  public static final int ERRORNOTRECOGNIZED = 56;
+  public static final int ERRORNOTRECOGNIZED = 57;
   public static final int DUENDE = 16;
   public static final int ENTREGA = 43;
   public static final int CIERRAREGALO = 12;
@@ -123,8 +123,8 @@ public class sym {
   "CUPIDO",
   "PERSONA",
   "FINREGALO",
-  "ERRORNOTRECOGNIZED",
-  "l_SANTA"
+  "l_SANTA",
+  "ERRORNOTRECOGNIZED"
   };
 }
 

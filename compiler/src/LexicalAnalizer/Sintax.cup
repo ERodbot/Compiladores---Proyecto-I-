@@ -83,11 +83,11 @@ terminal PERSONA;
 // End of Line
 terminal FINREGALO;
 
-// Lexical Error
-terminal ERRORNOTRECOGNIZED;
-
 // String Literal
 terminal l_SANTA;
+
+// Lexical Error
+terminal ERRORNOTRECOGNIZED;
 
 //no terminal 
 

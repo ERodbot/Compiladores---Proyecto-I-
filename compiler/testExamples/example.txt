@@ -3,7 +3,7 @@
 integer [3] kendall = [1,2,3] | 
 
 integer emmanuel
-"Fabián" @ comentario
+"Fabián" @comentario hola mundo
 
 integer funcion () { 
 
@@ -13,19 +13,19 @@ integer funcion () {
         break |
      }
  } until {
-     emmanuel => 10 |
+     emmanuel <= 10 |
  }
 
  if (emmanuel) >== 10 {
     return emmanuel |
- } elif { 'a' === 'b'
+ } elif { 'a' == 'b'
     --emmanuel |
     return 1 |
  }else {
     return 'a' |
  } |
 
-for (integer i =0; i++; i<10) 
+for (integer i <= 0; i++; i<10) 
   print(i) |
   read (i) |
 } |
