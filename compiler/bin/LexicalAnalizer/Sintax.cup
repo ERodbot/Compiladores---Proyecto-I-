@@ -44,11 +44,20 @@ terminal l_NICOLAS, l_NOEL;
 //Literal strings
 terminal STRING_LITERAL;
 
+//Literal char
+terminal l_COLACHO;
+
 // Input/Output Functions
 terminal NARRA, ESCUCHA;
 
 // Class Types
-terminal FESTIVAL, FIESTA, NAVIDAD;
+terminal MOTIVO, FESTIVAL, FIESTA, NAVIDAD;
+
+//null
+terminal NARIZROJA;
+
+//void 
+terminal SINREGALO;
 
 // Relational Operators
 terminal ALABASTRO, EVERGEEN, UPATREE, MINSTIX, MARY, OPENSLAE;
@@ -75,7 +84,7 @@ terminal PERSONA;
 terminal FINREGALO;
 
 // Lexical Error
-terminal ERROR;
+terminal ERRORNOTRECOGNIZED;
 
 // String Literal
 terminal l_SANTA;

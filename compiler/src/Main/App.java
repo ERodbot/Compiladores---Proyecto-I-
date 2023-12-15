@@ -52,42 +52,39 @@ public class App {
                 Paths.get((System.getProperty("user.dir") + "/src/LexicalAnalizer/Sintax.java")));
     }
 
-    public static void testLexer(String scannerPath) throws IOException
-    {
+    public static void testLexer(String scannerPath) throws IOException {
         Reader reader = new BufferedReader(new FileReader(scannerPath));
         reader.read();
-        LexerCup lexer= new LexerCup(reader);
+        LexerCup lexer = new LexerCup(reader);
         int i = 0;
-        Symbol token; 
-        while(true)
-        {
+        Symbol token;
+    
+        // Print table header
+        System.out.printf("%-20s %-20s %-20s %-20s %-20s %n", "Tipo de símbolo", "Símbolo", "Número de símbolo", "Línea", "Columna");
+        System.out.println("-------------------------------------------------------------------------------------------");
+    
+        while (true) {
             token = lexer.next_token();
-
-            if(token.sym !=0){
-                if(token.sym ==24){
-                System.out.println("Tipo de símbolo: "+ sym.terminalNames[token.sym]);
-                    System.out.println("Símbolo: "+token.value);
-                    System.out.println("Número de símbolo: "+token.sym);
-                    System.out.println("Encontrado en la línea "+token.left+ " y columna "+token.right);
-                    i++;
-                    System.out.println("Cantidad de lexemas encontrados: "+i);
-                    System.out.println("-----------------------------------------------------------");
-                }
-                else{
-                    System.out.println("Tipo de símbolo: "+ sym.terminalNames[token.sym]);
-                    System.out.println("Símbolo: "+lexer.yytext());
-                    System.out.println("Número de símbolo: "+token.sym);
-                    System.out.println("Encontrado en la línea "+token.left+ " y columna "+token.right);
-                    i++;
-                    System.out.println("Cantidad de lexemas encontrados: "+i);
-                    System.out.println("-----------------------------------------------------------");
-                }
-            }
-            else{
+    
+            if (token.sym != 0) {
+                String symbolType = sym.terminalNames[token.sym];
+                String symbol = (token.sym == 24) ? token.value.toString() : lexer.yytext();
+                int symbolNumber = token.sym;
+                int line = token.left;
+                int column = token.right;
+    
+                // Print table row
+                System.out.printf("%-20s %-20s %-20s %-20d %-20d %n", symbolType, symbol.toString(), symbolNumber, line, column);
+                i++;
+    
+                
+            } else {
                 break;
             }
         }
-
+        
+        System.out.println("Cantidad de lexemas encontrados: " + i);
+        System.out.println("-------------------------------------------------------------------------------------------");
     }
-
+    
 }

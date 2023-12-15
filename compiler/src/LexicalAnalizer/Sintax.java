@@ -40,7 +40,7 @@ public class Sintax extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\005\000\004\064\000\001\002\000\004\064\007\001" +
+    "\000\005\000\004\070\000\001\002\000\004\070\007\001" +
     "\002\000\004\002\006\001\002\000\004\002\001\001\002" +
     "\000\004\002\uffff\001\002" });
 

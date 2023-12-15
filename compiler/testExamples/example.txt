@@ -1,2 +1,73 @@
+ integer emmanuel <= 10 |
 
-boolean dfd int if else <= > <fdfad "holaMundo"
+integer [3] kendall = [1,2,3] | 
+
+integer emmanuel
+"Fabián" @ comentario
+
+integer funcion () { 
+
+ do {
+     ++emmanuel |
+     if (1<2) {
+        break |
+     }
+ } until {
+     emmanuel => 10 |
+ }
+
+ if (emmanuel) >== 10 {
+    return emmanuel |
+ } elif { 'a' === 'b'
+    --emmanuel |
+    return 1 |
+ }else {
+    return 'a' |
+ } |
+
+for (integer i =0; i++; i<10) 
+  print(i) |
+  read (i) |
+} |
+
+@ palabra
+@ aaaaaaa
+
+31 + 3.4 - 40 
+/_ 
+    comentario multilinea
+_/
+++emmanuel
+
+emmanuel == 10 |
+emmanuel != 5 |
+emmanuel > 5 |
+emmanuel < 10 |
+emmanuel >== 10 |
+emmanuel <== 5 |
+
+true ^ false # !true |
+
+integer emmanuel <= 10 |
+float tejaYMedia <= 100.5 |
+string nombre <= "Fabián" |
+char letra <= 'a' |
+boolean esVerdadero <= true |
+
+
+float sapo <= (2 / 55 ~ 36312 + 3.4 - 40 * 2)**1  |
+
+null nulo |
+
+public class trineo {
+    private <= integer tablas |
+    public <= string saco     |
+
+    abstract void repartir () {
+        return null |
+    } |   
+} |
+
+$;``%
+
+1asd

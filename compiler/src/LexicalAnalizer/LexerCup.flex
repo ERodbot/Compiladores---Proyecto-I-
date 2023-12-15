@@ -33,7 +33,7 @@ RightParenthesis= \)
 LeftBracket= \[
 RightBracket= \]
 LeftKey= \{
-RightKey= \}h
+RightKey= \}
 
 //separator
 Separator= ,
@@ -53,8 +53,8 @@ Sum= \+
 Subtraction= \-
 Multiplication=\*
 Division=\/
-Exponential=\*{2}
-Modulo=%
+Exponential=\*\*
+Modulo=\~
 
 //logical operators
 And = \^
@@ -63,7 +63,7 @@ Not = \!
 
 
 //Comments//
-SingleLineComment =  \@[^\@\n]*\@
+SingleLineComment =  \@[^\@\n]*
 /*MultipleLineComment*/
 MultipleLineComment = \/_([^_]|_+[^_/])*_\/
 
@@ -108,6 +108,7 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
 "read"                             {return symbol(sym.ESCUCHA);}
 
 //class types
+<YYINITIAL> "class"                {return symbol(sym.MOTIVO);}
 <YYINITIAL> "public"               {return symbol(sym.FESTIVAL);}
 <YYINITIAL> "private"              {return symbol(sym.FIESTA);}
 <YYINITIAL> "abstract"             {return symbol(sym.NAVIDAD);}
@@ -123,14 +124,20 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
 //asignation
 "<="                               {return symbol(sym.ENTREGA);}
 
+//void
+"void"                             {return symbol(sym.SINREGALO);}
+
+//null
+"null"                             {return symbol(sym.NARIZROJA);}
+
 //literaltrue
 <YYINITIAL> "true"                 {return symbol(sym.l_t_CLAUS);}
 
 //literalfalse
 <YYINITIAL> "false"                {return symbol(sym.l_f_CLAUS);}
 
-
-
+//literalChar
+<YYINITIAL> '[A-Za-z]'             {return symbol(sym.l_COLACHO);}
 
 
 
@@ -175,10 +182,10 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
     {LeftBracket}                  {return symbol(sym.ABREEMPAQUE);}
     {RightBracket}                 {return symbol(sym.CIERRAEMPAQUE);}
     {LeftKey}                      {return symbol(sym.ABREREGALO);}
-    {RightKey}                      {return symbol(sym.CIERRAREGALO);}
+    {RightKey}                     {return symbol(sym.CIERRAREGALO);}
 
     //eol(end of line);
-    {LineEnder}                      {return symbol(sym.FINREGALO);} 
+    {LineEnder}                      {/*skip*/} 
 
     //whitespace
     {WhiteSpace}                     {/*skip*/}
@@ -188,6 +195,8 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
 
     //identifier identifier        
     {Identifier}                     {return symbol(sym.PERSONA);}
+
+                                    
 }
 
 <STRING> {
@@ -201,11 +210,10 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
       \\r                            { string.append('\r'); }
       \\\"                           { string.append('\"'); }
       \\                             { string.append('\\'); }
-    }
-
-
-/* error fallback */
-[^] {
-    String errorMensaje = "Error léxico en la línea " + (yyline) + ", columna " + (yycolumn) + ": carácter no reconocido '" + yytext() + "'";
-    return symbol(sym.ERROR, errorMensaje);
+      
 }
+
+[^]                                  {return symbol(sym.ERRORNOTRECOGNIZED);}
+
+
+
