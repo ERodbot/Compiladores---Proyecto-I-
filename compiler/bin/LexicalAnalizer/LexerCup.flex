@@ -11,8 +11,18 @@ import java_cup.runtime.*;
 %line
 %column 
 
+
+
+/**
+    * This code gets added to the lexical analizer, working as a way to manage tokens and both strings and chars literals.
+    * 
+    * 
+    * 
+*/
 %{
     StringBuffer string = new StringBuffer();
+
+    StringBuffer charBuff = new StringBuffer();
 
     private Symbol symbol(int type) {
         
@@ -79,6 +89,8 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
 
 %state STRING
 
+%state CHAR
+
 %%
 
 //reserved words 
@@ -133,14 +145,16 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
 //literalfalse
 <YYINITIAL> "false"                {return symbol(sym.l_f_CLAUS);}
 
-//literalChar
-<YYINITIAL> '[A-Za-z]'             {return symbol(sym.l_COLACHO);}
+//function
+<YYINITIAL> "function"             {return symbol(sym.RECORRIDO);}
 
 
 
 
 <YYINITIAL> {
    \"                              { string.setLength(0); yybegin(STRING); }
+
+   \'                              { charBuff.setLength(0); yybegin(CHAR);}
 
    {SingleLineComment}             {/*skip*/}
 
@@ -195,7 +209,7 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
 
 <STRING> {
       \"                             { yybegin(YYINITIAL); 
-                                       return symbol(sym.STRING_LITERAL, 
+                                       return symbol(sym.l_SANTA, 
                                        "\""+string.toString()+"\""); }
       [^\n\r\"\\]+                   { string.append( yytext() ); }
       \\t                            { string.append('\t'); }
@@ -205,6 +219,31 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
       \\\"                           { string.append('\"'); }
       \\                             { string.append('\\'); }
       
+}
+
+<CHAR> {
+    \' {
+        if (charBuff.length() == 1 || (charBuff.length() == 2 && charBuff.charAt(0) == '\\')) {
+            yybegin(YYINITIAL);
+            return symbol(sym.l_COLACHO, "\'" + charBuff.toString() + "\'");
+        } else {
+            return symbol(sym.ERRORNOTRECOGNIZED);
+        }
+    }
+    [^\n\r\'\\] {
+        if (charBuff.length() == 0) {
+            charBuff.append(yytext());
+        } else {
+            return symbol(sym.ERRORNOTRECOGNIZED);
+        }
+    }
+    \\t | \\n | \\r | \\\'  {
+        if (charBuff.length() == 0) {
+            charBuff.append(yytext());
+        } else {
+            return symbol(sym.ERRORNOTRECOGNIZED);
+        }
+    }
 }
 
 .                                  {return symbol(sym.ERRORNOTRECOGNIZED);}

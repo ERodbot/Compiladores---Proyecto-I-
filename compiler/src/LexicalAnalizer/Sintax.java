@@ -31,8 +31,7 @@ public class Sintax extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\003\000\002\002\004\000\002\003\002\000\002\002" +
-    "\004" });
+    "\000\002\000\002\002\004\000\002\002\003" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -40,9 +39,9 @@ public class Sintax extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\005\000\004\070\000\001\002\000\004\070\007\001" +
-    "\002\000\004\002\006\001\002\000\004\002\001\001\002" +
-    "\000\004\002\uffff\001\002" });
+    "\000\004\000\004\071\005\001\002\000\004\002\006\001" +
+    "\002\000\004\002\000\001\002\000\004\002\001\001\002" +
+    "" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -50,9 +49,8 @@ public class Sintax extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\005\000\006\002\004\003\003\001\001\000\002\001" +
-    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "" });
+    "\000\004\000\004\002\003\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -107,7 +105,7 @@ public class Sintax extends java_cup.runtime.lr_parser {
   LexerCup lex;
 
   @SuppressWarnings("deprecation")
-  public void parser(LexerCup lex){
+  public Sintax(LexerCup lex){
     this.lex=lex;
     this.symbolFactory= new DefaultSymbolFactory();
   }
@@ -147,7 +145,7 @@ class CUP$Sintax$actions {
       switch (CUP$Sintax$act_num)
         {
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 0: // $START ::= placeHolder EOF 
+          case 0: // $START ::= main EOF 
             {
               Object RESULT =null;
 		int start_valleft = ((java_cup.runtime.Symbol)CUP$Sintax$stack.elementAt(CUP$Sintax$top-1)).left;
@@ -161,26 +159,11 @@ class CUP$Sintax$actions {
           return CUP$Sintax$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 1: // NT$0 ::= 
+          case 1: // main ::= PERSONA 
             {
               Object RESULT =null;
 
-                    uno();
-                 
-              CUP$Sintax$result = parser.getSymbolFactory().newSymbol("NT$0",1, ((java_cup.runtime.Symbol)CUP$Sintax$stack.peek()), RESULT);
-            }
-          return CUP$Sintax$result;
-
-          /*. . . . . . . . . . . . . . . . . . . .*/
-          case 2: // placeHolder ::= NT$0 PERSONA 
-            {
-              Object RESULT =null;
-              // propagate RESULT from NT$0
-                RESULT = (Object) ((java_cup.runtime.Symbol) CUP$Sintax$stack.elementAt(CUP$Sintax$top-1)).value;
-		
-                    dos();
-                 
-              CUP$Sintax$result = parser.getSymbolFactory().newSymbol("placeHolder",0, ((java_cup.runtime.Symbol)CUP$Sintax$stack.elementAt(CUP$Sintax$top-1)), ((java_cup.runtime.Symbol)CUP$Sintax$stack.peek()), RESULT);
+              CUP$Sintax$result = parser.getSymbolFactory().newSymbol("main",0, ((java_cup.runtime.Symbol)CUP$Sintax$stack.peek()), ((java_cup.runtime.Symbol)CUP$Sintax$stack.peek()), RESULT);
             }
           return CUP$Sintax$result;
 

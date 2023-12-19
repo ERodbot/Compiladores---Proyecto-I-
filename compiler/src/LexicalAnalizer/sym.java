@@ -8,14 +8,14 @@ package LexicalAnalizer;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int STRING_LITERAL = 24;
+  public static final int RECORRIDO = 54;
   public static final int NICOLAS = 3;
   public static final int MINSTIX = 37;
-  public static final int l_SANTA = 56;
+  public static final int l_SANTA = 24;
   public static final int CHIMENEA = 13;
-  public static final int FINREGALO = 55;
+  public static final int FINREGALO = 56;
   public static final int HADA = 15;
-  public static final int PERSONA = 54;
+  public static final int PERSONA = 55;
   public static final int CIERRACUENTO = 8;
   public static final int l_COLACHO = 25;
   public static final int ERRORNOTRECOGNIZED = 57;
@@ -91,7 +91,7 @@ public class sym {
   "CORTA",
   "l_NICOLAS",
   "l_NOEL",
-  "STRING_LITERAL",
+  "l_SANTA",
   "l_COLACHO",
   "NARRA",
   "ESCUCHA",
@@ -121,9 +121,9 @@ public class sym {
   "JUGUETON",
   "COMETA",
   "CUPIDO",
+  "RECORRIDO",
   "PERSONA",
   "FINREGALO",
-  "l_SANTA",
   "ERRORNOTRECOGNIZED"
   };
 }

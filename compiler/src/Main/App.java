@@ -10,9 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import LexicalAnalizer.LexerCup;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import LexicalAnalizer.Sintax;
 
 import java_cup.Lexer;
 import LexicalAnalizer.sym;
@@ -28,7 +26,7 @@ public class App {
         String pathLexerCup = System.getProperty("user.dir") + "/src/LexicalAnalizer/LexerCup.flex";
         String[] pathS = { "-parser", "Sintax", (System.getProperty("user.dir") + "/src/LexicalAnalizer/Sintax.cup") };
         generar(pathLexerCup, pathS);
-        testLexer(System.getProperty("user.dir") +"/testExamples/example.txt");
+        //testLexer(System.getProperty("user.dir") +"/testExamples/example.txt");
     }
 
     public static void generar(String pathLexerCup, String[] pathS) throws IOException, Exception {
@@ -52,10 +50,15 @@ public class App {
                 Paths.get((System.getProperty("user.dir") + "/src/LexicalAnalizer/Sintax.java")));
     }
 
-    public static void testLexer(String scannerPath) throws IOException {
+    public static void testLexer(String scannerPath) throws IOException, Exception {
         Reader reader = new BufferedReader(new FileReader(scannerPath));
         reader.read();
         LexerCup lexer = new LexerCup(reader);
+        Sintax sintax = new Sintax(lexer);
+        sintax.parse();
+
+
+        
         int i = 0;
         Symbol token;
     
