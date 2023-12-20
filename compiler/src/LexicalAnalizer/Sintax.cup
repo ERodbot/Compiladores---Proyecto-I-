@@ -192,7 +192,6 @@ initializer_list_integer ::= l_NOEL | initializer_list_integer CHIMENEA l_NOEL ;
 
 initializer_list_char ::= l_COLACHO | initializer_list_char CHIMENEA l_COLACHO ;
 
-array_type ::= COLACHO | NOEL; 
 
 assign_array ::= type_specifier PERSONA ABREEMPAQUE CIERRAEMPAQUE 
 	| type_specifier ABREEMPAQUE CIERRAEMPAQUE
