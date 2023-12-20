@@ -12,7 +12,6 @@ action code {:
 
 parser code {:
   LexerCup lex;
-
   @SuppressWarnings("deprecation")
   public Sintax(LexerCup lex){
     this.lex=lex;
@@ -91,264 +90,160 @@ terminal ERRORNOTRECOGNIZED;
 
 //no terminal 
 
-non terminal        primary_expression, constant, string, postfix_expression, argument_expression_list, 
-                    unary_expression, unary_operator, cast_expression, multiplicative_expression, 
-                    additive_expression, relational_expression, equality_expression, and_expression, logical_not_expression, 
-                    logical_and_expression, logical_or_expression, conditional_expression, assignment_expression,
-                    expression, declaration, declaration_specifiers, init_declarator_list, init_declarator, 
-                    type_specifier, specifier_qualifier_list, declarator, direct_declarator, parameter_list, 
-                    parameter_declaration, identifier_list, type_name, direct_abstract_declarator, 
-                    initializer, initializer_list, designation, designator_list, designator, statement, io_statement,
-                    compound_statement, block_item_list, block_item, expression_statement, selection_statement,
-                    elif_statement, iteration_statement, jump_statement, main, external_declaration,
-                    function_definition, declaration_list;
+
+
+
+
+
+
+non terminal   main, external_declaration, function_definition, type_specifier, statement, io_statement, function_call_statement,
+               compound_statement, block_item_list, block_item, expression_statement, selection_statement, 
+			   elif_statement, iteration_statement, jump_statement, initializer, initializer_list, initializer_list_integer,
+			   initializer_list_char, assign_array, assignment_expression, args, expression, ArithmeticExpr, LogicalExpr, 
+			   RelationalExpr;
+
+// Precedence and associativity
+precedence left MELCHOR, GASPAR;
+precedence left ALABASTRO, EVERGEEN;
+precedence left MINSTIX, UPATREE, OPENSLAE, MARY;
+precedence left RODOLFO, TRUENO;
+precedence left RELAMPAGO, JUGUETON, CUPIDO; // Including Modulo with same precedence as multiplication and division
+precedence right BALTASAR, TRUENO; // Unary minus
+precedence right QUIEN, GRINCH; // Increment and decrement
+precedence left ABRECUENTO, CIERRACUENTO;		   
 
 start with main;
 
-
-primary_expression ::= PERSONA
-	| constant
-	| string
-	| ABRECUENTO expression CIERRACUENTO
-	;
-
-constant ::= l_NOEL		
-	| l_NICOLAS	
-  | l_COLACHO
-  | l_t_CLAUS
-  | l_f_CLAUS
+main ::= external_declaration
+	| main external_declaration
 	;
 
 
-string ::= l_SANTA
-	| RECORRIDO
-	;
+external_declaration ::= function_definition | statement; 
 
-postfix_expression ::= primary_expression
-	| postfix_expression ABREEMPAQUE expression CIERRAEMPAQUE
-	| postfix_expression ABRECUENTO CIERRACUENTO
-	| postfix_expression ABRECUENTO argument_expression_list CIERRACUENTO
-	| postfix_expression QUIEN
-	| postfix_expression GRINCH
-	| ABRECUENTO type_name specifier_qualifier_list  CIERRACUENTO ABREREGALO initializer_list CIERRAREGALO
-	| ABRECUENTO type_name specifier_qualifier_list CIERRACUENTO ABREREGALO initializer_list CHIMENEA CIERRAREGALO
-	;
 
-argument_expression_list ::= assignment_expression
-	| argument_expression_list CHIMENEA assignment_expression
-	;
+function_definition ::= type_specifier RECORRIDO PERSONA ABRECUENTO args CIERRACUENTO compound_statement
+    | type_specifier RECORRIDO PERSONA ABRECUENTO  CIERRACUENTO compound_statement;
 
-unary_expression ::= postfix_expression
-	| QUIEN unary_expression
-	| GRINCH unary_expression
-	| unary_operator cast_expression
-	;
 
-unary_operator ::= 
-	| RODOLFO
-	| TRUENO
-	| BALTASAR
-	;
+//constant ::= l_NOEL	| l_NICOLAS | l_COLACHO | l_SANTA l_t_CLAUS | l_f_CLAUS;
 
-cast_expression ::= unary_expression
-	| ABRECUENTO type_name CIERRACUENTO cast_expression
-	;
-
-multiplicative_expression ::= cast_expression
-	| multiplicative_expression RELAMPAGO cast_expression
-	| multiplicative_expression JUGUETON cast_expression
-	| multiplicative_expression CUPIDO cast_expression
-	;
-
-additive_expression ::= multiplicative_expression
-	| additive_expression RODOLFO multiplicative_expression
-	| additive_expression TRUENO multiplicative_expression
-	;
-
-relational_expression ::= additive_expression
-	| relational_expression MINSTIX additive_expression
-	| relational_expression UPATREE additive_expression
-	| relational_expression OPENSLAE additive_expression
-	| relational_expression MARY additive_expression
-	;
-
-equality_expression ::= relational_expression
-	| equality_expression ALABASTRO relational_expression
-	| equality_expression EVERGEEN relational_expression
-	;
-
-and_expression ::= equality_expression
-	| and_expression GASPAR equality_expression
-	;
-
-logical_not_expression ::=  BALTASAR and_expression;
-
-logical_and_expression ::= logical_not_expression
-	| logical_and_expression GASPAR logical_not_expression
-	;
-
-logical_or_expression ::= logical_and_expression
-	| logical_or_expression MELCHOR logical_and_expression
-	;
-
-conditional_expression ::= logical_or_expression
-	;
-
-assignment_expression ::= conditional_expression
-	| unary_expression ENTREGA assignment_expression
-	;
-
-expression ::= assignment_expression
-	| expression CHIMENEA assignment_expression
-	;
-
-declaration ::= declaration_specifiers FINREGALO
-	| declaration_specifiers init_declarator_list FINREGALO
-	;
-
-declaration_specifiers ::= type_specifier declaration_specifiers
-	| type_specifier
-	;
-
-init_declarator_list ::= init_declarator
-	| init_declarator_list CHIMENEA init_declarator
-	;
-
-init_declarator ::= declarator ENTREGA initializer
-	| declarator
-	;
 
 type_specifier ::= SINREGALO
-	| COLACHO
+  | COLACHO
   | SANTA
-	| NOEL
-	| NICOLAS
-	| CLAUS
-	;
-specifier_qualifier_list ::= type_specifier specifier_qualifier_list
-	| type_specifier
-	;
+  | NOEL
+  | NICOLAS
+  | CLAUS
+  ;
 
-declarator ::= direct_declarator;
-
-direct_declarator ::= PERSONA
-	| ABRECUENTO declarator CIERRACUENTO
-	| direct_declarator ABREEMPAQUE CIERRAEMPAQUE
-	| direct_declarator ABREEMPAQUE assignment_expression CIERRAEMPAQUE
-	| direct_declarator ABRECUENTO parameter_list CIERRACUENTO
-	| direct_declarator ABRECUENTO CIERRACUENTO
-	| direct_declarator ABRECUENTO identifier_list CIERRACUENTO
-	;
-
-parameter_list ::= parameter_declaration
-	| parameter_list CHIMENEA parameter_declaration
-	;
-
-parameter_declaration ::= declaration_specifiers declarator
-	| declaration_specifiers direct_abstract_declarator
-	| declaration_specifiers
-	;
-
-identifier_list ::= PERSONA
-	| identifier_list CHIMENEA PERSONA
-	;
-type_name ::= specifier_qualifier_list direct_abstract_declarator
-	| specifier_qualifier_list
-	;
-
-direct_abstract_declarator ::= ABRECUENTO direct_abstract_declarator  CIERRACUENTO
-	| ABREEMPAQUE CIERRAEMPAQUE
-	| ABREEMPAQUE assignment_expression CIERRAEMPAQUE
-	| direct_abstract_declarator ABREEMPAQUE CIERRAEMPAQUE
-	| direct_abstract_declarator ABREEMPAQUE assignment_expression CIERRAEMPAQUE
-	| ABRECUENTO CIERRACUENTO
-	| ABRECUENTO parameter_list CIERRACUENTO
-	| direct_abstract_declarator ABRECUENTO CIERRACUENTO
-	| direct_abstract_declarator ABRECUENTO parameter_list CIERRACUENTO
-	;
-
-initializer ::= ABREREGALO initializer_list CIERRAREGALO
-	| ABREREGALO initializer_list CHIMENEA CIERRAREGALO
-	| assignment_expression
-	;
-
-initializer_list ::= designation initializer
-	| initializer
-	| initializer_list CHIMENEA designation initializer
-	| initializer_list CHIMENEA initializer
-	;
-
-designation ::= designator_list ENTREGA
-	;
-
-designator_list ::= designator
-	| designator_list designator
-	;
-
-designator ::= ABREEMPAQUE conditional_expression CIERRAEMPAQUE
-	;
 
 statement ::= compound_statement
-	| expression_statement
+	| assignment_expression
 	| selection_statement
 	| iteration_statement
 	| jump_statement
-  | io_statement
+    | io_statement
+	| function_call_statement
 	;
 
 io_statement ::= NARRA ABRECUENTO l_SANTA CIERRACUENTO FINREGALO
   | ESCUCHA ABRECUENTO l_SANTA CIERRACUENTO FINREGALO 
   ;
 
+function_call_statement ::= PERSONA ABRECUENTO args CIERRACUENTO FINREGALO;
+
 compound_statement ::= ABREREGALO CIERRAREGALO
 	| ABREREGALO  block_item_list CIERRAREGALO
 	;
 
-block_item_list ::= block_item
-	| block_item_list block_item
-	;
+block_item_list ::= block_item | block_item_list block_item;
 
-block_item ::= declaration
-	| statement
-	;
+block_item ::= statement;
 
 expression_statement ::= FINREGALO
 	| expression FINREGALO
 	;
-
-selection_statement ::= ELFO ABRECUENTO expression CIERRACUENTO statement elif_statement DUENDE statement
-    | ELFO ABRECUENTO expression CIERRACUENTO statement DUENDE statement
-	| ELFO ABRECUENTO expression CIERRACUENTO statement
+	
+selection_statement ::= ELFO ABRECUENTO expression CIERRACUENTO compound_statement FINREGALO                                             // if () {};
+	| ELFO ABRECUENTO expression CIERRACUENTO compound_statement DUENDE compound_statement FINREGALO                             // if () {} else {};
+    | ELFO ABRECUENTO expression CIERRACUENTO compound_statement elif_statement DUENDE compound_statement FINREGALO           // if () {} elif () {} else() {};
 	;
 
-elif_statement ::=  HADA  ABRECUENTO expression CIERRACUENTO statement
-	| elif_statement HADA  ABRECUENTO expression CIERRACUENTO statement;
+elif_statement ::=  HADA  ABRECUENTO expression CIERRACUENTO compound_statement
+	| elif_statement HADA  ABRECUENTO expression CIERRACUENTO compound_statement;
+
 
 iteration_statement ::= HACE statement REVISA ABRECUENTO expression CIERRACUENTO FINREGALO
 	| ENVUELVE ABRECUENTO expression_statement expression_statement CIERRACUENTO statement
-	| ENVUELVE ABRECUENTO expression_statement expression_statement expression CIERRACUENTO statement
-	| ENVUELVE ABRECUENTO declaration expression_statement CIERRACUENTO statement
-	| ENVUELVE ABRECUENTO declaration expression_statement expression CIERRACUENTO statement
 	;
 
 jump_statement ::= CORTA FINREGALO
 	| ENVIA FINREGALO
-	| ENVIA expression FINREGALO
+	| ENVIA expression
 	;
 
-main ::= external_declaration
-	| main external_declaration
+initializer ::=  ABREREGALO initializer_list CIERRAREGALO
+    | ABREREGALO CIERRAREGALO ;
+
+initializer_list ::= initializer_list_integer | initializer_list_char;
+
+initializer_list_integer ::= l_NOEL | initializer_list_integer CHIMENEA l_NOEL ;
+
+initializer_list_char ::= l_COLACHO | initializer_list_char CHIMENEA l_COLACHO ;
+
+array_type ::= COLACHO | NOEL; 
+
+assign_array ::= type_specifier PERSONA ABREEMPAQUE CIERRAEMPAQUE 
+	| type_specifier ABREEMPAQUE CIERRAEMPAQUE
+	| type_specifier PERSONA ABREEMPAQUE NOEL CIERRAEMPAQUE 
+	| type_specifier ABREEMPAQUE NOEL CIERRAEMPAQUE
 	;
 
-external_declaration ::= function_definition
-	| declaration
+assignment_expression ::= type_specifier PERSONA ENTREGA expression FINREGALO
+	| assign_array ENTREGA initializer FINREGALO
+	| assign_array FINREGALO
+	| assign_array ENTREGA expression FINREGALO
 	;
 
-function_definition ::= declaration_specifiers declarator declaration_list compound_statement
-	| declaration_specifiers declarator compound_statement
+args ::= type_specifier PERSONA | args CHIMENEA type_specifier PERSONA;
+
+expression ::= ArithmeticExpr
+       | LogicalExpr
+       | RelationalExpr
+       | l_NOEL // Literal entero
+       | l_NICOLAS // Literal flotante
+	   | NARIZROJA
+       | PERSONA  // Identificador
+	   ;
+
+
+// Expresiones aritméticas
+ArithmeticExpr ::= expression RODOLFO expression // Suma
+    | expression TRUENO expression // Resta
+    | expression RELAMPAGO expression // Multiplicación
+    | expression JUGUETON expression // División
+    | expression CUPIDO expression // Modulo
+    | QUIEN PERSONA %prec QUIEN // Incremento prefijo
+    | GRINCH PERSONA %prec GRINCH // Decremento prefijo
+    | ABRECUENTO expression CIERRACUENTO // Expresiones entre paréntesis
 	;
 
-declaration_list ::= declaration
-	| declaration_list declaration
+// Expresiones lógicas
+LogicalExpr ::= expression GASPAR expression // Y lógico
+    | expression MELCHOR expression // O lógico
+    | BALTASAR expression // Negación lógica
+    | l_t_CLAUS // Literal 'true'
+    | l_f_CLAUS // Literal 'false'
 	;
+
+// Expresiones relacionales
+RelationalExpr ::= expression ALABASTRO expression // Igual
+    | expression EVERGEEN expression // No igual
+    | expression MINSTIX expression // Menor que
+    | expression UPATREE expression // Mayor que
+    | expression OPENSLAE expression // Menor o igual
+    | expression MARY expression // Mayor o igual
+    ;
+
 
