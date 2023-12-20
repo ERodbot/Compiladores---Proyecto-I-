@@ -116,12 +116,6 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
 "print"                            {return symbol(sym.NARRA);}
 "read"                             {return symbol(sym.ESCUCHA);}
 
-//class types
-<YYINITIAL> "class"                {return symbol(sym.MOTIVO);}
-<YYINITIAL> "public"               {return symbol(sym.FESTIVAL);}
-<YYINITIAL> "private"              {return symbol(sym.FIESTA);}
-<YYINITIAL> "abstract"             {return symbol(sym.NAVIDAD);}
-
 //relational operators
 <YYINITIAL> "=="                   {return symbol(sym.ALABASTRO);}
 <YYINITIAL> "!="                   {return symbol(sym.EVERGEEN);}
