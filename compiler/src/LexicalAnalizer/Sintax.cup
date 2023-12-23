@@ -117,12 +117,12 @@ precedence left BALTASAR;
 
 start with main;
 
-main ::= nevada_external_declaration
-	| main nevada_external_declaration
+main ::= saco_function_definition
+	| main saco_function_definition
 	;
 
 
-nevada_external_declaration ::= saco_function_definition | risa_santa; 
+//nevada_external_declaration ::= saco_function_definition | risa_santa; 
 
 
 saco_function_definition ::= gorro_navidad_type_specifier RECORRIDO PERSONA ABRECUENTO pesebre_args CIERRACUENTO calcetin_compound_statement FINREGALO
