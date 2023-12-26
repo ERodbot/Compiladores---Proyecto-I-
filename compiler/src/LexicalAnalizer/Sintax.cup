@@ -98,7 +98,7 @@ terminal ERRORNOTRECOGNIZED;
 non terminal   main, nevada_external_declaration, saco_function_definition, arbol_constant, gorro_navidad_type_specifier, risa_santa, lazo_io_statement, belen_function_call_statement,
                calcetin_compound_statement, empaque_block_item_list, carta_block_item, deseos_selection_statement, 
 			   tradicion_elif_statement, caramelo_iteration_statement, calcetin_jump_statement, nochebuena_initializer, pino_initializer_list, campanas_initializer_list_integer,
-			   guirnaldas_initializer_list_char, estrella_assign_array, candelabro_assignment_expression, pesebre_args, reyes_magicos_list_expr, incienzo_expression, bastoncillo_arithmetic_expr, galleta_arithmetic_expr, 
+			   guirnaldas_initializer_list_char, estrella_assign_array, candelabro_assignment_expression, pesebre_args, reyes_magicos_list_expr, incienzo_expression, bastoncillo_arithmetic_expr, galleta_logic_expr, 
 			   leche_relational_expr;
 
 // Precedence and associativity
@@ -212,7 +212,7 @@ reyes_magicos_list_expr ::= incienzo_expression | reyes_magicos_list_expr CHIMEN
 
 
 incienzo_expression ::= bastoncillo_arithmetic_expr
-       | galleta_arithmetic_expr
+       | galleta_logic_expr
        | leche_relational_expr
        | arbol_constant
        | PERSONA  // Identificador
@@ -233,7 +233,7 @@ bastoncillo_arithmetic_expr ::= incienzo_expression TRUENO incienzo_expression /
 	;
 
 // Expresiones lógicas
-galleta_arithmetic_expr ::= incienzo_expression GASPAR incienzo_expression // Y lógico
+galleta_logic_expr ::= incienzo_expression GASPAR incienzo_expression // Y lógico
     | incienzo_expression MELCHOR incienzo_expression // O lógico
     | BALTASAR incienzo_expression // Negación lógica
 	;
