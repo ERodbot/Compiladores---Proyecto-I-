@@ -1,20 +1,17 @@
- void function hola (integer volumen, float nicolasRojo) {
+ 
+void function hola (integer volumen, float nicolasRojo) {
     float nicolasRojo <= "grey god"| 
     integer i <= 1| 
-    char holaMundo <= "strong"|
-
+    char holaMundo <= 's'|
+    integer carlos <= 45+67*90|
     char array[] <= {1,2,3,4}|
     char array[]|
     char array[4] <= {1,2,3,4} |
     char array[1]|
-
-
     integer g <= (5 + ++er - --nicolasRojo * (5)~1 >== 60) # true |
-
     if (12 > nicolasRojo) {
         return|
     }|
-
     if (nicolasRojo == holaMundo) {
         do {
             print("hola mundo ") |
