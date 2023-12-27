@@ -139,11 +139,6 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
 //literalfalse
 <YYINITIAL> "false"                {return symbol(sym.l_f_CLAUS);}
 
-//function
-<YYINITIAL> "function"             {return symbol(sym.RECORRIDO);}
-
-
-
 
 <YYINITIAL> {
    \"                              { string.setLength(0); yybegin(STRING); }
@@ -189,8 +184,11 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
     {LeftKey}                      {return symbol(sym.ABREREGALO);}
     {RightKey}                     {return symbol(sym.CIERRAREGALO);}
 
+    "function"                     {return symbol(sym.RECORRIDO);}
+
      //identifier identifier        
     {Identifier}                     {return symbol(sym.PERSONA);}
+    
 
     //eol(end of line);
     {LineEnder}                      {/*skip*/} 
@@ -240,7 +238,7 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
     }
 }
 
-.                                  {return symbol(sym.ERRORNOTRECOGNIZED);}
+[^]                                  {return symbol(sym.ERRORNOTRECOGNIZED);}
 
 
 

@@ -2,6 +2,7 @@
     float nicolasRojo <= "grey god"| 
     integer i <= 1| 
     char holaMundo <= "strong"|
+    char six = '6'|
 
     char array[] <= {1,2,3,4}|
     char array[]|

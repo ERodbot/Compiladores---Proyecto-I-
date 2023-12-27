@@ -54,8 +54,8 @@ public class App {
         Reader reader = new BufferedReader(new FileReader(scannerPath));
         reader.read();
         LexerCup lexer = new LexerCup(reader);
-        Sintax sintax = new Sintax(lexer);
-        sintax.parse();
+        //Sintax sintax = new Sintax(lexer);
+        //sintax.parse();
 
 
         
@@ -71,7 +71,7 @@ public class App {
     
             if (token.sym != 0) {
                 String symbolType = sym.terminalNames[token.sym];
-                String symbol = (token.sym == 24) ? token.value.toString() : lexer.yytext();
+                String symbol = (token.sym == 24|token.sym==25) ? token.value.toString() : lexer.yytext();
                 int symbolNumber = token.sym;
                 int line = token.left;
                 int column = token.right;

@@ -1,6 +1,14 @@
 package LexicalAnalizer;
 import java_cup.runtime.*;
 
+
+
+/**
+    * Function calls
+    * 
+    * 
+    * 
+*/
 action code {:
     public void uno(){
         System.out.println("123");
@@ -10,6 +18,13 @@ action code {:
     }
 :}
 
+
+/**
+    * create parser constructor, assigns to self lexer and initializes symbol factory
+    * 
+    * 
+    * 
+*/
 parser code {:
   LexerCup lex;
   @SuppressWarnings("deprecation")
@@ -34,6 +49,9 @@ terminal ABRECUENTO, CIERRACUENTO, ABREEMPAQUE, CIERRAEMPAQUE, ABREREGALO, CIERR
 //Separator
 terminal CHIMENEA;
 
+// Control Structures
+terminal ELFO, HADA, DUENDE, ENVUELVE, HACE, REVISA, ENVIA, CORTA;
+
 //Literals numbers
 terminal l_NICOLAS, l_NOEL;
 
@@ -42,10 +60,6 @@ terminal l_SANTA;
 
 //Literal char
 terminal l_COLACHO;
-
-// Control Structures
-terminal ELFO, HADA, DUENDE, ENVUELVE, HACE, REVISA, ENVIA, CORTA;
-
 
 // Input/Output Functions
 terminal NARRA, ESCUCHA;
@@ -74,11 +88,11 @@ terminal GRINCH, QUIEN;
 // Binary Arithmetic Operators
 terminal RODOLFO, TRUENO, RELAMPAGO, JUGUETON, COMETA, CUPIDO;
 
-//Functions
-terminal RECORRIDO;
-
 // Identifier
 terminal PERSONA;
+
+//Function
+terminal RECORRIDO;
 
 // End of Line
 terminal FINREGALO;
@@ -87,14 +101,6 @@ terminal FINREGALO;
 terminal ERRORNOTRECOGNIZED;
 
 //no terminal 
-
-
-
-
-
-
-
-
 non terminal   main, nevada_external_declaration, saco_function_definition, arbol_constant, gorro_navidad_type_specifier, risa_santa, lazo_io_statement, belen_function_call_statement,
                calcetin_compound_statement, empaque_block_item_list, carta_block_item, deseos_selection_statement, 
 			   tradicion_elif_statement, caramelo_iteration_statement, calcetin_jump_statement, nochebuena_initializer, pino_initializer_list, campanas_initializer_list_integer,
