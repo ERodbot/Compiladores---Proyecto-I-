@@ -54,8 +54,8 @@ public class App {
         Reader reader = new BufferedReader(new FileReader(scannerPath));
         reader.read();
         LexerCup lexer = new LexerCup(reader);
-        //Sintax sintax = new Sintax(lexer);
-        //sintax.parse();
+        Sintax sintax = new Sintax(lexer);
+        sintax.parse();
 
 
         

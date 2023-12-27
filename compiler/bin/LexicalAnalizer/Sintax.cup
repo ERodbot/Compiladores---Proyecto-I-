@@ -208,7 +208,7 @@ candelabro_assignment_expression ::= gorro_navidad_type_specifier PERSONA ENTREG
 pesebre_args ::= gorro_navidad_type_specifier PERSONA | pesebre_args CHIMENEA gorro_navidad_type_specifier PERSONA;
 
 
-reyes_magicos_list_expr ::= gorro_navidad_type_specifier PERSONA | reyes_magicos_list_expr CHIMENEA gorro_navidad_type_specifier PERSONA;
+reyes_magicos_list_expr ::=  PERSONA | reyes_magicos_list_expr CHIMENEA PERSONA;
 
 
 incienzo_expression ::= bastoncillo_arithmetic_expr

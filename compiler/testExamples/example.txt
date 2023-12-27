@@ -6,9 +6,11 @@ void function hola (integer volumen, float nicolasRojo) {
     integer carlos <= 45+67*90|
     char array[] <= {1,2,3,4}|
     char array[]|
-    char array[4] <= {1,2,3,4} |
+    char array[3] <= {'a','b','c','c'}|
+    char array[4] <= {1,2,3,4}|
     char array[1]|
-    integer g <= (5 + ++er - --nicolasRojo * (5)~1 >== 60) # true |
+
+    integer g <= 5 + ++er - --nicolasRojo * 5 ~1 >== 60 |
     if (12 > nicolasRojo) {
         return|
     }|
@@ -35,4 +37,6 @@ integer function gogo (){
     integer var <= hola(mal, vola)||
     return var|
     return hola(mal, vola)||
+    return 5+6|
+    boolean complex <= ((5+6) <== 11) # true|
 }|
