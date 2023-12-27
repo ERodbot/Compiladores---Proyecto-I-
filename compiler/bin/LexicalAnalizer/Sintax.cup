@@ -99,7 +99,7 @@ non terminal   main, saco_function_definition, arbol_constant, gorro_navidad_typ
                calcetin_compound_statement, empaque_block_item_list, carta_block_item, deseos_selection_statement, 
 			   tradicion_elif_statement, caramelo_iteration_statement, calcetin_jump_statement, nochebuena_initializer, pino_initializer_list, campanas_initializer_list_integer,
 			   guirnaldas_initializer_list_char, estrella_assign_array, candelabro_assignment_expression, pesebre_args, reyes_magicos_list_expr, incienzo_expression, bastoncillo_arithmetic_expr, galleta_logic_expr, 
-			   leche_relational_expr, burro_general_numerical_expr, mula_general_boolean_expr;
+			   leche_relational_expr, burro_general_numerical_expr, mula_general_boolean_expr, pez_general_string_expr;
 
 // Precedence and associativity
 
@@ -150,8 +150,8 @@ risa_santa ::= calcetin_compound_statement
 	| belen_function_call_statement
 	;
 
-lazo_io_statement ::= NARRA ABRECUENTO l_SANTA CIERRACUENTO FINREGALO
-  | ESCUCHA ABRECUENTO l_SANTA CIERRACUENTO FINREGALO 
+lazo_io_statement ::= NARRA ABRECUENTO pez_general_string_expr CIERRACUENTO FINREGALO
+  | ESCUCHA ABRECUENTO pez_general_string_expr CIERRACUENTO FINREGALO 
   ;
 
 belen_function_call_statement ::= PERSONA ABRECUENTO reyes_magicos_list_expr CIERRACUENTO FINREGALO;
@@ -164,18 +164,20 @@ empaque_block_item_list ::= carta_block_item | empaque_block_item_list carta_blo
 
 carta_block_item ::= risa_santa;
 	
-deseos_selection_statement ::= ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement FINREGALO                                             // if () {};
-	| ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement DUENDE calcetin_compound_statement FINREGALO                             // if () {} else {};
-    | ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement tradicion_elif_statement DUENDE calcetin_compound_statement FINREGALO           // if () {} elif () {} else() {};
+deseos_selection_statement ::= ELFO ABRECUENTO mula_general_boolean_expr CIERRACUENTO calcetin_compound_statement FINREGALO                                             // if () {};
+	| ELFO ABRECUENTO mula_general_boolean_expr CIERRACUENTO calcetin_compound_statement DUENDE calcetin_compound_statement FINREGALO                             // if () {} else {};
+    | ELFO ABRECUENTO mula_general_boolean_expr CIERRACUENTO calcetin_compound_statement tradicion_elif_statement DUENDE calcetin_compound_statement FINREGALO           // if () {} elif () {} else() {};
+	| ELFO ABRECUENTO mula_general_boolean_expr CIERRACUENTO calcetin_compound_statement tradicion_elif_statement    // if () {} elif () {}
+    ;
+
+tradicion_elif_statement ::=  HADA  ABRECUENTO mula_general_boolean_expr CIERRACUENTO calcetin_compound_statement
+	| tradicion_elif_statement HADA  ABRECUENTO mula_general_boolean_expr CIERRACUENTO calcetin_compound_statement;
+
+
+caramelo_iteration_statement ::= HACE risa_santa REVISA ABRECUENTO mula_general_boolean_expr CIERRACUENTO FINREGALO
+	| ENVUELVE ABRECUENTO candelabro_assignment_expression CHIMENEA leche_relational_expr CHIMENEA incienzo_expression CIERRACUENTO risa_santa FINREGALO 
 	;
 
-tradicion_elif_statement ::=  HADA  ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement
-	| tradicion_elif_statement HADA  ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement;
-
-
-caramelo_iteration_statement ::= HACE risa_santa REVISA ABRECUENTO incienzo_expression CIERRACUENTO FINREGALO
-	| ENVUELVE ABRECUENTO candelabro_assignment_expression CHIMENEA incienzo_expression CHIMENEA incienzo_expression CIERRACUENTO risa_santa FINREGALO 
-	;
 
 calcetin_jump_statement ::= CORTA FINREGALO
 	| ENVIA FINREGALO
@@ -206,7 +208,7 @@ candelabro_assignment_expression ::= gorro_navidad_type_specifier PERSONA ENTREG
 pesebre_args ::= gorro_navidad_type_specifier PERSONA | pesebre_args CHIMENEA gorro_navidad_type_specifier PERSONA;
 
 
-reyes_magicos_list_expr ::= incienzo_expression | reyes_magicos_list_expr CHIMENEA incienzo_expression;
+reyes_magicos_list_expr ::= gorro_navidad_type_specifier PERSONA | reyes_magicos_list_expr CHIMENEA gorro_navidad_type_specifier PERSONA;
 
 
 incienzo_expression ::= bastoncillo_arithmetic_expr
@@ -234,6 +236,11 @@ mula_general_boolean_expr::= galleta_logic_expr
     | l_f_CLAUS
     ;
 
+//Expresion general string, básicamente cualquier elemento que pueda retornar un string
+pez_general_string_expr::= PERSONA
+    | belen_function_call_statement
+    | l_SANTA
+    ;
 // Expresiones aritméticas
 bastoncillo_arithmetic_expr ::= burro_general_numerical_expr TRUENO burro_general_numerical_expr // Resta 
     | burro_general_numerical_expr RODOLFO burro_general_numerical_expr // Suma
