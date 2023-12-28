@@ -37,6 +37,5 @@ integer function gogo (){
     integer var <= hola(mal, vola)||
     return var|
     return hola(mal, vola)||
-    return 5+6|
-    boolean complex <= ((5+6) <== 11) # true|
+    return -5|
 }|

@@ -99,7 +99,7 @@ non terminal   main, saco_function_definition, arbol_constant, gorro_navidad_typ
                calcetin_compound_statement, empaque_block_item_list, carta_block_item, deseos_selection_statement, 
 			   tradicion_elif_statement, caramelo_iteration_statement, calcetin_jump_statement, nochebuena_initializer, pino_initializer_list, campanas_initializer_list_integer,
 			   guirnaldas_initializer_list_char, estrella_assign_array, candelabro_assignment_expression, pesebre_args, reyes_magicos_list_expr, incienzo_expression, bastoncillo_arithmetic_expr, galleta_logic_expr, 
-			   leche_relational_expr, burro_general_numerical_expr, mula_general_boolean_expr, pez_general_string_expr;
+			   leche_relational_expr, burro_general_numerical_expr, mula_general_boolean_expr;
 
 // Precedence and associativity
 
@@ -109,7 +109,6 @@ precedence left CUPIDO, COMETA; // mod, exponente
 precedence left QUIEN, GRINCH; // Increment and decrement
 precedence left ALABASTRO, EVERGEEN;
 precedence left MINSTIX, UPATREE, OPENSLAE, MARY;
-precedence left ABRECUENTO, CIERRACUENTO;	
 precedence left GASPAR;
 precedence left MELCHOR; 
 precedence left BALTASAR;
@@ -150,8 +149,8 @@ risa_santa ::= calcetin_compound_statement
 	| belen_function_call_statement
 	;
 
-lazo_io_statement ::= NARRA ABRECUENTO pez_general_string_expr CIERRACUENTO FINREGALO
-  | ESCUCHA ABRECUENTO pez_general_string_expr CIERRACUENTO FINREGALO 
+lazo_io_statement ::= NARRA ABRECUENTO incienzo_expression CIERRACUENTO FINREGALO
+  | ESCUCHA ABRECUENTO incienzo_expression CIERRACUENTO FINREGALO 
   ;
 
 belen_function_call_statement ::= PERSONA ABRECUENTO reyes_magicos_list_expr CIERRACUENTO FINREGALO;
@@ -219,6 +218,12 @@ incienzo_expression ::= bastoncillo_arithmetic_expr
        | belen_function_call_statement
        ;
 
+
+
+
+
+
+
 //Expresion general numérica, básicamente cualquier elemento que pueda retornar un número
 burro_general_numerical_expr::= bastoncillo_arithmetic_expr
     | PERSONA
@@ -236,11 +241,6 @@ mula_general_boolean_expr::= galleta_logic_expr
     | l_f_CLAUS
     ;
 
-//Expresion general string, básicamente cualquier elemento que pueda retornar un string
-pez_general_string_expr::= PERSONA
-    | belen_function_call_statement
-    | l_SANTA
-    ;
 // Expresiones aritméticas
 bastoncillo_arithmetic_expr ::= burro_general_numerical_expr TRUENO burro_general_numerical_expr // Resta 
     | burro_general_numerical_expr RODOLFO burro_general_numerical_expr // Suma
@@ -253,13 +253,13 @@ bastoncillo_arithmetic_expr ::= burro_general_numerical_expr TRUENO burro_genera
     | ABRECUENTO burro_general_numerical_expr CIERRACUENTO // Expresiones entre paréntesis
 	;
 
-
-
 // Expresiones lógicas
 galleta_logic_expr ::= mula_general_boolean_expr GASPAR mula_general_boolean_expr // Y lógico
     | mula_general_boolean_expr MELCHOR mula_general_boolean_expr // O lógico
     | BALTASAR mula_general_boolean_expr // Negación lógica
 	;
+
+
 
 // Expresiones relacionales
 leche_relational_expr ::= burro_general_numerical_expr ALABASTRO burro_general_numerical_expr // Igual

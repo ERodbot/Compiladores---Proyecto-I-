@@ -240,7 +240,7 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
     }
 }
 
-.                                  {return symbol(sym.ERRORNOTRECOGNIZED);}
+[^]                                  {return symbol(sym.ERRORNOTRECOGNIZED);}
 
 
 
