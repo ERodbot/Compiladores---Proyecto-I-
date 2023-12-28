@@ -102,17 +102,22 @@ non terminal   main, saco_function_definition, arbol_constant, gorro_navidad_typ
 			   leche_relational_expr, burro_general_numerical_expr, mula_general_boolean_expr, pez_general_string_expr;
 
 // Precedence and associativity
-
+precedence left ALABASTRO, EVERGEEN; // == !=
+precedence left MINSTIX, UPATREE, OPENSLAE, MARY;//<== ETC
+precedence left ABRECUENTO, CIERRACUENTO;	//()
+precedence left GASPAR;//AND
+precedence left MELCHOR; //OR
+precedence left BALTASAR;//NOT
 precedence left TRUENO, RODOLFO; //resta
 precedence left JUGUETON, RELAMPAGO;  //division, multiplicacion
 precedence left CUPIDO, COMETA; // mod, exponente
 precedence left QUIEN, GRINCH; // Increment and decrement
-precedence left ALABASTRO, EVERGEEN;
-precedence left MINSTIX, UPATREE, OPENSLAE, MARY;
-precedence left ABRECUENTO, CIERRACUENTO;	
-precedence left GASPAR;
-precedence left MELCHOR; 
-precedence left BALTASAR;
+//precedence left ALABASTRO, EVERGEEN;  == !=
+//precedence left MINSTIX, UPATREE, OPENSLAE, MARY; <== ETC
+//precedence left ABRECUENTO, CIERRACUENTO;	()
+//precedence left GASPAR; AND
+//precedence left MELCHOR; OR
+//precedence left BALTASAR; NOT
 
 
 start with main;
@@ -250,7 +255,7 @@ bastoncillo_arithmetic_expr ::= burro_general_numerical_expr TRUENO burro_genera
     | burro_general_numerical_expr COMETA burro_general_numerical_expr //Exponente
     | QUIEN PERSONA %prec QUIEN // Incremento prefijo
     | GRINCH PERSONA %prec GRINCH // Decremento prefijo
-    | ABRECUENTO burro_general_numerical_expr CIERRACUENTO // Expresiones entre paréntesis
+    | ABRECUENTO bastoncillo_arithmetic_expr CIERRACUENTO // Expresiones entre paréntesis
 	;
 
 
@@ -259,6 +264,7 @@ bastoncillo_arithmetic_expr ::= burro_general_numerical_expr TRUENO burro_genera
 galleta_logic_expr ::= mula_general_boolean_expr GASPAR mula_general_boolean_expr // Y lógico
     | mula_general_boolean_expr MELCHOR mula_general_boolean_expr // O lógico
     | BALTASAR mula_general_boolean_expr // Negación lógica
+    | ABRECUENTO galleta_logic_expr CIERRACUENTO // Expresiones entre paréntesis
 	;
 
 // Expresiones relacionales
@@ -268,6 +274,7 @@ leche_relational_expr ::= burro_general_numerical_expr ALABASTRO burro_general_n
     | burro_general_numerical_expr UPATREE burro_general_numerical_expr // Mayor que
     | burro_general_numerical_expr OPENSLAE burro_general_numerical_expr // Menor o igual
     | burro_general_numerical_expr MARY burro_general_numerical_expr // Mayor o igual
+    | ABRECUENTO leche_relational_expr CIERRACUENTO // Expresiones entre paréntesis
     ;
 
 
