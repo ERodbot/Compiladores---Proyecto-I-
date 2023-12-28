@@ -102,12 +102,12 @@ non terminal   main, saco_function_definition, arbol_constant, gorro_navidad_typ
 			   leche_relational_expr, burro_general_numerical_expr, mula_general_boolean_expr, pez_general_string_expr;
 
 // Precedence and associativity
-precedence left ALABASTRO, EVERGEEN; // == !=
-precedence left MINSTIX, UPATREE, OPENSLAE, MARY;//<== ETC
-precedence left ABRECUENTO, CIERRACUENTO;	//()
 precedence left GASPAR;//AND
 precedence left MELCHOR; //OR
 precedence left BALTASAR;//NOT
+precedence left ALABASTRO, EVERGEEN; // == !=
+precedence left MINSTIX, UPATREE, OPENSLAE, MARY;//<== ETC
+precedence left ABRECUENTO, CIERRACUENTO;	//()
 precedence left TRUENO, RODOLFO; //resta
 precedence left JUGUETON, RELAMPAGO;  //division, multiplicacion
 precedence left CUPIDO, COMETA; // mod, exponente
