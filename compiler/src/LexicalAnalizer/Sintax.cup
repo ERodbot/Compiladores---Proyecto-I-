@@ -16,7 +16,16 @@ parser code {:
   public Sintax(LexerCup lex){
     this.lex=lex;
     this.symbolFactory= new DefaultSymbolFactory();
-  }
+  };
+
+public void report_error(String message, Object info) {
+        if (info instanceof Symbol) {
+            Symbol symbol = (Symbol) info;
+            System.err.println("Error en línea " + symbol.left + ", columna " + symbol.right + ": " + message);
+        } else {
+            System.err.println("Error: " + message);
+        }
+    };
 :}
 
 init with {: :};
@@ -95,11 +104,12 @@ terminal ERRORNOTRECOGNIZED;
 
 
 
-non terminal   main, saco_function_definition, arbol_constant, gorro_navidad_type_specifier, risa_santa, lazo_io_statement, belen_function_call_statement,
+non terminal   navidad, saco_function_definition, arbol_constant, gorro_navidad_type_specifier, statement_risa_santa, lazo_io_statement, belen_function_call_statement,
                calcetin_compound_statement, empaque_block_item_list, carta_block_item, deseos_selection_statement, 
 			   tradicion_elif_statement, caramelo_iteration_statement, calcetin_jump_statement, nochebuena_initializer, pino_initializer_list, campanas_initializer_list_integer,
-			   guirnaldas_initializer_list_char, estrella_assign_array, candelabro_assignment_expression, pesebre_args, reyes_magicos_list_expr, incienzo_expression, bastoncillo_arithmetic_expr, galleta_logic_expr, 
-			   leche_relational_expr, burro_general_numerical_expr, mula_general_boolean_expr;
+			   guirnaldas_initializer_list_char, estrella_assign_array, candelabro_assignment_expression, pesebre_args, reyes_magicos_list_expr, incienzo_expression, diciembre_operation_array, bastoncillo_arithmetic_expr, galleta_logic_expr, 
+			   leche_relational_expr;
+
 
 // Precedence and associativity
 
@@ -114,23 +124,27 @@ precedence left MELCHOR;
 precedence left BALTASAR;
 
 
-start with main;
+start with navidad;
 
-main ::= saco_function_definition
-	| main saco_function_definition
+//produccion de inicio
+navidad ::= saco_function_definition
+	| navidad saco_function_definition
 	;
 
-
-//nevada_external_declaration ::= saco_function_definition | risa_santa; 
-
-
+//definicion de funciones
 saco_function_definition ::= gorro_navidad_type_specifier RECORRIDO PERSONA ABRECUENTO pesebre_args CIERRACUENTO calcetin_compound_statement FINREGALO
     | gorro_navidad_type_specifier RECORRIDO PERSONA ABRECUENTO  CIERRACUENTO calcetin_compound_statement FINREGALO;
 
+//constantes
+arbol_constant ::= l_NOEL:l_int {:RESULT = l_int;:}	
+    | l_NICOLAS:l_flo {:RESULT = l_flo;:} 
+    | l_COLACHO:l_ch {:RESULT = l_ch;:}
+    | l_SANTA:l_st {:RESULT = l_st;:}
+    | l_t_CLAUS:l_t {:RESULT = l_t;:} 
+    | l_f_CLAUS:l_f {:RESULT = l_f;:}
+    | NARIZROJA:nil {:RESULT = nil;:};
 
-arbol_constant ::= l_NOEL	| l_NICOLAS | l_COLACHO | l_SANTA | l_t_CLAUS | l_f_CLAUS | NARIZROJA;
-
-
+//tipos
 gorro_navidad_type_specifier ::= SINREGALO
   | COLACHO
   | SANTA
@@ -139,8 +153,8 @@ gorro_navidad_type_specifier ::= SINREGALO
   | CLAUS
   ;
 
-
-risa_santa ::= calcetin_compound_statement
+//estatuo 
+statement_risa_santa ::= calcetin_compound_statement
 	| candelabro_assignment_expression
 	| deseos_selection_statement
 	| caramelo_iteration_statement
@@ -149,125 +163,118 @@ risa_santa ::= calcetin_compound_statement
 	| belen_function_call_statement
 	;
 
+//estatuo de input/output
 lazo_io_statement ::= NARRA ABRECUENTO incienzo_expression CIERRACUENTO FINREGALO
   | ESCUCHA ABRECUENTO incienzo_expression CIERRACUENTO FINREGALO 
   ;
 
+//llamada a funcion
 belen_function_call_statement ::= PERSONA ABRECUENTO reyes_magicos_list_expr CIERRACUENTO FINREGALO;
 
+//bloque de codigo
 calcetin_compound_statement ::= ABREREGALO CIERRAREGALO
 	| ABREREGALO empaque_block_item_list CIERRAREGALO
 	;
 
+//items de bloque de codigo
 empaque_block_item_list ::= carta_block_item | empaque_block_item_list carta_block_item;
 
-carta_block_item ::= risa_santa;
-	
-deseos_selection_statement ::= ELFO ABRECUENTO mula_general_boolean_expr CIERRACUENTO calcetin_compound_statement FINREGALO                                             // if () {};
-	| ELFO ABRECUENTO mula_general_boolean_expr CIERRACUENTO calcetin_compound_statement DUENDE calcetin_compound_statement FINREGALO                             // if () {} else {};
-    | ELFO ABRECUENTO mula_general_boolean_expr CIERRACUENTO calcetin_compound_statement tradicion_elif_statement DUENDE calcetin_compound_statement FINREGALO           // if () {} elif () {} else() {};
-	| ELFO ABRECUENTO mula_general_boolean_expr CIERRACUENTO calcetin_compound_statement tradicion_elif_statement    // if () {} elif () {}
+//elementos de bloque de codigo
+carta_block_item ::= statement_risa_santa;
+
+//estatuos logicos	
+deseos_selection_statement ::= ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement FINREGALO                                             // if () {};
+	| ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement DUENDE calcetin_compound_statement FINREGALO                                   // if () {} else {};
+    | ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement tradicion_elif_statement DUENDE calcetin_compound_statement FINREGALO          // if () {} elif () {} else() {};
     ;
 
-tradicion_elif_statement ::=  HADA  ABRECUENTO mula_general_boolean_expr CIERRACUENTO calcetin_compound_statement
-	| tradicion_elif_statement HADA  ABRECUENTO mula_general_boolean_expr CIERRACUENTO calcetin_compound_statement;
+//elifs
+tradicion_elif_statement ::=  HADA  ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement
+	| tradicion_elif_statement HADA  ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement;
 
-
-caramelo_iteration_statement ::= HACE risa_santa REVISA ABRECUENTO mula_general_boolean_expr CIERRACUENTO FINREGALO
-	| ENVUELVE ABRECUENTO candelabro_assignment_expression CHIMENEA leche_relational_expr CHIMENEA incienzo_expression CIERRACUENTO risa_santa FINREGALO 
+//iterracion
+caramelo_iteration_statement ::= HACE statement_risa_santa REVISA ABRECUENTO incienzo_expression CIERRACUENTO FINREGALO //do while
+	| ENVUELVE ABRECUENTO candelabro_assignment_expression CHIMENEA leche_relational_expr CHIMENEA incienzo_expression CIERRACUENTO statement_risa_santa FINREGALO //for
 	;
 
-
-calcetin_jump_statement ::= CORTA FINREGALO
-	| ENVIA FINREGALO
-	| ENVIA incienzo_expression FINREGALO
+//terminacion de ciclos y retornos
+calcetin_jump_statement ::= CORTA FINREGALO     //break
+	| ENVIA FINREGALO                           //return|
+	| ENVIA incienzo_expression FINREGALO       //return 5+2|
 	;
 
-nochebuena_initializer ::=  ABREREGALO pino_initializer_list CIERRAREGALO
+//inicializacion de un array 
+nochebuena_initializer ::=  ABREREGALO pino_initializer_list CIERRAREGALO      // {1,2,3,4...}
     | ABREREGALO CIERRAREGALO ;
 
-pino_initializer_list ::= campanas_initializer_list_integer | guirnaldas_initializer_list_char;
+//elementos de un array sin importar su tipo
+pino_initializer_list ::= campanas_initializer_list_integer | guirnaldas_initializer_list_char;   // {1,2,3,4} o {'a','b','c'}
 
+//elementos de lista con integer
 campanas_initializer_list_integer ::= l_NOEL | campanas_initializer_list_integer CHIMENEA l_NOEL ;
 
+//elementos de lista con char
 guirnaldas_initializer_list_char ::= l_COLACHO | guirnaldas_initializer_list_char CHIMENEA l_COLACHO ;
 
-estrella_assign_array ::= gorro_navidad_type_specifier PERSONA ABREEMPAQUE CIERRAEMPAQUE 
-	| gorro_navidad_type_specifier ABREEMPAQUE CIERRAEMPAQUE
-	| gorro_navidad_type_specifier PERSONA ABREEMPAQUE burro_general_numerical_expr CIERRAEMPAQUE  
-	| gorro_navidad_type_specifier ABREEMPAQUE burro_general_numerical_expr CIERRAEMPAQUE
+//asignacion de arrays (parte izquierda)
+estrella_assign_array ::= gorro_navidad_type_specifier PERSONA ABREEMPAQUE CIERRAEMPAQUE      //int id[]
+	| gorro_navidad_type_specifier ABREEMPAQUE CIERRAEMPAQUE                                  //int []
+	| gorro_navidad_type_specifier PERSONA ABREEMPAQUE incienzo_expression CIERRAEMPAQUE      //int id[4]
+	| gorro_navidad_type_specifier ABREEMPAQUE incienzo_expression CIERRAEMPAQUE              //int [4]
 	;
 
-candelabro_assignment_expression ::= gorro_navidad_type_specifier PERSONA ENTREGA incienzo_expression FINREGALO
-	| estrella_assign_array FINREGALO
-	| estrella_assign_array ENTREGA nochebuena_initializer FINREGALO
-	| estrella_assign_array ENTREGA incienzo_expression FINREGALO
+//expresiones de asignacion 
+candelabro_assignment_expression ::= gorro_navidad_type_specifier PERSONA ENTREGA incienzo_expression FINREGALO  //int id = 5|
+	| estrella_assign_array FINREGALO        // int id[4]| ó int[4] ...|
+	| estrella_assign_array ENTREGA nochebuena_initializer FINREGALO  // int id[4] = {1,2,3,4}
+	| estrella_assign_array ENTREGA incienzo_expression FINREGALO      //idAlreadyDeclared[2] = 2 ó idAlreadyDelcared[2] = ++idAlreadyDeclared[2]
 	;
 
+//argumentos para definicion de funciones 
 pesebre_args ::= gorro_navidad_type_specifier PERSONA | pesebre_args CHIMENEA gorro_navidad_type_specifier PERSONA;
 
-
+//incremento o decremento con asignacion en arrays
 reyes_magicos_list_expr ::=  PERSONA | reyes_magicos_list_expr CHIMENEA PERSONA;
 
-
-incienzo_expression ::= bastoncillo_arithmetic_expr
-       | galleta_logic_expr
-       | leche_relational_expr
-       | arbol_constant
-       | PERSONA  // Identificador
-       | belen_function_call_statement
+incienzo_expression ::= arbol_constant                      // literales
+       | PERSONA                                            // Identificador                          
+       | ABRECUENTO incienzo_expression CIERRACUENTO        // ( expresion )
+       | belen_function_call_statement                      // llamada a function
+       | bastoncillo_arithmetic_expr                        // operacion aritmetica
+       | galleta_logic_expr                                 // operacion logica
+       | leche_relational_expr                              // operacion relacional
        ;
 
+diciembre_operation_array ::= QUIEN estrella_assign_array
+    | GRINCH estrella_assign_array; 
 
 
-
-
-
-
-//Expresion general numérica, básicamente cualquier elemento que pueda retornar un número
-burro_general_numerical_expr::= bastoncillo_arithmetic_expr
-    | PERSONA
-    | belen_function_call_statement
-    | l_NICOLAS
-    | l_NOEL
-    ;
-
-//Expresion general booleana, básicamente cualquier elemento que pueda retornar un booleano
-mula_general_boolean_expr::= galleta_logic_expr
-    | leche_relational_expr
-    | PERSONA
-    | belen_function_call_statement
-    | l_t_CLAUS
-    | l_f_CLAUS
-    ;
 
 // Expresiones aritméticas
-bastoncillo_arithmetic_expr ::= burro_general_numerical_expr TRUENO burro_general_numerical_expr // Resta 
-    | burro_general_numerical_expr RODOLFO burro_general_numerical_expr // Suma
-    | burro_general_numerical_expr JUGUETON burro_general_numerical_expr // División 
-    | burro_general_numerical_expr RELAMPAGO burro_general_numerical_expr // Multiplicación
-    | burro_general_numerical_expr CUPIDO burro_general_numerical_expr // Modulo
-    | burro_general_numerical_expr COMETA burro_general_numerical_expr //Exponente
-    | QUIEN PERSONA %prec QUIEN // Incremento prefijo
-    | GRINCH PERSONA %prec GRINCH // Decremento prefijo
-    | ABRECUENTO burro_general_numerical_expr CIERRACUENTO // Expresiones entre paréntesis
+bastoncillo_arithmetic_expr ::= incienzo_expression TRUENO incienzo_expression                // Resta 
+    | incienzo_expression:a RODOLFO incienzo_expression:b                                     // Suma
+    | incienzo_expression:a JUGUETON incienzo_expression:b                                    // División 
+    | incienzo_expression:a RELAMPAGO incienzo_expression:b                                   // Multiplicación
+    | incienzo_expression:a CUPIDO incienzo_expression:b                                      // Modulo
+    | incienzo_expression:a COMETA incienzo_expression:b                                      //Exponente
+    | QUIEN PERSONA:id                                                                                               // Incremento prefijo
+    | GRINCH PERSONA:id                                                                                                   // Decremento prefijo
+    | diciembre_operation_array                                                                                                                     // Decr o Incr con indice array
 	;
 
 // Expresiones lógicas
-galleta_logic_expr ::= mula_general_boolean_expr GASPAR mula_general_boolean_expr // Y lógico
-    | mula_general_boolean_expr MELCHOR mula_general_boolean_expr // O lógico
-    | BALTASAR mula_general_boolean_expr // Negación lógica
-	;
-
-
-
+galleta_logic_expr ::= incienzo_expression GASPAR incienzo_expression               // Y lógico
+    | incienzo_expression MELCHOR incienzo_expression                               // O lógico
+    | BALTASAR incienzo_expression // Negación lógica                               // No lógico
+    ;
+  
 // Expresiones relacionales
-leche_relational_expr ::= burro_general_numerical_expr ALABASTRO burro_general_numerical_expr // Igual
-    | burro_general_numerical_expr EVERGEEN burro_general_numerical_expr // No igual
-    | burro_general_numerical_expr MINSTIX burro_general_numerical_expr // Menor que
-    | burro_general_numerical_expr UPATREE burro_general_numerical_expr // Mayor que
-    | burro_general_numerical_expr OPENSLAE burro_general_numerical_expr // Menor o igual
-    | burro_general_numerical_expr MARY burro_general_numerical_expr // Mayor o igual
+leche_relational_expr ::= incienzo_expression ALABASTRO incienzo_expression         // Igual
+    | incienzo_expression EVERGEEN incienzo_expression                              // No igual
+    | incienzo_expression MINSTIX incienzo_expression                               // Menor que
+    | incienzo_expression UPATREE incienzo_expression                               // Mayor que
+    | incienzo_expression OPENSLAE incienzo_expression                              // Menor o igual
+    | incienzo_expression MARY incienzo_expression                                  // Mayor o igual
     ;
 
 

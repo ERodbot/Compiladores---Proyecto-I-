@@ -134,10 +134,10 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
 "null"                             {return symbol(sym.NARIZROJA);}
 
 //literaltrue
-<YYINITIAL> "true"                 {return symbol(sym.l_t_CLAUS);}
+<YYINITIAL> "true"                 {return symbol(sym.l_t_CLAUS, yytext());}
 
 //literalfalse
-<YYINITIAL> "false"                {return symbol(sym.l_f_CLAUS);}
+<YYINITIAL> "false"                {return symbol(sym.l_f_CLAUS, yytext());}
 
 //function
 <YYINITIAL> "function"             {return symbol(sym.RECORRIDO);}
@@ -155,10 +155,10 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
    {MultipleLineComment}           {/*skip*/}
 
    /*decimal integer literal*/
-   {LiteralDecimalInteger}         {return symbol(sym.l_NOEL);}
+   {LiteralDecimalInteger}         {return symbol(sym.l_NOEL, yytext());}
 
    /*decimal float literal*/
-   {LiteralDecimalFloat}           {return symbol(sym.l_NICOLAS);}
+   {LiteralDecimalFloat}           {return symbol(sym.l_NICOLAS, yytext());}
 
    /*unarian operators*/
    {Decrement}                     {return symbol(sym.GRINCH);}
