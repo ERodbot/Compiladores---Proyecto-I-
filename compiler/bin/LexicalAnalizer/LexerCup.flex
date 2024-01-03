@@ -96,11 +96,11 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
 //reserved words 
 
 //types
-<YYINITIAL> "integer"              {return symbol(sym.NOEL);}
-<YYINITIAL> "float"                {return symbol(sym.NICOLAS);} 
-<YYINITIAL> "string"               {return symbol(sym.SANTA);}
-<YYINITIAL> "char"                 {return symbol(sym.COLACHO);}
-<YYINITIAL> "boolean"              {return symbol(sym.CLAUS);}
+<YYINITIAL> "integer"              {return symbol(sym.NOEL, yytext());}
+<YYINITIAL> "float"                {return symbol(sym.NICOLAS, yytext());} 
+<YYINITIAL> "string"               {return symbol(sym.SANTA, yytext());}
+<YYINITIAL> "char"                 {return symbol(sym.COLACHO, yytext());}
+<YYINITIAL> "boolean"              {return symbol(sym.CLAUS, yytext());}
 
 //control structures
 <YYINITIAL> "if"                   {return symbol(sym.ELFO);}                               
@@ -128,16 +128,19 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
 "<="                               {return symbol(sym.ENTREGA);}
 
 //void
-"void"                             {return symbol(sym.SINREGALO);}
+"void"                             {return symbol(sym.SINREGALO, yytext());}
 
 //null
-"null"                             {return symbol(sym.NARIZROJA);}
+"null"                             {return symbol(sym.NARIZROJA, yytext());}
 
 //literaltrue
 <YYINITIAL> "true"                 {return symbol(sym.l_t_CLAUS, yytext());}
 
 //literalfalse
 <YYINITIAL> "false"                {return symbol(sym.l_f_CLAUS, yytext());}
+
+//main 
+<YYINITIAL> "main"                 {return symbol(sym.MAINNAVIDAD);}
 
 //function
 <YYINITIAL> "function"             {return symbol(sym.RECORRIDO);}
@@ -190,7 +193,7 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
     {RightKey}                     {return symbol(sym.CIERRAREGALO);}
 
      //identifier identifier        
-    {Identifier}                     {return symbol(sym.PERSONA);}
+    {Identifier}                     {return symbol(sym.PERSONA, yytext());}
 
     //eol(end of line);
     {LineEnder}                      {/*skip*/} 

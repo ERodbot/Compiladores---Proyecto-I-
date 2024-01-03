@@ -8,17 +8,17 @@ package LexicalAnalizer;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int RECORRIDO = 50;
+  public static final int RECORRIDO = 51;
   public static final int NICOLAS = 3;
   public static final int MINSTIX = 33;
   public static final int l_SANTA = 16;
   public static final int CHIMENEA = 13;
-  public static final int FINREGALO = 52;
+  public static final int FINREGALO = 53;
   public static final int HADA = 19;
-  public static final int PERSONA = 51;
+  public static final int PERSONA = 52;
   public static final int CIERRACUENTO = 8;
   public static final int l_COLACHO = 17;
-  public static final int ERRORNOTRECOGNIZED = 53;
+  public static final int ERRORNOTRECOGNIZED = 54;
   public static final int DUENDE = 20;
   public static final int ENTREGA = 39;
   public static final int CIERRAREGALO = 12;
@@ -55,6 +55,7 @@ public class sym {
   public static final int CUPIDO = 49;
   public static final int ENVIA = 24;
   public static final int SINREGALO = 29;
+  public static final int MAINNAVIDAD = 50;
   public static final int CLAUS = 6;
   public static final int COLACHO = 5;
   public static final int ALABASTRO = 30;
@@ -113,6 +114,7 @@ public class sym {
   "JUGUETON",
   "COMETA",
   "CUPIDO",
+  "MAINNAVIDAD",
   "RECORRIDO",
   "PERSONA",
   "FINREGALO",
