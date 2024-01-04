@@ -38,19 +38,24 @@ action code {:
 
 parser code {:
   LexerCup lex;
+  public ArrayList<String> errores = new ArrayList<String>();
   @SuppressWarnings("deprecation")
   public Sintax(LexerCup lex){
     this.lex=lex;
     this.symbolFactory= new DefaultSymbolFactory();
   };
-public void report_error(Object info) {
-        if (info instanceof Symbol) {
-            Symbol symbol = (Symbol) info;
-            System.err.println("Error en línea " + symbol.left + ", columna " + symbol.right + ": ");
-        } else {
-            System.err.println("Error: no se pudo recuperar el token de origen para el error sintáctico");
-        }
-    };
+public void syntax_error(Symbol cur_token){
+    if (cur_token!=null){
+        System.err.println("Error de sintaxis en la línea " + (cur_token.left+1) + " y columna " + (cur_token.right+1)+ ".");
+        this.errores.add("Error de sintaxis en la línea " + (cur_token.left+1) + " y columna " + (cur_token.right+1)+ ".");
+    }
+    else{
+        System.err.println("Error de sintaxis en la línea " + (cur_token.left+1) + " y columna " + (cur_token.right+1)+". Token: "+ cur_token.value);
+        this.errores.add("Error de sintaxis en la línea " + (cur_token.left+1) + " y columna " + (cur_token.right+1)+". Token: "+ cur_token.value);
+    }
+	
+}
+
 public void unrecovered_syntax_error(Symbol token) throws java.lang.Exception {
     throw new Exception("Error de sintaxis no puede ser recuperado. Encontrado en la línea " + token.left + " colúmna " + token.right + ": " + token.value);
   }
@@ -176,8 +181,9 @@ saco_function_definition_aux ::=  SINREGALO MAINNAVIDAD ABRECUENTO CIERRACUENTO 
                                                                                                          anadirSimbolo(new SymbolT("function", ty.toString(), id.toString()));:}
      pesebre_args CIERRACUENTO                                                                                                      
     | gorro_navidad_type_specifier:ty RECORRIDO PERSONA:id ABRECUENTO CIERRACUENTO                       {:definirHash(id.toString());
-                                                                                                         anadirSimbolo(new SymbolT("function", ty.toString(), id.toString()));:};
+                                                                                                         anadirSimbolo(new SymbolT("function", ty.toString(), id.toString()));:}
 
+    ;
 
 //constantes
 arbol_constant ::= l_NOEL:l_int {:RESULT = l_int;:}	
@@ -205,6 +211,7 @@ statement_risa_santa ::= calcetin_compound_statement
 	| calcetin_jump_statement
     | lazo_io_statement
 	| belen_function_call_statement
+    | error FINREGALO 
 	;
 
 //estatuo de input/output
@@ -278,7 +285,7 @@ candelabro_assignment_expression ::= gorro_navidad_type_specifier:ty PERSONA:id 
 	;
 
 //argumentos para definicion de funciones 
-pesebre_args ::=  pesebre_arg | pesebre_args CHIMENEA pesebre_arg;
+pesebre_args ::=  pesebre_arg | pesebre_args CHIMENEA pesebre_arg| pesebre_args CHIMENEA error|error;
 
 pesebre_arg ::= gorro_navidad_type_specifier:ty PERSONA:id  
                 {:anadirSimbolo(new SymbolT("argumento de funcion", ty.toString(), id.toString()));:}     
