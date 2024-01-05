@@ -57,7 +57,7 @@ public void syntax_error(Symbol cur_token){
 }
 
 public void unrecovered_syntax_error(Symbol token) throws java.lang.Exception {
-    throw new Exception("Error de sintaxis no puede ser recuperado. Encontrado en la línea " + token.left + " colúmna " + token.right + ": " + token.value);
+    throw new Exception("Error de sintaxis no puede ser recuperado. Encontrado en la línea " + (cur_token.left+1) + " colúmna " + (cur_token.right+1) + ". Token que generó el error: " + token.value);
   }
 
 :}
@@ -170,6 +170,8 @@ navidad ::= {:System.out.println("Inicio de parseo");:}
 
 navidadAux ::= saco_function_definition
 	| navidadAux saco_function_definition
+    | navidadAux error
+    | error
 	;
 
 //definicion de funciones
@@ -182,7 +184,7 @@ saco_function_definition_aux ::=  SINREGALO MAINNAVIDAD ABRECUENTO CIERRACUENTO 
      pesebre_args CIERRACUENTO                                                                                                      
     | gorro_navidad_type_specifier:ty RECORRIDO PERSONA:id ABRECUENTO CIERRACUENTO                       {:definirHash(id.toString());
                                                                                                          anadirSimbolo(new SymbolT("function", ty.toString(), id.toString()));:}
-
+    |error RECORRIDO PERSONA:id ABRECUENTO pesebre_args CIERRACUENTO 
     ;
 
 //constantes
