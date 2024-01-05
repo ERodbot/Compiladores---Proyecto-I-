@@ -1,5 +1,5 @@
  
- kendall function hola (integer volumen, float nicolasRojo) {
+ void function hola (integer volumen, float nicolasRojo) {
     float nicolasRojo <= "grey god"| 
     integer i <= 1| 
     char holaMundo <= "strong"|
