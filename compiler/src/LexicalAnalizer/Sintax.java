@@ -6,6 +6,10 @@
 package LexicalAnalizer;
 
 import java_cup.runtime.*;
+import FileWriter.FileWriterUtil;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
@@ -648,11 +652,11 @@ public void syntax_error(Symbol cur_token){
 
 public void unrecovered_syntax_error(Symbol token) throws java.lang.Exception {
     if (token!=null){
-        throw new Exception("Error de sintaxis no puede ser recuperado. Encontrado en la línea " + (token.left+1) + " colúmna " + (token.right+1) + ". Token que generó el error: " + lex.yytext());
+        throw new Exception("Error de sintaxis no puede ser recuperado. Encontrado en la línea " + (token.left+1) + " columna " + (token.right+1) + ". Token que generó el error: " + lex.yytext());
   
     }
     else{
-        throw new Exception("Error de sintaxis no puede ser recuperado. Encontrado en la línea " + (token.left+1) + " colúmna " + (token.right+1) + ". Token que generó el error: " + token.value);
+        throw new Exception("Error de sintaxis no puede ser recuperado. Encontrado en la línea " + (token.left+1) + " columna " + (token.right+1) + ". Token que generó el error: " + token.value);
     }
     
 }
@@ -670,14 +674,43 @@ class CUP$Sintax$actions {
 
     public void imprimirTablaSimbolos(){
         for (String key: listaTablasSimbolos.keySet()){
-            System.out.println("Tabla de simbolos: " + key);
-            System.out.println("Valores: ");
+
+            System.out.println("\n\n\n°-------------------------------------------------------------------------------------°");
+            System.out.println("\n\t\t\t\tTabla de simbolos: " + key + "\n");
+            System.out.println("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            System.out.println("\t\t\t\t\tValores:");
+            System.out.println("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+
+            System.out.println("\t\t" + String.format("%-20s %-20s %-20s", "valor", "tipo", "lexema") + "\n");
             for (SymbolT item: listaTablasSimbolos.get(key)) {
-                System.out.println(item.toString());
+                System.out.println("\t\t" + item.toString());
             }
+            System.out.println("\n\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
             System.out.println("");
+            System.out.println("°-------------------------------------------------------------------------------------°");
         }
     }
+
+    String MarkdownFilePath = "C:\\Users\\em000\\Documents\\School\\School\\2023_TEC\\Verano\\Compiladores e interpretes\\Proyecto-1\\Compiladores---Proyecto-I-\\compiler\\testExamples\\SymbolTable.md";
+    
+    public void guardarTablaSimbolos(){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(MarkdownFilePath))) {
+            for (Map.Entry<String, ArrayList<SymbolT>> entry : listaTablasSimbolos.entrySet()) {
+                writer.write("## " + entry.getKey() + "\n\n");
+                writer.write("| Valor | Tipo | Lexema |\n");
+                writer.write("|-------|------|--------|\n");
+                for (SymbolT symbol : entry.getValue()) {
+                    writer.write("| " + symbol.getValor() + " | " + symbol.getTipo() + " | " + symbol.getLexema() + " |\n");
+                }
+                writer.write("\n");
+            }
+            System.out.println("Markdown file created successfully: " + MarkdownFilePath);
+        } catch (IOException e) {
+            System.err.println("Error writing the file: " + e.getMessage());
+        }
+    }
+
+    
 
     public void definirHash(String hash) {
         currentHash = hash;
@@ -739,7 +772,7 @@ System.out.println("Inicio de parseo");
               Object RESULT =null;
               // propagate RESULT from NT$0
                 RESULT = (Object) ((java_cup.runtime.Symbol) CUP$Sintax$stack.elementAt(CUP$Sintax$top-1)).value;
-		imprimirTablaSimbolos(); System.out.println("Fin de parseo");
+		imprimirTablaSimbolos(); guardarTablaSimbolos(); System.out.println("Fin de parseo");
               CUP$Sintax$result = parser.getSymbolFactory().newSymbol("navidad",0, ((java_cup.runtime.Symbol)CUP$Sintax$stack.elementAt(CUP$Sintax$top-1)), ((java_cup.runtime.Symbol)CUP$Sintax$stack.peek()), RESULT);
             }
           return CUP$Sintax$result;

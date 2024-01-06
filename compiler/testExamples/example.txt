@@ -1,5 +1,7 @@
  
- < function hola (integer volumen, float nicolasRojo) {
+
+
+integer function hola (integer volumen, float nicolasRojo ) {
     float nicolasRojo <= "grey god"| 
     integer i <= 1| 
     char holaMundo <= "strong"|
@@ -8,7 +10,7 @@
     char array[] <= {1,2,3,4}|
     char array[]|
     char array[4] <= {1,2,3,4} |
-    char array[1]|
+    char array[1]| = 1 |
 
 
     integer g <= (5 + ++er - --nicolasRojo * (5)~1 >== 60) # true |
@@ -34,7 +36,8 @@
  }|
 
 integer function gogo () {
-    integer var <= hola(mal, vola)||
-    return var|
-    return hola(mal, vola)||
-}|
+     integer var <= hola(mal, vola)||
+     return var|
+     return hola(mal, vola)||
+ }|
+

@@ -22,6 +22,6 @@ public class SymbolT {
     }
 
     public String toString(){
-        return ("\t" +  lexema + "\t" + tipo + "\t" + valor );
+        return String.format("%-20s %-20s %-20s", valor, tipo, lexema );
     }
 }

@@ -1,6 +1,8 @@
 package Main;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,11 +13,13 @@ import java.nio.file.Paths;
 
 import LexicalAnalizer.LexerCup;
 import LexicalAnalizer.Sintax;
+import LexicalAnalizer.sym;
 
 import java_cup.Lexer;
-import LexicalAnalizer.sym;
 import java_cup.runtime.Symbol;
 import jflex.anttask.JFlexTask;
+
+import java.io.IOException;
 
 
 //Acá se genera el archivo Lexer.java, si se hacen modificaciones en los tokens o en el lexer.flex debería regenerarse el archivo
@@ -54,40 +58,54 @@ public class App {
         Reader reader = new BufferedReader(new FileReader(scannerPath));
         reader.read();
         LexerCup lexer = new LexerCup(reader);
-        Sintax sintax = new Sintax(lexer);
-        sintax.parse();
-
-
-        
         int i = 0;
         Symbol token;
-    
         // Print table header
-        System.out.printf("%-20s %-20s %-20s %-20s %-20s %n", "Tipo de símbolo", "Símbolo", "Número de símbolo", "Línea", "Columna");
-        System.out.println("-------------------------------------------------------------------------------------------");
-    
-        while (true) {
-            token = lexer.next_token();
-    
-            if (token.sym != 0) {
-                String symbolType = sym.terminalNames[token.sym];
-                String symbol = (token.sym == 16|token.sym==17) ? token.value.toString() : lexer.yytext();
-                int symbolNumber = token.sym;
-                int line = token.left;
-                int column = token.right;
-    
-                // Print table row
-                System.out.printf("%-20s %-20s %-20s %-20d %-20d %n", symbolType, symbol.toString(), symbolNumber, line, column);
-                i++;
-    
-                
-            } else {
-                break;
-            }
-        }
+        String tokenListPath = "C:\\Users\\em000\\Documents\\School\\School\\2023_TEC\\Verano\\Compiladores e interpretes\\Proyecto-1\\Compiladores---Proyecto-I-\\compiler\\testExamples\\tokenList.txt";
+        String header = String.format("%-20s %-20s %-20s %-20s %-20s %n", "Tipo de símbolo", "Símbolo", "Número de símbolo", "Línea", "Columna");
+        String divider = "-------------------------------------------------------------------------------------------"; 
+
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(tokenListPath))) {
+            writer.write(header);
+            writer.write(divider + "\n");
+            System.out.println(header);
+            System.out.println(divider);
         
-        System.out.println("Cantidad de lexemas encontrados: " + i);
-        System.out.println("-------------------------------------------------------------------------------------------");
+            while (true) {
+                token = lexer.next_token();
+        
+                if (token.sym != 0) {
+                    String symbolType = sym.terminalNames[token.sym];
+                    String symbol = (token.sym == 16|token.sym==17) ? token.value.toString() : lexer.yytext();
+                    int symbolNumber = token.sym;
+                    int line = token.left;
+                    int column = token.right;
+        
+                    // Print table row
+                    String row = String.format( "%-20s %-20s %-20s %-20d %-20d %n", symbolType, symbol.toString(), symbolNumber, line, column);
+                    System.out.println(row);
+                    writer.write(row);
+                    i++;
+        
+                    
+                } else {
+                    break;
+                }
+                System.out.println("Cantidad de lexemas encontrados: " + i);
+                System.out.println(divider + "\n\n\n");
+                writer.write(divider);
+
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing the file: " + e.getMessage());
+        }
+
+        reader = new BufferedReader(new FileReader(scannerPath));
+        reader.read();
+        lexer = new LexerCup(reader);
+        Sintax sintax = new Sintax(lexer);
+        sintax.parse();
     }
     
 }
