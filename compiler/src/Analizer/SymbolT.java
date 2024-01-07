@@ -1,4 +1,4 @@
-package LexicalAnalizer;
+package Analizer;
 
 public class SymbolT {
     private String lexema, tipo, valor;
