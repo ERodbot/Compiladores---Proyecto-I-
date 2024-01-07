@@ -11,9 +11,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import LexicalAnalizer.LexerCup;
-import LexicalAnalizer.Sintax;
-import LexicalAnalizer.sym;
+import Analizer.LexerCup;
+import Analizer.Sintax;
+import Analizer.sym;
 
 import java_cup.Lexer;
 import java_cup.runtime.Symbol;
@@ -27,8 +27,8 @@ public class App {
 
     public static void main(String[] args) throws Exception {
 
-        String pathLexerCup = System.getProperty("user.dir") + "/src/LexicalAnalizer/LexerCup.flex";
-        String[] pathS = { "-parser", "Sintax", (System.getProperty("user.dir") + "/src/LexicalAnalizer/Sintax.cup") };
+        String pathLexerCup = System.getProperty("user.dir") + "/src/Analizer/LexerCup.flex";
+        String[] pathS = { "-parser", "Sintax", (System.getProperty("user.dir") + "/src/Analizer/Sintax.cup") };
         generar(pathLexerCup, pathS);
         test(System.getProperty("user.dir") +"/testExamples/example.txt");
     }
@@ -38,25 +38,25 @@ public class App {
         jflex.Main.generate(paths);
         java_cup.Main.main(pathS);
 
-        Path pathSym = Paths.get((System.getProperty("user.dir") + "/src/LexicalAnalizer/sym.java"));
+        Path pathSym = Paths.get((System.getProperty("user.dir") + "/src/Analizer/sym.java"));
         if (Files.exists(pathSym)) {
             Files.delete(pathSym);
         }
 
         Files.move(Paths.get((System.getProperty("user.dir") + "/sym.java")),
-                Paths.get((System.getProperty("user.dir") + "/src/LexicalAnalizer/sym.java")));
+                Paths.get((System.getProperty("user.dir") + "/src/Analizer/sym.java")));
 
-        Path pathSin = Paths.get((System.getProperty("user.dir") + "/src/LexicalAnalizer/Sintax.java"));
+        Path pathSin = Paths.get((System.getProperty("user.dir") + "/src/Analizer/Sintax.java"));
         if (Files.exists(pathSin)) {
             Files.delete(pathSin);
         }
         Files.move(Paths.get((System.getProperty("user.dir") + "/Sintax.java")),
-                Paths.get((System.getProperty("user.dir") + "/src/LexicalAnalizer/Sintax.java")));
+                Paths.get((System.getProperty("user.dir") + "/src/Analizer/Sintax.java")));
     }
 
     public static void test(String scannerPath) throws IOException, Exception {
 
-        String tokenListPath = "C:\\Users\\em000\\Documents\\School\\School\\2023_TEC\\Verano\\Compiladores e interpretes\\Proyecto-1\\Compiladores---Proyecto-I-\\programa\\compiler\\testExamples\\tokenList.txt";
+        String tokenListPath = (System.getProperty("user.dir") +"/testExamples/tokenList.txt");
         lexAnalize(tokenListPath, scannerPath);
         sintaxAnilize(scannerPath);
 
