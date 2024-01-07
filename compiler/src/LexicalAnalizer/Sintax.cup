@@ -1,4 +1,4 @@
-package Analizer;
+package LexicalAnalizer;
 import java_cup.runtime.*;
 import FileWriter.FileWriterUtil; 
 import java.io.BufferedWriter;
