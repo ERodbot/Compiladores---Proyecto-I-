@@ -6,7 +6,6 @@
 package LexicalAnalizer;
 
 import java_cup.runtime.*;
-import FileWriter.FileWriterUtil;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
