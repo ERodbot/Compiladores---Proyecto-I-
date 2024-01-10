@@ -30,7 +30,7 @@ public class App {
         String pathLexerCup = System.getProperty("user.dir") + "/src/Analizer/LexerCup.flex";
         String[] pathS = { "-parser", "Sintax", (System.getProperty("user.dir") + "/src/Analizer/Sintax.cup") };
         generar(pathLexerCup, pathS);
-        test(System.getProperty("user.dir") +"/testExamples/example.txt");
+        test(System.getProperty("user.dir") +"/testExamples/ejemplo código 1.sintactico 2.txt");
     }
 
     public static void generar(String pathLexerCup, String[] pathS) throws IOException, Exception {

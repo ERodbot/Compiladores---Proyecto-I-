@@ -1,25 +1,44 @@
-## gogo
+## func1
 
 | Valor | Tipo | Lexema |
 |-------|------|--------|
-| gogo | integer | function |
-| var | integer | variable local |
+| func1 | float | function |
+| x22 | char | argumento de funcion |
+| x22 | char | argumento de funcion |
+| x22 | char | variable local |
+| miChar | char | variable local |
+| miChar2 | char | variable local |
+| str1 | string | variable local |
+| fl1 | float | variable local |
+| fl1 | float | variable local |
+| in1 | int | variable local |
+| arr | char | variable local |
+| mibool | bool | variable local |
+| in1 | int | variable local |
 
-## hola
+## miFunc
 
 | Valor | Tipo | Lexema |
 |-------|------|--------|
-| hola | integer | function |
-| volumen | integer | argumento de funcion |
-| nicolasRojo | float | argumento de funcion |
-| nicolasRojo | float | variable local |
-| i | integer | variable local |
-| holaMundo | char | variable local |
-| six | char | variable local |
-| array | char | variable local |
-| array | char | variable local |
-| array | char | variable local |
-| array | char | variable local |
-| g | integer | variable local |
-| i | integer | variable local |
+| miFunc | float | function |
+| dif | int | argumento de funcion |
+| otra | char | argumento de funcion |
+| otra2 | char | argumento de funcion |
+
+## main
+
+| Valor | Tipo | Lexema |
+|-------|------|--------|
+| Main | integer | function |
+| b1 | bool | variable local |
+| s1 | string | variable local |
+| bl0 | bool | variable local |
+| bl1 | bool | variable local |
+
+## func3
+
+| Valor | Tipo | Lexema |
+|-------|------|--------|
+| func3 | string | function |
+| b1 | string | argumento de funcion |
 

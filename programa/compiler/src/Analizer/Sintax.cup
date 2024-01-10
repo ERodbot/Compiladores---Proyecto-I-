@@ -77,6 +77,7 @@ parser code {:
     this.lex=lex;
     this.symbolFactory= new DefaultSymbolFactory();
   };
+/*
 public void syntax_error(Symbol cur_token){
 
      
@@ -104,7 +105,34 @@ public void unrecovered_syntax_error(Symbol token) throws java.lang.Exception {
     }
     
 }
+*/
+public void syntax_error(Symbol cur_token){
 
+     
+    if (cur_token!=null){
+        String cadenaError="Error de sintaxis en la línea " + (cur_token.left+1) + " y columna " + (cur_token.right+1)+ ". Token que generó el error: "+ lex.yytext();
+        System.err.println(cadenaError);
+        this.errores.add(cadenaError);
+        
+    }
+    else{
+        String cadenaError="Error de sintaxis en la línea " + (cur_token.left+1) + " y columna " + (cur_token.right+1)+". Token: "+ cur_token.value;
+        System.err.println(cadenaError);
+        this.errores.add(cadenaError);
+    }
+	
+}
+
+public void unrecovered_syntax_error(Symbol token) throws java.lang.Exception {
+    if (token!=null){
+        throw new Exception("Error de sintaxis no puede ser recuperado. Encontrado en la línea " + (token.left+1) + " columna " + (token.right+1) + ". Token que generó el error: " + lex.yytext());
+  
+    }
+    else{
+        throw new Exception("Error de sintaxis no puede ser recuperado. Encontrado en la línea " + (token.left+1) + " columna " + (token.right+1) + ". Token que generó el error: " + token.value);
+    }
+    
+}
 :}
 
 init with {: :};
@@ -193,7 +221,7 @@ non terminal   navidad, navidadAux, saco_function_definition_aux, saco_function_
                calcetin_compound_statement, empaque_block_item_list, carta_block_item, deseos_selection_statement, 
 			   tradicion_elif_statement, caramelo_iteration_statement, calcetin_jump_statement, nochebuena_initializer, pino_initializer_list, campanas_initializer_list_integer,
 			   guirnaldas_initializer_list_char, estrella_assign_array, candelabro_assignment_expression, pesebre_args, pesebre_arg, reyes_magicos_list_expr, incienzo_expression, diciembre_operation_array, bastoncillo_arithmetic_expr, galleta_logic_expr, 
-			   leche_relational_expr;
+			   leche_relational_expr, belen_function_call_expression;
 
 
 // Precedence and associativity
@@ -223,14 +251,14 @@ navidadAux ::= saco_function_definition
 	;
 
 //definicion de funciones
-saco_function_definition ::= saco_function_definition_aux  calcetin_compound_statement FINREGALO;
+saco_function_definition ::= saco_function_definition_aux  calcetin_compound_statement;
 
-saco_function_definition_aux ::=  SINREGALO MAINNAVIDAD ABRECUENTO CIERRACUENTO                          {:definirHash("main");
+saco_function_definition_aux ::=  RECORRIDO NOEL MAINNAVIDAD ABRECUENTO CIERRACUENTO                          {:definirHash("main");
                                                                                                          anadirSimbolo(new SymbolT("function", "integer", "Main"));:}
-    | gorro_navidad_type_specifier:ty RECORRIDO PERSONA:id ABRECUENTO                                    {:definirHash(id.toString());
+    | RECORRIDO gorro_navidad_type_specifier:ty  PERSONA:id ABRECUENTO                                    {:definirHash(id.toString());
                                                                                                          anadirSimbolo(new SymbolT("function", ty.toString(), id.toString()));:}
      pesebre_args CIERRACUENTO                                                                                                      
-    | gorro_navidad_type_specifier:ty RECORRIDO PERSONA:id ABRECUENTO CIERRACUENTO                       {:definirHash(id.toString());
+    | RECORRIDO gorro_navidad_type_specifier:ty PERSONA:id ABRECUENTO CIERRACUENTO                       {:definirHash(id.toString());
                                                                                                          anadirSimbolo(new SymbolT("function", ty.toString(), id.toString()));:}
     |error CIERRACUENTO
     ;
@@ -262,6 +290,7 @@ statement_risa_santa ::= calcetin_compound_statement
     | lazo_io_statement
 	| belen_function_call_statement
     | error FINREGALO 
+    | error CIERRAREGALO
 	;
 
 //estatuo de input/output
@@ -270,7 +299,7 @@ lazo_io_statement ::= NARRA ABRECUENTO incienzo_expression CIERRACUENTO FINREGAL
   ;
 
 //llamada a funcion
-belen_function_call_statement ::= PERSONA ABRECUENTO reyes_magicos_list_expr CIERRACUENTO FINREGALO;
+belen_function_call_expression ::= PERSONA ABRECUENTO reyes_magicos_list_expr CIERRACUENTO ;
 
 //bloque de codigo
 calcetin_compound_statement ::= ABREREGALO CIERRAREGALO
@@ -284,9 +313,10 @@ empaque_block_item_list ::= carta_block_item | empaque_block_item_list carta_blo
 carta_block_item ::= statement_risa_santa;
 
 //estatuos logicos	
-deseos_selection_statement ::= ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement FINREGALO                                             // if () {};
-	| ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement DUENDE calcetin_compound_statement FINREGALO                                   // if () {} else {};                               
-    | ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement tradicion_elif_statement DUENDE calcetin_compound_statement FINREGALO          // if () {} elif () {} else() {};
+deseos_selection_statement ::= ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement                                              // if () {};
+	| ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement DUENDE calcetin_compound_statement                                    // if () {} else {};
+    | ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement tradicion_elif_statement                                              // if () {} elif () {} ;                              
+    | ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement tradicion_elif_statement DUENDE calcetin_compound_statement           // if () {} elif () {} else() {};
     ;
 
 //elifs
@@ -295,7 +325,7 @@ tradicion_elif_statement ::=  HADA  ABRECUENTO incienzo_expression CIERRACUENTO 
 
 //iterracion
 caramelo_iteration_statement ::= HACE statement_risa_santa REVISA ABRECUENTO incienzo_expression CIERRACUENTO FINREGALO //do while
-	| ENVUELVE ABRECUENTO candelabro_assignment_expression CHIMENEA leche_relational_expr CHIMENEA incienzo_expression CIERRACUENTO statement_risa_santa FINREGALO //for
+	| ENVUELVE ABRECUENTO PERSONA:id ENTREGA incienzo_expression CHIMENEA incienzo_expression CHIMENEA incienzo_expression CIERRACUENTO statement_risa_santa //for
 	;
 
 //terminacion de ciclos y retornos
@@ -322,6 +352,8 @@ estrella_assign_array ::= LOCALCOLOCARREGALO gorro_navidad_type_specifier:ty PER
     {:anadirSimbolo(new SymbolT("variable local", ty.toString(), id.toString()));:}
 	| LOCALCOLOCARREGALO gorro_navidad_type_specifier:ty PERSONA:id ABREEMPAQUE incienzo_expression CIERRAEMPAQUE      //int id[4]
     {:anadirSimbolo(new SymbolT("variable local", ty.toString(), id.toString()));:}
+    |PERSONA:id ABREEMPAQUE incienzo_expression CIERRAEMPAQUE      //id[4]
+    |PERSONA:id ABREEMPAQUE CIERRAEMPAQUE //id[]
 	;
 
 //expresiones de asignacion 
@@ -329,6 +361,7 @@ candelabro_assignment_expression ::= LOCALCOLOCARREGALO gorro_navidad_type_speci
     {:anadirSimbolo(new SymbolT("variable local", ty.toString(), id.toString()));:}
     | LOCALCOLOCARREGALO gorro_navidad_type_specifier:ty PERSONA:id FINREGALO 
     {:anadirSimbolo(new SymbolT("variable local", ty.toString(), id.toString()));:}
+    | PERSONA:id ENTREGA incienzo_expression FINREGALO  //id = 5|
     | estrella_assign_array FINREGALO        // int id[4]| ó int[4] ...|
 	| estrella_assign_array ENTREGA nochebuena_initializer FINREGALO  // int id[4] = {1,2,3,4}
 	| estrella_assign_array ENTREGA incienzo_expression FINREGALO      //idAlreadyDeclared[2] = 2 ó idAlreadyDelcared[2] = ++idAlreadyDeclared[2]
@@ -346,12 +379,15 @@ pesebre_arg ::= gorro_navidad_type_specifier:ty PERSONA:id
 
 
 //incremento o decremento con asignacion en arrays
-reyes_magicos_list_expr ::=  PERSONA | reyes_magicos_list_expr CHIMENEA PERSONA;
+reyes_magicos_list_expr ::=  incienzo_expression | reyes_magicos_list_expr CHIMENEA incienzo_expression|;
+belen_function_call_statement::= belen_function_call_expression FINREGALO ;
+
 
 incienzo_expression ::= arbol_constant                      // literales
-       | PERSONA                                            // Identificador                          
+       | PERSONA                                            // Identificador
+       | PERSONA:id ABREEMPAQUE incienzo_expression CIERRAEMPAQUE      // llamada a elemento de un array id[4]                          
        | ABRECUENTO incienzo_expression CIERRACUENTO        // ( expresion )
-       | belen_function_call_statement                      // llamada a function
+       | belen_function_call_expression           // llamada a function 
        | bastoncillo_arithmetic_expr                        // operacion aritmetica
        | galleta_logic_expr                                 // operacion logica
        | leche_relational_expr                              // operacion relacional
@@ -369,6 +405,7 @@ bastoncillo_arithmetic_expr ::= incienzo_expression TRUENO incienzo_expression  
     | incienzo_expression RELAMPAGO incienzo_expression                                  // Multiplicación
     | incienzo_expression CUPIDO incienzo_expression                                     // Modulo
     | incienzo_expression COMETA incienzo_expression                                        //Exponente
+    | TRUENO incienzo_expression
     | QUIEN PERSONA:id                                                                                               // Incremento prefijo
     | GRINCH PERSONA:id                                                                                                   // Decremento prefijo
     | diciembre_operation_array                                                                                                                     // Decr o Incr con indice array

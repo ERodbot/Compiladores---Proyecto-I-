@@ -49,7 +49,7 @@ RightKey= \}
 Separator= ,
 
 //literaldecimalinteger
-LiteralDecimalInteger= (0|-?[1-9][0-9]*)
+LiteralDecimalInteger= (0|[1-9][0-9]*) // SE QUITO -? PARA AGREGARLO A LA LÓGICA DE CUP
 
 //literaldecimalfloat 
 LiteralDecimalFloat= ({LiteralDecimalInteger})\.?[0-9]*
@@ -96,11 +96,11 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
 //reserved words 
 
 //types
-<YYINITIAL> "integer"              {return symbol(sym.NOEL, yytext());}
+<YYINITIAL> "int"              {return symbol(sym.NOEL, yytext());}
 <YYINITIAL> "float"                {return symbol(sym.NICOLAS, yytext());} 
 <YYINITIAL> "string"               {return symbol(sym.SANTA, yytext());}
 <YYINITIAL> "char"                 {return symbol(sym.COLACHO, yytext());}
-<YYINITIAL> "boolean"              {return symbol(sym.CLAUS, yytext());}
+<YYINITIAL> "bool"              {return symbol(sym.CLAUS, yytext());}
 
 //control structures
 <YYINITIAL> "if"                   {return symbol(sym.ELFO);}                               
@@ -121,8 +121,8 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
 <YYINITIAL> "!="                   {return symbol(sym.EVERGEEN);}
 <YYINITIAL> ">"                    {return symbol(sym.UPATREE);}
 <YYINITIAL> "<"                    {return symbol(sym.MINSTIX);}
-<YYINITIAL> ">=="                  {return symbol(sym.MARY);}
-<YYINITIAL> "<=="                  {return symbol(sym.OPENSLAE);}
+<YYINITIAL> "=>"                  {return symbol(sym.MARY);}
+<YYINITIAL> "=<"                  {return symbol(sym.OPENSLAE);}
 
 //asignation
 "<="                               {return symbol(sym.ENTREGA);}
