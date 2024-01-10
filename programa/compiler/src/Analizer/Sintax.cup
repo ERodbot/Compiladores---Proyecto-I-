@@ -77,35 +77,6 @@ parser code {:
     this.lex=lex;
     this.symbolFactory= new DefaultSymbolFactory();
   };
-/*
-public void syntax_error(Symbol cur_token){
-
-     
-    if (cur_token!=null){
-        String cadenaError="Error de sintaxis en la línea " + (cur_token.left+1) + " y columna " + (cur_token.right+1)+ ". Token que generó el error: "+ lex.yytext();
-        System.err.println(cadenaError);
-        this.errores.add(cadenaError);
-        
-    }
-    else{
-        String cadenaError="Error de sintaxis en la línea " + (cur_token.left+1) + " y columna " + (cur_token.right+1)+". Token: "+ cur_token.value;
-        System.err.println(cadenaError);
-        this.errores.add(cadenaError);
-    }
-	
-}
-
-public void unrecovered_syntax_error(Symbol token) throws java.lang.Exception {
-    if (token!=null){
-        throw new Exception("Error de sintaxis no puede ser recuperado. Encontrado en la línea " + (token.left+1) + " columna " + (token.right+1) + ". Token que generó el error: " + lex.yytext());
-  
-    }
-    else{
-        throw new Exception("Error de sintaxis no puede ser recuperado. Encontrado en la línea " + (token.left+1) + " columna " + (token.right+1) + ". Token que generó el error: " + token.value);
-    }
-    
-}
-*/
 public void syntax_error(Symbol cur_token){
 
      
