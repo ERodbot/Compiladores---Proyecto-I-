@@ -230,7 +230,7 @@ terminal ERRORNOTRECOGNIZED;
 
 //no terminal 
 non terminal   navidad, navidadAux, saco_function_definition_aux, saco_function_definition, arbol_constant, gorro_navidad_type_specifier, statement_risa_santa, lazo_io_statement, belen_function_call_statement,
-               calcetin_compound_statement, empaque_block_item_list, carta_block_item, deseos_selection_statement, 
+               calcetin_compound_statement, empaque_block_item_list, carta_block_item, deseos_selection_statement, lapiz_papel_if_statement,
 			   tradiciones_elif_lista_statements, tradicion_elif_statement, caramelo_iteration_statement, calcetin_jump_statement, nochebuena_initializer, pino_initializer_list, campanas_initializer_list_integer,
 			   guirnaldas_initializer_list_char, estrella_assign_array, decorativo_array_elem, candelabro_assignment_expression, pesebre_args, pesebre_arg, reyes_magicos_list_expr, incienzo_expression, diciembre_operation_array, bastoncillo_arithmetic_expr, galleta_logic_expr, 
 			   leche_relational_expr, belen_function_call_expression;
@@ -449,46 +449,39 @@ empaque_block_item_list ::= carta_block_item | empaque_block_item_list carta_blo
 carta_block_item ::= statement_risa_santa;
 
 //estatuos logicos	
-deseos_selection_statement ::= ELFO ABRECUENTO incienzo_expression:expr CIERRACUENTO 
+deseos_selection_statement ::= lapiz_papel_if_statement calcetin_compound_statement
+	| lapiz_papel_if_statement calcetin_compound_statement DUENDE calcetin_compound_statement                                    // if () {} else {};
+    | lapiz_papel_if_statement calcetin_compound_statement  tradiciones_elif_lista_statements                                              // if () {} elif () {} ;                              
+    | lapiz_papel_if_statement calcetin_compound_statement tradiciones_elif_lista_statements DUENDE calcetin_compound_statement           // if () {} elif () {} else() {};
+    ;
+
+lapiz_papel_if_statement ::= ELFO ABRECUENTO incienzo_expression:iexpr CIERRACUENTO 
     {:
-        var expr = (Expresion)expr;
+        var expr = (Expresion)iexpr;
         if (expr.getType() != TypeEx.BOOL) {
             System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getType().toString() + " no valido para una expresion booleana");
         }
         else {
 
         };
-    :}calcetin_compound_statement:st                                              // if () {};
-    {:
-
-    :}
-	| ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement DUENDE calcetin_compound_statement                                    // if () {} else {};
-    | ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement  tradiciones_elif_lista_statements                                              // if () {} elif () {} ;                              
-    | ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement tradiciones_elif_lista_statements DUENDE calcetin_compound_statement           // if () {} elif () {} else() {};
-    ;
+    :};
 
 
-tradiciones_elif_lista_statements ::=  tradicion_elif_statement | tradiciones_elif_lista_statements HADA  ABRECUENTO incienzo_expression:expr CIERRACUENTO 
-    {:
-        var expr = (Expresion)expr;
-        if (expr.getType() != TypeEx.BOOL) {
-        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getTipo().toString() + " no valido para una expresion booleana");
-        }
-        else {
-        }
-    :} calcetin_compound_statement;
+tradiciones_elif_lista_statements ::=  tradicion_elif_statement | tradiciones_elif_lista_statements tradicion_elif_statement calcetin_compound_statement;
 
 
 //elifs
-tradicion_elif_statement ::=  HADA  ABRECUENTO incienzo_expression:expr CIERRACUENTO 
+tradicion_elif_statement ::=  HADA  ABRECUENTO incienzo_expression:iexpr CIERRACUENTO 
     {:
-        var expr = (Expresion)expr;
+        var expr = (Expresion)iexpr;
         if (expr.getType() != TypeEx.BOOL) {
-        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getTipo().toString() + " no valido para una expresion booleana");
+        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getType().toString() + " no valido para una expresion booleana");
         }
         else {
         }
-    :}calcetin_compound_statement;
+    :};
+    
+    
 	
 
 //iterracion
