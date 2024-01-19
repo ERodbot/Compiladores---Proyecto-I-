@@ -1,16 +1,19 @@
- void function hola (integer volumen, float nicolasRojo) {
-    float nicolasRojo <= "grey god"| 
-    integer i <= 1| 
-    char holaMundo <= "strong"|
-    char six = '6'|
-
-    char array[] <= {1,2,3,4}|
-    char array[]|
-    char array[4] <= {1,2,3,4} |
-    char array[1]|
+ 
 
 
-    integer g <= (5 + ++er - --nicolasRojo * (5)~1 >== 60) # true |
+integer function hola (integer volumen, float nicolasRojo) {
+    local float nicolasRojo <= "grey god"| 
+    local integer i <= 1| 
+    local char holaMundo <= "strong"|
+    local char six <= '6'|
+
+    local char array[] <= {1,2,3,4}|
+    local char array[]|
+    local char array[4] <= {1,2,3,4} |
+    local char array[1]| 
+
+
+    local integer g <= (5 + ++er - --nicolasRojo * (5)~1 >== 60) # true |
 
     if (12 > nicolasRojo) {
         return|
@@ -23,20 +26,18 @@
         until (1 >== nicolasRojo )|
     }
     elif (true) {
-        for (integer i <= 1| , i <== 10 , ++i) {
-           read("them j boyzz")|
+        for (local integer i <= 1|, i <== 10 , ++i) {
+           read(123)|
         }|
     }
     else {
-
+        return error404 |
     }|
  }|
 
-
-
-integer function gogo (){
-
-    integer var <= hola(mal, vola)||
+integer function gogo () {
+     local integer var <= hola(mal, vola)||
     return var|
     return hola(mal, vola)||
-}|
+ }|
+

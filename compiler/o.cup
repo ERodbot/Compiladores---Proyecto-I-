@@ -1,4 +1,4 @@
-package LexicalAnalizer;
+package Analizer;
 import java_cup.runtime.*;
 
 action code {:

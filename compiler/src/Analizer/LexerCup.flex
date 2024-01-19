@@ -1,4 +1,4 @@
-package LexicalAnalizer;
+package Analizer;
 import java_cup.runtime.*;
 
 
@@ -32,6 +32,14 @@ import java_cup.runtime.*;
         
         return new Symbol(type, yyline, yycolumn, value);
     }
+
+    public int getLine() {
+        return yyline;
+    }
+
+    public int getColumn() {
+        return yycolumn;
+    }
 %}
 
 //LineTerminator
@@ -49,7 +57,7 @@ RightKey= \}
 Separator= ,
 
 //literaldecimalinteger
-LiteralDecimalInteger= (0|-?[1-9][0-9]*)
+LiteralDecimalInteger= (0|[1-9][0-9]*) // SE QUITO -? PARA AGREGARLO A LA LÓGICA DE CUP
 
 //literaldecimalfloat 
 LiteralDecimalFloat= ({LiteralDecimalInteger})\.?[0-9]*
@@ -96,11 +104,11 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
 //reserved words 
 
 //types
-<YYINITIAL> "integer"              {return symbol(sym.NOEL);}
-<YYINITIAL> "float"                {return symbol(sym.NICOLAS);} 
-<YYINITIAL> "string"               {return symbol(sym.SANTA);}
-<YYINITIAL> "char"                 {return symbol(sym.COLACHO);}
-<YYINITIAL> "boolean"              {return symbol(sym.CLAUS);}
+<YYINITIAL> "int"              {return symbol(sym.NOEL, yytext());}
+<YYINITIAL> "float"                {return symbol(sym.NICOLAS, yytext());} 
+<YYINITIAL> "string"               {return symbol(sym.SANTA, yytext());}
+<YYINITIAL> "char"                 {return symbol(sym.COLACHO, yytext());}
+<YYINITIAL> "bool"              {return symbol(sym.CLAUS, yytext());}
 
 //control structures
 <YYINITIAL> "if"                   {return symbol(sym.ELFO);}                               
@@ -121,23 +129,34 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
 <YYINITIAL> "!="                   {return symbol(sym.EVERGEEN);}
 <YYINITIAL> ">"                    {return symbol(sym.UPATREE);}
 <YYINITIAL> "<"                    {return symbol(sym.MINSTIX);}
-<YYINITIAL> ">=="                  {return symbol(sym.MARY);}
-<YYINITIAL> "<=="                  {return symbol(sym.OPENSLAE);}
+<YYINITIAL> "=>"                  {return symbol(sym.MARY);}
+<YYINITIAL> "=<"                  {return symbol(sym.OPENSLAE);}
 
 //asignation
 "<="                               {return symbol(sym.ENTREGA);}
 
 //void
-"void"                             {return symbol(sym.SINREGALO);}
+"void"                             {return symbol(sym.SINREGALO, yytext());}
 
 //null
-"null"                             {return symbol(sym.NARIZROJA);}
+"null"                             {return symbol(sym.NARIZROJA, yytext());}
 
 //literaltrue
-<YYINITIAL> "true"                 {return symbol(sym.l_t_CLAUS);}
+<YYINITIAL> "true"                 {return symbol(sym.l_t_CLAUS, yytext());}
 
 //literalfalse
-<YYINITIAL> "false"                {return symbol(sym.l_f_CLAUS);}
+<YYINITIAL> "false"                {return symbol(sym.l_f_CLAUS, yytext());}
+
+//main 
+<YYINITIAL> "main"                 {return symbol(sym.MAINNAVIDAD, yytext());}
+
+//function
+<YYINITIAL> "function"             {return symbol(sym.RECORRIDO, yytext());}
+
+//variables 
+<YYINITIAL> "local"                {return symbol(sym.LOCALCOLOCARREGALO);}
+
+
 
 
 <YYINITIAL> {
@@ -150,10 +169,10 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
    {MultipleLineComment}           {/*skip*/}
 
    /*decimal integer literal*/
-   {LiteralDecimalInteger}         {return symbol(sym.l_NOEL);}
+   {LiteralDecimalInteger}         {return symbol(sym.l_NOEL, yytext());}
 
    /*decimal float literal*/
-   {LiteralDecimalFloat}           {return symbol(sym.l_NICOLAS);}
+   {LiteralDecimalFloat}           {return symbol(sym.l_NICOLAS, yytext());}
 
    /*unarian operators*/
    {Decrement}                     {return symbol(sym.GRINCH);}
@@ -184,11 +203,8 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
     {LeftKey}                      {return symbol(sym.ABREREGALO);}
     {RightKey}                     {return symbol(sym.CIERRAREGALO);}
 
-    "function"                     {return symbol(sym.RECORRIDO);}
-
      //identifier identifier        
-    {Identifier}                     {return symbol(sym.PERSONA);}
-    
+    {Identifier}                     {return symbol(sym.PERSONA, yytext());}
 
     //eol(end of line);
     {LineEnder}                      {/*skip*/} 

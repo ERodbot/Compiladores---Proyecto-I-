@@ -1,0 +1,1045 @@
+package Analizer;
+import java_cup.runtime.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+//manejo de tabla de simbolos 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+
+action code {:
+
+    HashMap<String, SymbolTable> listaTablasSimbolos = new HashMap<String, SymbolTable>();
+    ArrayList<FunctionIdentifier> functionIdentifiers = new ArrayList<FunctionIdentifier>();
+    String currentHash = "";
+
+
+    public void imprimirTablaSimbolos(){
+        System.out.println("Iniciando el guardado");
+        for (String key: listaTablasSimbolos.keySet()){
+
+            System.out.println("\n\n\n°-------------------------------------------------------------------------------------°");
+            System.out.println("\n\t\t\t\tTabla de simbolos: " + key + "\n");
+            System.out.println("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            System.out.println("\t\t\t\t\tValores:");
+            System.out.println("\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+            SymbolTable val = listaTablasSimbolos.get(key);
+            System.out.println("\t\t" + String.format("%-20s %-20s %-20s", "valor", "tipo", "lexema") + "\n");
+            for (SymbolTObj item: val.getSymbolTable()) {
+                System.out.println("\t\t" + item.toString());
+            }
+            System.out.println("\n\t~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+            System.out.println("");
+            System.out.println("°-------------------------------------------------------------------------------------°");
+        }
+        System.out.println("Completado el guardado");
+    }
+
+    String MarkdownFilePath = (System.getProperty("user.dir") +"/testExamples/SymbolTable.md");
+    
+    public void guardarTablaSimbolos(){
+        System.out.println("Iniciando el guardado");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(MarkdownFilePath))) {
+            for (Map.Entry<String, SymbolTable> entry : listaTablasSimbolos.entrySet()) {
+                writer.write("## " + entry.getKey() + "\n\n");
+                writer.write("| Valor | Tipo | Lexema |\n");
+                writer.write("|-------|------|--------|\n");
+                for (SymbolTObj symbol : entry.getValue().getSymbolTable()) {
+                    writer.write("| " + symbol.getValor() + " | " + symbol.getTipo() + " | " + symbol.getLexema() + " |\n");
+                }
+                writer.write("\n");
+            }
+            System.out.println("Markdown file created successfully: " + MarkdownFilePath);
+        } catch (IOException e) {
+            System.err.println("Error writing the file: " + e.getMessage());
+        }
+        System.out.println("Completado el guardado");
+    }
+
+    public void definirHash(String hash) {
+        currentHash = hash;
+        listaTablasSimbolos.put(hash, new SymbolTable());
+    }
+
+    public void anadirSimbolo(SymbolTObj sym){
+        listaTablasSimbolos.get(currentHash).getSymbolTable().add(sym);
+    }
+
+    public TypeEx getType(String id, boolean isError){
+       for(SymbolTObj sym : listaTablasSimbolos.get(currentHash).getSymbolTable()) {
+            if (id.equals(sym.getValor())){
+                return Expresion.tipoFromString(sym.getTipo());
+            }
+        }
+        if (isError){
+            System.out.println("Error semántico: la variable con id: " + id +" en la linea " + lex.getLine() + "columna" + lex.getColumn() +"no puede ser encontrado ");
+        };
+        return TypeEx.NULL; 
+    }
+
+    public void addFunctionIdentifier(FunctionIdentifier identifierF){
+        functionIdentifiers.add(identifierF);
+    }
+
+    public FunctionIdentifier findFunction(String id){
+        for(FunctionIdentifier identifierF: functionIdentifiers){
+            if (identifierF.getNombre().equals(id)) {
+                return identifierF;
+            }
+        }
+        return null;
+    }
+
+    public void isNoReturnForNonVoidFunc(){
+        for (FunctionIdentifier identifierF: functionIdentifiers){
+            if (!identifierF.isRetornaValor() && !(identifierF.getTipoRetorno()==TypeEx.NULL)){
+                System.out.println("Error semántico: no se encontró un valor de retorno para la función:" + identifierF.getNombre() + "pese a haber sido declarada como " + identifierF.getTipoRetorno().toString());
+            }
+        }
+    }
+
+    public boolean isType(String type) {
+        if (type.equals("char") || type.equals("int") || type.equals("string") || type.equals("float") || type.equals("bool") || type.equals("void")){
+            return true;
+        };
+        return false;
+    };
+
+:}
+
+parser code {:
+  LexerCup lex;
+  int literId = 0;
+  int labelId = 0;
+  
+
+  public ArrayList<String> errores = new ArrayList<String>();
+  @SuppressWarnings("deprecation")
+  public Sintax(LexerCup lex){
+    this.lex=lex;
+    this.symbolFactory= new DefaultSymbolFactory();
+  };
+    public void syntax_error(Symbol cur_token){
+
+     
+        if (cur_token!=null){
+            String cadenaError="Error de sintaxis en la línea " + (cur_token.left+1) + " y columna " + (cur_token.right+1)+ ". Token que generó el error: "+ lex.yytext();
+            System.err.println(cadenaError);
+            this.errores.add(cadenaError);
+        
+        }else{
+            String cadenaError="Error de sintaxis en la línea " + (cur_token.left+1) + " y columna " + (cur_token.right+1)+". Token: "+ cur_token.value;
+            System.err.println(cadenaError);
+            this.errores.add(cadenaError);
+        }
+	
+    }
+
+    public void unrecovered_syntax_error(Symbol token) throws java.lang.Exception {
+        if (token!=null){
+            throw new Exception("Error de sintaxis no puede ser recuperado. Encontrado en la línea " + (token.left+1) + " columna " + (token.right+1) + ". Token que generó el error: " + lex.yytext());
+  
+        }
+        else{
+            throw new Exception("Error de sintaxis no puede ser recuperado. Encontrado en la línea " + (token.left+1) + " columna " + (token.right+1) + ". Token que generó el error: " + token.value);
+        }
+    
+    }
+
+    public TypeEx validarTipado(String operand, Expresion a, Expresion b, ArrayList<TypeEx> validTypes) {
+    // validar que los tipos de a y b sean iguales
+    if (a.getType() != b.getType()) {
+      System.out.println("Error semántico: Los tipos de datos son incompatibles: " + a.getType().toString() + " y " + b.getType().toString() + "con la operacion" + operand +" en la linea " + lex.getLine() + " columna " + lex.getColumn());
+      return TypeEx.NULL;
+    }
+    // validar que el tipo de a esté en la lista de tipos validos
+    if (!validTypes.contains(a.getType())) {
+      System.out.println("Error semántico: Tipo de dato ilegal: " + a.getType().toString() + " para operacion " + operand + "en la linea " + lex.getLine() + " columna " + lex.getColumn());
+      return TypeEx.NULL;
+    }
+
+    return a.getType();
+  }
+
+  // overloading del metodo pero unario
+  public TypeEx validarTipado(String operand, Expresion a, ArrayList<TypeEx> validTypes) {
+    // validar que el tipo de a esté en la lista de tipos validos
+    if (!validTypes.contains(a.getType())) {
+      System.out.println("Error semántico: "  + "Tipo ilegal de dato" + a.getType().toString() + " para operacion " + operand + "en la linea " + lex.getLine() + " columna " + lex.getColumn());
+      return TypeEx.NULL;
+    }
+    return a.getType();
+  }
+
+
+:}
+
+init with {: :};
+
+scan with {: return lex.next_token(); :};
+
+// Terminals
+// Data Types
+terminal NOEL, NICOLAS, SANTA, COLACHO, CLAUS;
+//Parenthesis
+terminal ABRECUENTO, CIERRACUENTO, ABREEMPAQUE, CIERRAEMPAQUE, ABREREGALO, CIERRAREGALO;
+//Separator
+terminal CHIMENEA;
+//Literals numbers
+terminal l_NICOLAS, l_NOEL;
+//Literal strings
+terminal l_SANTA;
+//Literal char
+terminal l_COLACHO;
+// Control Structures
+terminal ELFO, HADA, DUENDE, ENVUELVE, HACE, REVISA, ENVIA, CORTA;
+// Input/Output Functions
+terminal NARRA, ESCUCHA;
+//null
+terminal NARIZROJA;
+//void 
+terminal SINREGALO;
+// Relational Operators
+terminal ALABASTRO, EVERGEEN, UPATREE, MINSTIX, MARY, OPENSLAE;
+// Logical Operators
+terminal GASPAR, MELCHOR, BALTASAR;
+// Assignment
+terminal ENTREGA;
+// Boolean Literals
+terminal l_t_CLAUS, l_f_CLAUS;
+// Unary Operators
+terminal GRINCH, QUIEN;
+// Binary Arithmetic Operators
+terminal RODOLFO, TRUENO, RELAMPAGO, JUGUETON, COMETA, CUPIDO;
+//Main 
+terminal MAINNAVIDAD;
+//Functions
+terminal RECORRIDO;
+//Variables 
+terminal LOCALCOLOCARREGALO;
+// Identifier
+terminal PERSONA;
+// End of Line
+terminal FINREGALO;
+// Lexical Error
+terminal ERRORNOTRECOGNIZED;
+
+//no terminal 
+non terminal   navidad, navidadAux, saco_function_definition_aux, saco_function_definition, arbol_constant, gorro_navidad_type_specifier, statement_risa_santa, lazo_io_statement, belen_function_call_statement,
+               calcetin_compound_statement, empaque_block_item_list, carta_block_item, deseos_selection_statement, 
+			   tradicion_elif_statement, caramelo_iteration_statement, calcetin_jump_statement, nochebuena_initializer, pino_initializer_list, campanas_initializer_list_integer,
+			   guirnaldas_initializer_list_char, estrella_assign_array, decorativo_array_elem, candelabro_assignment_expression, pesebre_args, pesebre_arg, reyes_magicos_list_expr, incienzo_expression, diciembre_operation_array, bastoncillo_arithmetic_expr, galleta_logic_expr, 
+			   leche_relational_expr, belen_function_call_expression;
+
+
+// Precedence and associativity
+
+precedence left TRUENO, RODOLFO; //resta
+precedence left JUGUETON, RELAMPAGO;  //division, multiplicacion
+precedence left CUPIDO, COMETA; // mod, exponente
+precedence left QUIEN, GRINCH; // Increment and decrement
+precedence left ALABASTRO, EVERGEEN;
+precedence left MINSTIX, UPATREE, OPENSLAE, MARY;
+precedence left GASPAR;
+precedence left MELCHOR; 
+precedence left BALTASAR;
+
+
+start with navidad;
+
+//produccion de inicio
+navidad ::= {:System.out.println("Inicio de parseo");:} 
+            navidadAux 
+            {: 
+                if (findFunction("main") == null) {
+                    System.out.println("Error: no existe una función main para el programa");
+                };
+                isNoReturnForNonVoidFunc(); 
+                imprimirTablaSimbolos(); guardarTablaSimbolos(); System.out.println("Fin de parseo");
+            :}; 
+
+navidadAux ::= saco_function_definition
+	| navidadAux saco_function_definition
+    | navidadAux error
+    | error
+	;
+
+//definicion de funciones
+saco_function_definition ::= saco_function_definition_aux: funcD  calcetin_compound_statement {:
+    String functionId = (String)funcD; 
+:}; 
+
+saco_function_definition_aux ::=  RECORRIDO NOEL MAINNAVIDAD ABRECUENTO CIERRACUENTO    
+        {:
+            if (findFunction("main") != null) {
+                System.out.println("Error semántico: la función main ya fue declarada. Linea: " + lex.getLine() + "columna" + lex.getColumn());
+            } else {    
+                definirHash("main");
+                RESULT = "main";
+                anadirSimbolo(new SymbolTObj("function", "integer", "Main"));
+                addFunctionIdentifier(new FunctionIdentifier("function", TypeEx.INT, true, new TypeEx[] {}));
+            };
+        :}
+    | RECORRIDO gorro_navidad_type_specifier:ty  PERSONA:id ABRECUENTO                                    
+        {:
+            String type = (String)ty;
+            if (!isType(type)) {
+                System.out.println("Error semántico: la función no posee un tipo de retorno válido. Linea: " + lex.getLine() + "columna" + lex.getColumn());
+            } else {
+                RESULT = (String)id;
+                definirHash(id.toString());
+                anadirSimbolo(new SymbolTObj("function", ty.toString(), id.toString()));
+                addFunctionIdentifier(new FunctionIdentifier("function", Expresion.tipoFromString(id.toString()), false, new TypeEx[] {}));
+            };
+        :}                                                         
+     pesebre_args CIERRACUENTO                                                                                                      
+    | RECORRIDO gorro_navidad_type_specifier:ty PERSONA:id ABRECUENTO CIERRACUENTO                       
+        {:
+            String type = (String)ty;
+            if (!isType(type)) {
+                System.out.println("Error semántico: la función no posee un tipo de retorno válido. Linea: " + lex.getLine() + "columna" + lex.getColumn());
+            } else {
+                RESULT = (String)id;
+                definirHash(id.toString());
+                anadirSimbolo(new SymbolTObj("function", ty.toString(), id.toString()));
+                addFunctionIdentifier(new FunctionIdentifier("function", Expresion.tipoFromString(id.toString()), false, new TypeEx[] {}));
+            };
+        :}                                                         
+    |error CIERRACUENTO
+    ;
+
+//constantes
+arbol_constant ::= l_NOEL:l_int {:RESULT =  new Expresion(l_int, TypeEx.INT);:}	
+    | l_NICOLAS:l_flo {:RESULT = new Expresion(l_flo, TypeEx.FLOAT);:} 
+    | l_COLACHO:l_ch {:RESULT = new Expresion(l_ch, TypeEx.CHAR);:}
+    | l_SANTA:l_st {:RESULT = new Expresion(l_st, TypeEx.STRING);:}
+    | l_t_CLAUS:l_t {:RESULT = new Expresion(l_t, TypeEx.BOOL);:} 
+    | l_f_CLAUS:l_f {:RESULT = new Expresion(l_f, TypeEx.BOOL);:}
+    | NARIZROJA:nil {:RESULT = new Expresion(nil, TypeEx.NULL);:};
+
+//tipos
+gorro_navidad_type_specifier ::= SINREGALO:sr {:RESULT = sr;:}
+  | COLACHO:c {:RESULT = c;:}
+  | SANTA:s {:RESULT = s;:}
+  | NOEL:n {:RESULT = n;:}
+  | NICOLAS:ni {:RESULT = ni;:}
+  | CLAUS:cl {:RESULT = cl;:}
+  ;
+
+//estatuo 
+statement_risa_santa ::= calcetin_compound_statement
+	| candelabro_assignment_expression
+	| deseos_selection_statement
+	| caramelo_iteration_statement
+	| calcetin_jump_statement
+    | lazo_io_statement
+	| belen_function_call_statement
+    | error FINREGALO 
+    | error CIERRAREGALO
+	;
+
+//estatuo de input/output
+lazo_io_statement ::= NARRA ABRECUENTO reyes_magicos_list_expr: argsList CIERRACUENTO FINREGALO
+    {:
+        var exprargs = (ArrayList<Expresion>)argsList;
+        for (Expresion e : exprargs) {
+        switch (e.getType()) {
+            case STRING:
+            break;
+            case INT:
+            break;
+            case FLOAT:
+            break;
+            default:
+            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e.getType().toString() + " no valido para print");
+            break;
+        }
+        }
+        RESULT = new Expresion("null", TypeEx.NULL);
+    :}
+    | ESCUCHA ABRECUENTO PERSONA:id CIERRACUENTO FINREGALO
+    {:
+        var type = getType(id.toString(), true);
+            switch (type){
+            case INT:
+                RESULT = new Expresion("null", TypeEx.NULL);
+                break;
+            case FLOAT:
+                RESULT = new Expresion("null", TypeEx.NULL);
+                break;
+            default:
+                break;
+            } 
+        RESULT = new Expresion("null", TypeEx.NULL);
+    :} 
+    | ESCUCHA ABRECUENTO decorativo_array_elem:elem CIERRACUENTO FINREGALO 
+    {:
+        var type = ((Expresion)elem).getType();
+        if (type == TypeEx.INT) {
+
+        }
+        else {
+            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + type.toString() + " no valido para read");
+        }
+        RESULT = new Expresion("null", TypeEx.NULL);
+    :}
+  ;
+
+//llamada a funcion
+belen_function_call_expression ::= PERSONA:id ABRECUENTO reyes_magicos_list_expr:listArgs CIERRACUENTO 
+    {:
+        RESULT = new Expresion("null", TypeEx.NULL);
+        var fidentifier = findFunction(id.toString());
+        if (fidentifier == null){
+        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " no declarada todavía.");
+        } else {
+        var argsTypes = fidentifier.getTiposParametros();
+        var expr_args = (ArrayList<Expresion>)listArgs;
+        var validTypes = true;
+
+        if (argsTypes.length != expr_args.size()) {
+            validTypes = false;
+            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Numero de argumentos incorrecto para funcion " + id.toString());
+        }
+        else {
+            for (int i = 0; i < argsTypes.length; i++) {
+            if (argsTypes[i] != expr_args.get(i).getType()) {
+                validTypes = false;
+                System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de argumento " + (i+1) + " incorrecto para funcion " + id.toString());
+                break;
+            }
+            }
+        }
+
+        if (validTypes) {
+            RESULT = new Expresion("null", fidentifier.getTipoRetorno());
+        }
+        }
+    :}
+    | PERSONA:id ABRECUENTO CIERRACUENTO
+    {:
+        RESULT = new Expresion("null", TypeEx.NULL);
+        var fidentifier = findFunction(id.toString());
+        if (fidentifier == null) {
+            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " no declarada todavía.");
+        }
+        else {
+            if (fidentifier.getTiposParametros().length != 0) {
+                System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " no tiene parametros");
+            }
+            else {            
+                RESULT = new Expresion("null", fidentifier.getTipoRetorno());
+            }
+        } 
+    :};
+
+//bloque de codigo
+calcetin_compound_statement ::= ABREREGALO CIERRAREGALO
+	| ABREREGALO empaque_block_item_list CIERRAREGALO
+	;
+
+//items de bloque de codigo
+empaque_block_item_list ::= carta_block_item | empaque_block_item_list carta_block_item;
+
+//elementos de bloque de codigo
+carta_block_item ::= statement_risa_santa;
+
+//estatuos logicos	
+deseos_selection_statement ::= ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement                                              // if () {};
+	| ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement DUENDE calcetin_compound_statement                                    // if () {} else {};
+    | ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement tradicion_elif_statement                                              // if () {} elif () {} ;                              
+    | ELFO ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement tradicion_elif_statement DUENDE calcetin_compound_statement           // if () {} elif () {} else() {};
+    ;
+
+//elifs
+tradicion_elif_statement ::=  HADA  ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement
+	| tradicion_elif_statement HADA  ABRECUENTO incienzo_expression CIERRACUENTO calcetin_compound_statement;
+
+//iterracion
+caramelo_iteration_statement ::= HACE  
+    {:
+        String label = "do" + labelId;
+        listaTablasSimbolos.get(currentHash).controlStackPush(label);
+        ++labelId;
+    :}statement_risa_santa REVISA ABRECUENTO incienzo_expression:iexpr CIERRACUENTO FINREGALO //do while
+    {: 
+        var expr = (Expresion)iexpr;
+        if (expr.getType() != TypeEx.BOOL) {
+            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getType().toString() + " no valido para una expresion booleana");
+        }
+        else {
+            var label = listaTablasSimbolos.get(currentHash).controlStackTop();
+            listaTablasSimbolos.get(currentHash).controlStackPop();
+        };
+
+    :}
+	| ENVUELVE ABRECUENTO PERSONA:id ENTREGA incienzo_expression:expr 
+    {:
+        var label = "for" + labelId;
+        listaTablasSimbolos.get(currentHash).controlStackPush(label);
+        ++labelId;
+    :} CHIMENEA incienzo_expression:iexpr 
+    {:
+        var expr = (Expresion)e;
+        var label = tablasSimbolos.get(currentHash).controlStackTop();
+        if (expr.getType() != TypeEx.BOOL) {
+            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getType().toString() + " no valido para una expresion booleana");
+        }
+        else {
+
+        }
+    :} CHIMENEA {:
+        //ver que hacer
+    :} incienzo_expression:iexpr {:
+        //ver que hacer
+    :}CIERRACUENTO statement_risa_santa {:
+        //ver que hacer
+    :}//for
+	;
+
+//terminacion de ciclos y retornos
+calcetin_jump_statement ::= CORTA FINREGALO 
+    {: 
+        var top = listaTablasSimbolos.get(currentHash).controlStackNonIfTop();
+        if (top == null){
+            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Break fuera de estructura de control");
+        };  
+    :}
+	| ENVIA FINREGALO                           //return|
+    {:
+        String top = listaTablasSimbolos.get(currentHash).controlStackNonIfTop();
+        if (top == null){
+            System.out.println("Error semántico: return fuera de estrucutra de control valida. " +  "en la linea " + lex.getLine() + " columna " + lex.getColumn());
+        };
+    :}
+	| ENVIA incienzo_expression:expr FINREGALO       //return 5+2|
+    {:
+        TypeEx type = ((Expresion)expr).getType();
+        TypeEx typeFuncReturn = functionIdentifiers.get(functionIdentifiers.size()-1).getTipoRetorno();
+        if (type != typeFuncReturn) {
+            System.out.println("Error semántico: retorno de tipo " + type.toString() + "no coincide con el tipo de retorno de su función (" + typeFuncReturn.toString());
+        } else {
+            functionIdentifiers.get(functionIdentifiers.size()-1).setRetornaValor(true);
+        };
+    :}
+	;
+
+//inicializacion de un array 
+nochebuena_initializer ::=  ABREREGALO pino_initializer_list:l CIERRAREGALO      // {1,2,3,4...}
+    {:
+        var arrL = (ArrayList<Expresion>)l;
+        var isValid = true;
+
+        TypeEx tipo = arrL.get(0).getType();
+        if (tipo != TypeEx.INT && tipo != TypeEx.CHAR) {
+            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + tipo.toString() + " no valido para arreglo");
+            RESULT = new Expresion("null", TypeEx.NULL);
+            isValid = false;
+        }
+        for (Expresion e : arrL) {
+            if (e.getType() != tipo) {
+                System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e.getType().toString() + " no valido para un literal de arreglo de tipo " + tipo.toString());
+                RESULT = new Expresion("null", TypeEx.NULL);
+                isValid = false;  
+                break;
+            }
+        }
+        if (isValid){
+            if (tipo == TypeEx.INT) {
+                RESULT = new Expresion(arrL, TypeEx.INT_ARRAY);
+            }
+            else {
+                RESULT = new Expresion(arrL, TypeEx.CHAR_ARRAY);
+            }
+        }
+    :}
+    | ABREREGALO CIERRAREGALO ;
+
+
+//elementos de un array sin importar su tipo
+pino_initializer_list ::= campanas_initializer_list_integer:il | guirnaldas_initializer_list_char:cl;   // {1,2,3,4} o {'a','b','c'}
+
+//elementos de lista con integer
+campanas_initializer_list_integer ::= l_NOEL | campanas_initializer_list_integer:ili CHIMENEA l_NOEL ;
+
+//elementos de lista con char
+guirnaldas_initializer_list_char ::= l_COLACHO | guirnaldas_initializer_list_char:ilc CHIMENEA l_COLACHO ;
+
+//asignacion de arrays (parte izquierda)
+estrella_assign_array ::= LOCALCOLOCARREGALO gorro_navidad_type_specifier:ty PERSONA:id ABREEMPAQUE CIERRAEMPAQUE      //int id[]
+    {:anadirSimbolo(new SymbolTObj("variable local", ty.toString(), id.toString()));:}
+	| LOCALCOLOCARREGALO gorro_navidad_type_specifier:ty PERSONA:id ABREEMPAQUE incienzo_expression CIERRAEMPAQUE      //int id[4]
+    {:anadirSimbolo(new SymbolTObj("variable local", ty.toString(), id.toString()));:}
+    |PERSONA:id ABREEMPAQUE CIERRAEMPAQUE //id[]
+	;
+
+
+decorativo_array_elem ::=  PERSONA:id ABREEMPAQUE incienzo_expression:iexpr CIERRAEMPAQUE      // llamada a elemento de un array id[4]                          
+    {:
+        Expresion expr = (Expresion)iexpr;
+        TypeEx type = expr.getType();
+        TypeEx idType = getType(id.toString(), true);
+        RESULT = new Expresion("null", TypeEx.NULL);
+        if (type != TypeEx.INT) {
+            System.out.println("Error semántico: el dato de tipo " + type.toString() + "no puede ser usado para indexar un array. Linea: " + lex.getLine() + "columna: " + lex.getColumn());
+        } else if(idType != TypeEx.INT_ARRAY && idType != TypeEx.CHAR_ARRAY){
+            System.out.println("Error semántico: el dato de tipo " + type.toString() + "no corresponde a un array. Linea: " + lex.getLine() + "columna: " + lex.getColumn());
+        } else {
+            // RESULT = new Expresion()
+        };
+    :};
+
+//expresiones de asignacion 
+candelabro_assignment_expression ::= LOCALCOLOCARREGALO gorro_navidad_type_specifier:ty PERSONA:id ENTREGA incienzo_expression FINREGALO  //int id = 5|
+    {:anadirSimbolo(new SymbolTObj("variable local", ty.toString(), id.toString()));:}
+    | LOCALCOLOCARREGALO gorro_navidad_type_specifier:ty PERSONA:id FINREGALO 
+    {:anadirSimbolo(new SymbolTObj("variable local", ty.toString(), id.toString()));:}
+    | PERSONA:id ENTREGA incienzo_expression FINREGALO  //id = 5|
+    | estrella_assign_array FINREGALO        // int id[4]| ó int[4] ...|
+	| estrella_assign_array ENTREGA nochebuena_initializer FINREGALO  // int id[4] = {1,2,3,4}
+	| estrella_assign_array ENTREGA incienzo_expression FINREGALO      //idAlreadyDeclared[2] = 2 ó idAlreadyDelcared[2] = ++idAlreadyDeclared[2]
+	;
+
+//argumentos para definicion de funciones 
+pesebre_args ::=  pesebre_arg | pesebre_args CHIMENEA pesebre_arg| pesebre_args CHIMENEA error|error;
+
+pesebre_arg ::= gorro_navidad_type_specifier:ty PERSONA:id  
+    {:
+        anadirSimbolo(new SymbolTObj("argumento de funcion", ty.toString(), id.toString()));
+        String type = ty.toString();
+        functionIdentifiers.get(functionIdentifiers.size()-1).addTipoParametro(Expresion.tipoFromString(type));
+    :}     
+    | gorro_navidad_type_specifier:ty PERSONA:id  ABREEMPAQUE incienzo_expression CIERRAEMPAQUE
+    {:anadirSimbolo(new SymbolTObj("argumento de funcion", ty.toString(), id.toString()));:}
+    ;
+
+
+//Argumentos de una funcion
+reyes_magicos_list_expr ::=  incienzo_expression:expr {:
+        ArrayList arrayExpr = new ArrayList<Expresion>();
+        arrayExpr.add((Expresion)expr);
+        RESULT = arrayExpr;
+    :} 
+    | reyes_magicos_list_expr: listExpr CHIMENEA incienzo_expression: expr{:
+        ArrayList arrayExpr = (ArrayList<Expresion>)listExpr;
+        arrayExpr.add((Expresion)expr);
+        RESULT = arrayExpr;
+    :};
+
+//llamada a funcion como statement
+belen_function_call_statement::= belen_function_call_expression FINREGALO ;
+
+
+//expresiones 
+incienzo_expression ::=
+    // literales
+    arbol_constant: c  
+    {: 
+        RESULT = c;                                          
+    :}                   
+    // Identificador
+    | PERSONA: id    
+    {:
+        if (getType(id.toString(), true) != TypeEx.NULL){
+            RESULT = new Expresion(id.toString(), getType(id.toString(),true));
+        } else {
+            RESULT = new Expresion("null", TypeEx.NULL);
+        };
+    :}                                        
+    | decorativo_array_elem: iexpr  // llamada a elemento de un array id[4]                          
+    {:
+        RESULT = iexpr;
+    :}  
+    | belen_function_call_expression:iexpr           // llamada a function 
+    {:
+        RESULT = iexpr;
+    :}
+        | ABRECUENTO incienzo_expression: iexpr CIERRACUENTO        // ( expresion )
+    {:
+        RESULT = iexpr;
+    :}
+    | bastoncillo_arithmetic_expr:iexpr                        // operacion aritmetica
+    {:
+        RESULT = iexpr;
+    :}
+    | galleta_logic_expr:iexpr                                 // operacion logica
+    {:
+        RESULT = iexpr;
+    :}
+    | leche_relational_expr:iexpr                              // operacion relacional
+    {:
+        RESULT = iexpr;
+    :}
+       ;
+
+//incremento o decremento con asignacion en arrays
+diciembre_operation_array ::= QUIEN decorativo_array_elem:arrElem
+    {:
+        Expresion arrElemExpr = (Expresion)arrElem;
+        var resultType = validarTipado("++", arrElemExpr, new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT)));
+        if (resultType == TypeEx.INT) {
+            RESULT = new Expresion(arrElemExpr.getValue().toString() + "++", TypeEx.INT);
+        }
+        else {
+            System.out.println("Error semántico: tipo de dato " + arrElemExpr.getType().toString() + " no es permitido para incremento. En la linea " + lex.getLine() + " columna " + lex.getColumn());
+            RESULT = new Expresion("null", TypeEx.NULL);
+        }
+    :}
+    | GRINCH decorativo_array_elem:arrElem
+        {:
+        Expresion arrElemExpr = (Expresion)arrElem;
+        var resultType = validarTipado("--", arrElemExpr, new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT)));
+        if (resultType == TypeEx.INT) {
+            RESULT = new Expresion(arrElemExpr.getValue().toString() + "--", TypeEx.INT);
+        }
+        else {
+            System.out.println("Error semántico: tipo de dato " + arrElemExpr.getType().toString() + " no es permitido para decremento. En la linea " + lex.getLine() + " columna " + lex.getColumn());
+            RESULT = new Expresion("null", TypeEx.NULL);
+        }
+    :}
+    ; 
+
+// Expresiones aritméticas
+bastoncillo_arithmetic_expr ::= 
+    incienzo_expression: a TRUENO incienzo_expression:b         // Resta 
+    {:
+        Expresion aexpr = (Expresion)a;
+        Expresion bexpr = (Expresion)b;
+        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
+        TypeEx resultType = validarTipado("-", aexpr, bexpr, arrayValidTypes);
+
+        switch(resultType){
+            case INT:
+                RESULT = new Expresion(aexpr.getValue().toString() + " - " + bexpr.getValue().toString(), TypeEx.INT);
+                break;
+            case FLOAT:
+                RESULT = new Expresion(aexpr.getValue().toString() + " - " + bexpr.getValue().toString(), TypeEx.FLOAT);
+                break;
+            default:
+                RESULT = new Expresion("null", TypeEx.NULL);
+                break;
+        };
+    :}
+    | incienzo_expression:a RODOLFO incienzo_expression:b                                     // Suma
+    {:
+        Expresion aexpr = (Expresion)a;
+        Expresion bexpr = (Expresion)b;
+        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
+        TypeEx resultType = validarTipado("+", aexpr, bexpr, arrayValidTypes);
+
+        switch(resultType){
+            case INT:
+                RESULT = new Expresion(aexpr.getValue().toString() + " + " + bexpr.getValue().toString(), TypeEx.INT);
+                break;
+            case FLOAT:
+                RESULT = new Expresion(aexpr.getValue().toString() + " + " + bexpr.getValue().toString(), TypeEx.FLOAT);
+                break;
+            default:
+                RESULT = new Expresion("null", TypeEx.NULL);
+                break;
+        };
+    :}
+    | incienzo_expression:a JUGUETON incienzo_expression:b                                  // División 
+    {:
+        Expresion aexpr = (Expresion)a;
+        Expresion bexpr = (Expresion)b;
+        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
+        TypeEx resultType = validarTipado("/", aexpr, bexpr, arrayValidTypes);
+
+        switch(resultType){
+            case INT:
+                RESULT = new Expresion(aexpr.getValue().toString() + " / " + bexpr.getValue().toString(), TypeEx.INT);
+                break;
+            case FLOAT:
+                RESULT = new Expresion(aexpr.getValue().toString() + " / " + bexpr.getValue().toString(), TypeEx.FLOAT);
+                break;
+            default:
+                RESULT = new Expresion("null", TypeEx.NULL);
+                break;
+        };
+    :}
+    | incienzo_expression:a RELAMPAGO incienzo_expression:b                                  // Multiplicación
+    {:
+        Expresion aexpr = (Expresion)a;
+        Expresion bexpr = (Expresion)b;
+        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
+        TypeEx resultType = validarTipado("*", aexpr, bexpr, arrayValidTypes);
+
+        switch(resultType){
+            case INT:
+                RESULT = new Expresion(aexpr.getValue().toString() + " * " + bexpr.getValue().toString(), TypeEx.INT);
+                break;
+            case FLOAT:
+                RESULT = new Expresion(aexpr.getValue().toString() + " * " + bexpr.getValue().toString(), TypeEx.FLOAT);
+                break;
+            default:
+                RESULT = new Expresion("null", TypeEx.NULL);
+                break;
+        };
+    :}
+    | incienzo_expression:a CUPIDO incienzo_expression:b                                   // Modulo
+    {:
+        Expresion aexpr = (Expresion)a;
+        Expresion bexpr = (Expresion)b;
+        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
+        TypeEx resultType = validarTipado("~xz", aexpr, bexpr, arrayValidTypes);
+
+        switch(resultType){
+            case INT:
+                RESULT = new Expresion(aexpr.getValue().toString() + " ~ " + bexpr.getValue().toString(), TypeEx.INT);
+                break;
+            case FLOAT:
+                RESULT = new Expresion(aexpr.getValue().toString() + " ~ " + bexpr.getValue().toString(), TypeEx.FLOAT);
+                break;
+            default:
+                RESULT = new Expresion("null", TypeEx.NULL);
+                break;
+        };
+    :}
+    | incienzo_expression:a COMETA incienzo_expression:b                                        //Exponente
+    {:
+        Expresion aexpr = (Expresion)a;
+        Expresion bexpr = (Expresion)b;
+        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT)); 
+        TypeEx resultType = validarTipado("**", aexpr, bexpr, arrayValidTypes);
+
+        switch(resultType){
+            case INT:
+                RESULT = new Expresion(aexpr.getValue().toString() + " ** " + bexpr.getValue().toString(), TypeEx.INT);
+                break;
+            case FLOAT:
+                RESULT = new Expresion(aexpr.getValue().toString() + " ** " + bexpr.getValue().toString(), TypeEx.FLOAT);
+                break;
+            default:
+                RESULT = new Expresion("null", TypeEx.NULL);
+                break;
+        };
+    :}
+    | TRUENO incienzo_expression:a
+    {:
+        Expresion aexpr = (Expresion)a;
+        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT)); 
+        TypeEx resultType = validarTipado("-", aexpr, arrayValidTypes);
+
+        switch(resultType){
+            case INT:
+                RESULT = new Expresion(" - " + aexpr.getValue().toString(), TypeEx.INT);
+                break;
+            case FLOAT:
+                RESULT = new Expresion(" - " + aexpr.getValue().toString(), TypeEx.FLOAT);
+                break;
+            default:
+                RESULT = new Expresion("null", TypeEx.NULL);
+                break;
+        };
+    :}
+    | QUIEN PERSONA:id                                                                                               // Incremento prefijo
+    {:
+        TypeEx resultType = getType(id.toString(), false);
+        if (resultType == TypeEx.NULL) {
+            RESULT = new Expresion("null", TypeEx.NULL);
+        } else {
+            switch(resultType){
+                case INT:
+                    RESULT = new Expresion(" ++ " + id.toString(), TypeEx.INT);
+                    break;
+                case FLOAT:
+                    RESULT = new Expresion(" ++ " + id.toString(), TypeEx.FLOAT);
+                    break;
+                default:
+                    System.out.println("Error semántico: no es posible implementar la operación sobre tipos de dato:" + resultType.toString() + ". Error en línea " + lex.getLine() + " columna: " + lex.getColumn());
+                    RESULT = new Expresion("null", TypeEx.NULL);
+                    break;
+            };
+        };
+    :}
+    | GRINCH PERSONA:id                                                                                                   // Decremento prefijo
+    {:
+        TypeEx resultType = getType(id.toString(), false);
+        if (resultType == TypeEx.NULL) {
+            RESULT = new Expresion("null", TypeEx.NULL);
+        } else {
+            switch(resultType){
+                case INT:
+                    RESULT = new Expresion(" -- " + id.toString(), TypeEx.INT);
+                    break;
+                case FLOAT:
+                    RESULT = new Expresion(" -- " + id.toString(), TypeEx.FLOAT);
+                    break;
+                default:
+                    System.out.println("Error semántico: no es posible implementar la operación sobre tipos de dato:" + resultType.toString() + ". Error en línea " + lex.getLine() + " columna: " + lex.getColumn());
+                    RESULT = new Expresion("null", TypeEx.NULL);
+                    break;
+            };
+        };
+    :}
+    | diciembre_operation_array                                                                                                                     // Decr o Incr con indice array
+	;
+
+// Expresiones lógicas
+galleta_logic_expr ::= 
+    incienzo_expression:a GASPAR incienzo_expression:b               // Y lógico
+    {:
+        Expresion aexpr = (Expresion)a;
+        Expresion bexpr = (Expresion)b;
+        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.BOOL));
+        TypeEx resultType = validarTipado(" ^ ", aexpr, bexpr, arrayValidTypes);
+        switch (resultType) {
+        case BOOL:
+            RESULT = new Expresion(aexpr.getValue().toString() + " ^ " + bexpr.getValue().toString(), TypeEx.BOOL);
+            break;
+        default:
+            RESULT = new Expresion("null", TypeEx.NULL);
+            break;
+        }
+    :}
+    | incienzo_expression:a MELCHOR incienzo_expression:b                               // O lógico
+    {:
+        Expresion aexpr = (Expresion)a;
+        Expresion bexpr = (Expresion)b;
+        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.BOOL));
+        TypeEx resultType = validarTipado(" # ", aexpr, bexpr, arrayValidTypes);
+        switch (resultType) {
+        case BOOL:
+            RESULT = new Expresion(aexpr.getValue().toString() + " # " + bexpr.getValue().toString(), TypeEx.BOOL);
+            break;
+        default:
+            RESULT = new Expresion("null", TypeEx.NULL);
+            break;
+        }
+    :}
+    | BALTASAR incienzo_expression:a // Negación lógica                               // No lógico
+    {:
+        Expresion aexpr = (Expresion)a;
+        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.BOOL));
+        TypeEx resultType = validarTipado(" ! ", aexpr, arrayValidTypes);
+        switch (resultType) {
+        case BOOL:
+            RESULT = new Expresion(" ! " + aexpr.getValue().toString(), TypeEx.BOOL);
+            break;
+        default:
+            RESULT = new Expresion("null", TypeEx.NULL);
+            break;
+        }
+    :}
+    ;
+
+// Expresiones relacionales
+leche_relational_expr ::= 
+    incienzo_expression:a ALABASTRO incienzo_expression:b         // Igual
+    {:
+        var aexpr = (Expresion)a;
+        var bexpr = (Expresion)b;
+        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT, TypeEx.BOOL));
+        var resultType = validarTipado("==", aexpr, bexpr, arrayValidTypes);
+        switch (resultType) {
+        case INT:
+        case BOOL: 
+            RESULT = new Expresion(aexpr.getValue().toString() + " == " + bexpr.getValue().toString(), TypeEx.BOOL);
+            break;
+        case FLOAT:
+            RESULT = new Expresion(aexpr.getValue().toString() + " == " + bexpr.getValue().toString(), TypeEx.BOOL);
+            break; 
+        default:
+            RESULT = new Expresion("null", TypeEx.NULL);
+            break;
+        };
+    :}
+    | incienzo_expression:a EVERGEEN incienzo_expression:b                              // No igual
+    {:
+        var aexpr = (Expresion)a;
+        var bexpr = (Expresion)b;
+        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT, TypeEx.BOOL));
+        var resultType = validarTipado("!=", aexpr, bexpr, arrayValidTypes);
+        switch (resultType) {
+        case INT:
+        case BOOL: 
+            RESULT = new Expresion(aexpr.getValue().toString() + " != " + bexpr.getValue().toString(), TypeEx.BOOL);
+            break;
+        case FLOAT:
+            RESULT = new Expresion(aexpr.getValue().toString() + " != " + bexpr.getValue().toString(), TypeEx.BOOL);
+            break; 
+        default:
+            RESULT = new Expresion("null", TypeEx.NULL);
+            break;
+        };
+    :}
+    | incienzo_expression:a MINSTIX incienzo_expression:b                              // Menor que
+    {:
+        var aexpr = (Expresion)a;
+        var bexpr = (Expresion)b;
+        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
+        var resultType = validarTipado("<", aexpr, bexpr, arrayValidTypes);
+        switch (resultType) {
+        case INT:
+            RESULT = new Expresion(aexpr.getValue().toString() + " < " + bexpr.getValue().toString(), TypeEx.BOOL);
+            break;
+        case FLOAT:
+            RESULT = new Expresion(aexpr.getValue().toString() + " < " + bexpr.getValue().toString(), TypeEx.BOOL);
+            break; 
+        default:
+            RESULT = new Expresion("null", TypeEx.NULL);
+            break;
+        };
+    :}
+    | incienzo_expression:a UPATREE incienzo_expression:b                              // Mayor que
+    {:
+        var aexpr = (Expresion)a;
+        var bexpr = (Expresion)b;
+        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
+        var resultType = validarTipado(">", aexpr, bexpr, arrayValidTypes);
+        switch (resultType) {
+        case INT:
+            RESULT = new Expresion(aexpr.getValue().toString() + " > " + bexpr.getValue().toString(), TypeEx.BOOL);
+            break;
+        case FLOAT:
+            RESULT = new Expresion(aexpr.getValue().toString() + " > " + bexpr.getValue().toString(), TypeEx.BOOL);
+            break; 
+        default:
+            RESULT = new Expresion("null", TypeEx.NULL);
+            break;
+        };
+    :}
+    | incienzo_expression:a OPENSLAE incienzo_expression:b                              // Menor o igual
+    {:
+        var aexpr = (Expresion)a;
+        var bexpr = (Expresion)b;
+        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
+        var resultType = validarTipado("=<", aexpr, bexpr, arrayValidTypes);
+        switch (resultType) {
+        case INT:
+            RESULT = new Expresion(aexpr.getValue().toString() + " =<" + bexpr.getValue().toString(), TypeEx.BOOL);
+            break;
+        case FLOAT:
+            RESULT = new Expresion(aexpr.getValue().toString() + " =< " + bexpr.getValue().toString(), TypeEx.BOOL);
+            break; 
+        default:
+            RESULT = new Expresion("null", TypeEx.NULL);
+            break;
+        };
+    :}
+    | incienzo_expression:a MARY incienzo_expression:b                              // Mayor o igual
+    {:
+        var aexpr = (Expresion)a;
+        var bexpr = (Expresion)b;
+        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
+        var resultType = validarTipado("=>", aexpr, bexpr, arrayValidTypes);
+        switch (resultType) {
+        case INT:
+            RESULT = new Expresion(aexpr.getValue().toString() + " =>" + bexpr.getValue().toString(), TypeEx.BOOL);
+            break;
+        case FLOAT:
+            RESULT = new Expresion(aexpr.getValue().toString() + " => " + bexpr.getValue().toString(), TypeEx.BOOL);
+            break; 
+        default:
+            RESULT = new Expresion("null", TypeEx.NULL);
+            break;
+        };
+    :}
+    ;
+
+
