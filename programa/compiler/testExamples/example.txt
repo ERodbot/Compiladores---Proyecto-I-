@@ -1,0 +1,43 @@
+ 
+
+
+integer function hola (integer volumen, float nicolasRojo) {
+    local float nicolasRojo <= "grey god"| 
+    local integer i <= 1| 
+    local char holaMundo <= "strong"|
+    local char six <= '6'|
+
+    local char array[] <= {1,2,3,4}|
+    local char array[]|
+    local char array[4] <= {1,2,3,4} |
+    local char array[1]| 
+
+
+    local integer g <= (5 + ++er - --nicolasRojo * (5)~1 >== 60) # true |
+
+    if (12 > nicolasRojo) {
+        return|
+    }|
+
+    if (nicolasRojo == holaMundo) {
+        do {
+            print("hola mundo ") |
+        }
+        until (1 >== nicolasRojo )|
+    }
+    elif (true) {
+        for (local integer i <= 1|, i <== 10 , ++i) {
+           read(123)|
+        }|
+    }
+    else {
+        return error404 |
+    }|
+ }|
+
+integer function gogo () {
+     local integer var <= hola(mal, vola)||
+    return var|
+    return hola(mal, vola)||
+ }|
+
