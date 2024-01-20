@@ -8,8 +8,7 @@ function float func1(char x22){	@semantico borrar parametro
 	local float fl1|
 	
 	local int in1<= false|
-	local char arr[fl1] <= {'c','d'}| @sintatico lit
-	arr[fl1] <= 'c'|
+	local char arr[5] <= {'c','d'}| @sintatico lit
 	local bool mibool <= true|
 
 	local int in1<= --fl1 ~ -14/++in1+7-15 **  arr[67] * func1 (hola, true, "hola mundo", 4.5, 'a') | @semantico fl1, in1

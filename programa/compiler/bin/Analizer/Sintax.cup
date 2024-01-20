@@ -72,7 +72,7 @@ action code {:
     public TypeEx getType(String id, boolean isError){
        for(SymbolTObj sym : listaTablasSimbolos.get(currentHash).getSymbolTable()) {
             if (sym.getValor().equals(id)){
-                System.out.println("Tipo encontrado para id: " + id);
+                //System.out.println("Tipo encontrado para id: " + id);
                 return Expresion.tipoFromString(sym.getTipo()); }
         }
         if (isError){
@@ -652,11 +652,58 @@ nochebuena_initializer ::=  ABREREGALO reyes_magicos_list_expr:l CIERRAREGALO   
 
 
 //asignacion de arrays (parte izquierda)
-estrella_assign_array ::= LOCALCOLOCARREGALO gorro_navidad_type_specifier:ty PERSONA:id ABREEMPAQUE CIERRAEMPAQUE      //int id[]
-    {:anadirSimbolo(new SymbolTObj("variable local", ty.toString(), id.toString()));:}
-	| LOCALCOLOCARREGALO gorro_navidad_type_specifier:ty PERSONA:id ABREEMPAQUE incienzo_expression CIERRAEMPAQUE      //int id[4]
-    {:anadirSimbolo(new SymbolTObj("variable local", ty.toString(), id.toString()));:}
-    |PERSONA:id ABREEMPAQUE CIERRAEMPAQUE //id[]
+estrella_assign_array ::= LOCALCOLOCARREGALO:l gorro_navidad_type_specifier:ty PERSONA:id ABREEMPAQUE l_NOEL:l_int CIERRAEMPAQUE ENTREGA nochebuena_initializer:arrl //int id[4]
+    {:
+        if (ty.toString() != "int" && ty.toString() != "char") {
+            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + ty.toString() + " no valido para arreglo");
+        }
+        else {
+            var earr = (Expresion)arrl;
+            if (earr.getType() == TypeEx.NULL){
+                System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Literal de arreglo mal formado");
+            }
+            else {
+                TypeEx tipo = Expresion.tipoFromString(ty.toString() + "[]");
+                if (earr.getType() != tipo){
+                    System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + earr.getType().toString() + " no valido para una variable de tipo " + tipo.toString());
+                }
+                else {
+                    var arr = (ArrayList<Expresion>)earr.getValue();
+                    if ((int)l_int != arr.size()) {
+                           System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + l_int + " no coincide con la longitud del literal de arreglo " + arr.size());
+                        }
+                    else {
+                        if (getType(id.toString(), false) != TypeEx.NULL) {
+                           System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
+                        }
+                        else {
+                            anadirSimbolo(new SymbolTObj("variable local", ty.toString(), id.toString()));
+                        }
+                    }
+                }
+            }
+        }
+    :}
+    | LOCALCOLOCARREGALO gorro_navidad_type_specifier:ty PERSONA:id ABREEMPAQUE l_NOEL:l_int CIERRAEMPAQUE 
+    {:
+        if(ty.toString() != "int" && ty.toString() != "char"){
+            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + ty.toString() + " no valido para arreglo");
+        }
+        else {
+            var i_arr = (int)l_int;
+            if (i_arr <= 0) {
+                System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + i_arr + " no valida");
+            }
+            else {
+                if (getType(id.toString(), false) != TypeEx.NULL) {
+                    System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
+                }
+                else {
+                    anadirSimbolo(new SymbolTObj("variable local", ty.toString(), id.toString()));
+                }
+            }
+        }
+    :}
 	;
 
 
@@ -703,22 +750,27 @@ candelabro_assignment_expression ::= LOCALCOLOCARREGALO:l gorro_navidad_type_spe
         var expr = (Expresion)iexpr;
         var idType = getType(id.toString(), true);
         if (idType != expr.getType()) {
-        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getType().toString() + " no valido para una variable de tipo " + idType.toString());
+            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getType().toString() + " no valido para una variable de tipo " + idType.toString());
         }
         else {
         
         }
     :}
-    | estrella_assign_array FINREGALO        // int id[4]| ó int[4] ...|
-	| estrella_assign_array ENTREGA nochebuena_initializer FINREGALO  // int id[4] = {1,2,3,4}
+    | estrella_assign_array FINREGALO   //local arr[4] = {1,2,3,4}
+    | decorativo_array_elem:arre ENTREGA incienzo_expression:iexpr FINREGALO
     {:
-    
-    :}
-	| estrella_assign_array ENTREGA incienzo_expression FINREGALO      //idAlreadyDeclared[2] = 2 ó idAlreadyDelcared[2] = ++idAlreadyDeclared[2]
-	{:
+        var expreaj = (Expresion)arre;
+        var expre = (Expresion)iexpr;
 
-    :}
-    ;
+        if (expreaj.getType() != expre.getType()){
+            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expre.getType().toString() + " no valido para una variable de tipo " + expreaj.getType().toString());
+        } else if (expreaj.getType() == TypeEx.NULL){
+            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Asignación mal formada.");
+        }
+        else {
+            
+        }
+    :}; // arr[4] = number
 
 //argumentos para definicion de funciones 
 pesebre_args ::=  pesebre_arg | pesebre_args CHIMENEA pesebre_arg| pesebre_args CHIMENEA error|error;

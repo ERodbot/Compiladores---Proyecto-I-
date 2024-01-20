@@ -8,7 +8,6 @@
 | miChar | char | local |
 | miChar2 | char | local |
 | str1 | string | local |
-| arr | char | variable local |
 | mibool | bool | local |
 
 ## miFunc
