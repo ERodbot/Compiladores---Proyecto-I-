@@ -169,10 +169,10 @@ Identifier= [A-Za-z_][A-Za-z0-9_]*
    {MultipleLineComment}           {/*skip*/}
 
    /*decimal integer literal*/
-   {LiteralDecimalInteger}         {return symbol(sym.l_NOEL, yytext());}
+   {LiteralDecimalInteger}         {return symbol(sym.l_NOEL, new Integer(yytext()));}
 
    /*decimal float literal*/
-   {LiteralDecimalFloat}           {return symbol(sym.l_NICOLAS, yytext());}
+   {LiteralDecimalFloat}           {return symbol(sym.l_NICOLAS, new Float(yytext()));}
 
    /*unarian operators*/
    {Decrement}                     {return symbol(sym.GRINCH);}

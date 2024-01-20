@@ -77,6 +77,17 @@ public class Expresion {
         }
    }
 
+   public static TypeEx fromArr(TypeEx type){
+        switch (type) {
+            case INT_ARRAY:
+                return TypeEx.INT;
+            case CHAR_ARRAY:
+                return TypeEx.CHAR;
+            default:
+                return TypeEx.NULL;
+        }
+    }
+
    public void setDirection(String direction){
         this.direction = direction;
    }

@@ -4,17 +4,12 @@
 |-------|------|--------|
 | func1 | float | function |
 | x22 | char | argumento de funcion |
-| x22 | char | argumento de funcion |
-| x22 | char | variable local |
-| miChar | char | variable local |
-| miChar2 | char | variable local |
-| str1 | string | variable local |
-| fl1 | float | variable local |
-| fl1 | float | variable local |
-| in1 | int | variable local |
+| fl1 | float | local |
+| miChar | char | local |
+| miChar2 | char | local |
+| str1 | string | local |
 | arr | char | variable local |
-| mibool | bool | variable local |
-| in1 | int | variable local |
+| mibool | bool | local |
 
 ## miFunc
 
@@ -32,8 +27,7 @@
 | Main | integer | function |
 | b1 | bool | variable local |
 | s1 | string | variable local |
-| bl0 | bool | variable local |
-| bl1 | bool | variable local |
+| bl0 | bool | local |
 
 ## func3
 
