@@ -1,12 +1,12 @@
  /_ esto es un comentario inicial _/
 
-function float func1(char x22,char x22){@semantico borrar parametro
-	local char x22 <= '!'| /_semantico x22_/
+function float func1(char x22){	@semantico borrar parametro
+	local float fl1<=56.6| @semantico fl1
 	local char miChar<='!'|
 	local char miChar2<='!'| @sintactico
 	local string str1<="Hola $%&/#$&) mundo"|
 	local float fl1|
-	local float fl1<=56.6| @semantico fl1
+	
 	local int in1<= false|
 	local char arr[fl1] <= {'c','d'}| @sintatico lit
 	arr[fl1] <= 'c'|

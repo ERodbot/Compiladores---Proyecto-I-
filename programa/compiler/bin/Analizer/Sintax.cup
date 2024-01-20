@@ -231,8 +231,8 @@ terminal ERRORNOTRECOGNIZED;
 //no terminal 
 non terminal   navidad, navidadAux, saco_function_definition_aux, saco_function_definition, arbol_constant, gorro_navidad_type_specifier, statement_risa_santa, lazo_io_statement, belen_function_call_statement,
                calcetin_compound_statement, empaque_block_item_list, carta_block_item, deseos_selection_statement, lapiz_papel_if_statement,
-			   tradiciones_elif_lista_statements, tradicion_elif_statement, caramelo_iteration_statement, calcetin_jump_statement, nochebuena_initializer, pino_initializer_list, campanas_initializer_list_integer,
-			   guirnaldas_initializer_list_char, estrella_assign_array, decorativo_array_elem, candelabro_assignment_expression, pesebre_args, pesebre_arg, reyes_magicos_list_expr, incienzo_expression, diciembre_operation_array, bastoncillo_arithmetic_expr, galleta_logic_expr, 
+			   tradiciones_elif_lista_statements, tradicion_elif_statement, caramelo_iteration_statement, calcetin_jump_statement, nochebuena_initializer, 
+			   estrella_assign_array, decorativo_array_elem, candelabro_assignment_expression, pesebre_args, pesebre_arg, reyes_magicos_list_expr, incienzo_expression, diciembre_operation_array, bastoncillo_arithmetic_expr, galleta_logic_expr, 
 			   leche_relational_expr, belen_function_call_expression;
 
 
@@ -346,8 +346,8 @@ statement_risa_santa ::= calcetin_compound_statement
 lazo_io_statement ::= NARRA ABRECUENTO reyes_magicos_list_expr: argsList CIERRACUENTO FINREGALO
     {:
         var exprargs = (ArrayList<Expresion>)argsList;
-        for (Expresion e : exprargs) {
-        switch (e.getType()) {
+        for (Expresion iexpr : exprargs) {
+        switch (iexpr.getType()) {
             case STRING:
             break;
             case INT:
@@ -355,7 +355,7 @@ lazo_io_statement ::= NARRA ABRECUENTO reyes_magicos_list_expr: argsList CIERRAC
             case FLOAT:
             break;
             default:
-            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e.getType().toString() + " no valido para print");
+            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + iexpr.getType().toString() + " no valido para print");
             break;
         }
         }
@@ -414,7 +414,6 @@ belen_function_call_expression ::= PERSONA:id ABRECUENTO reyes_magicos_list_expr
             }
             }
         }
-
         if (validTypes) {
             RESULT = new Expresion("null", fidentifier.getTipoRetorno());
         }
@@ -554,7 +553,7 @@ calcetin_jump_statement ::= CORTA FINREGALO
 	;
 
 //inicializacion de un array 
-nochebuena_initializer ::=  ABREREGALO pino_initializer_list:l CIERRAREGALO      // {1,2,3,4...}
+nochebuena_initializer ::=  ABREREGALO reyes_magicos_list_expr:l CIERRAREGALO      // {1,2,3,4...}
     {:
         var arrL = (ArrayList<Expresion>)l;
         var isValid = true;
@@ -565,9 +564,9 @@ nochebuena_initializer ::=  ABREREGALO pino_initializer_list:l CIERRAREGALO     
             RESULT = new Expresion("null", TypeEx.NULL);
             isValid = false;
         }
-        for (Expresion e : arrL) {
-            if (e.getType() != tipo) {
-                System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + e.getType().toString() + " no valido para un literal de arreglo de tipo " + tipo.toString());
+        for (Expresion iexpr : arrL) {
+            if (iexpr.getType() != tipo) {
+                System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + iexpr.getType().toString() + " no valido para un literal de arreglo de tipo " + tipo.toString());
                 RESULT = new Expresion("null", TypeEx.NULL);
                 isValid = false;  
                 break;
@@ -584,15 +583,6 @@ nochebuena_initializer ::=  ABREREGALO pino_initializer_list:l CIERRAREGALO     
     :}
     | ABREREGALO CIERRAREGALO ;
 
-
-//elementos de un array sin importar su tipo
-pino_initializer_list ::= campanas_initializer_list_integer:il | guirnaldas_initializer_list_char:cl;   // {1,2,3,4} o {'a','b','c'}
-
-//elementos de lista con integer
-campanas_initializer_list_integer ::= l_NOEL | campanas_initializer_list_integer:ili CHIMENEA l_NOEL ;
-
-//elementos de lista con char
-guirnaldas_initializer_list_char ::= l_COLACHO | guirnaldas_initializer_list_char:ilc CHIMENEA l_COLACHO ;
 
 //asignacion de arrays (parte izquierda)
 estrella_assign_array ::= LOCALCOLOCARREGALO gorro_navidad_type_specifier:ty PERSONA:id ABREEMPAQUE CIERRAEMPAQUE      //int id[]
@@ -619,15 +609,50 @@ decorativo_array_elem ::=  PERSONA:id ABREEMPAQUE incienzo_expression:iexpr CIER
     :};
 
 //expresiones de asignacion 
-candelabro_assignment_expression ::= LOCALCOLOCARREGALO gorro_navidad_type_specifier:ty PERSONA:id ENTREGA incienzo_expression FINREGALO  //int id = 5|
+candelabro_assignment_expression ::= LOCALCOLOCARREGALO gorro_navidad_type_specifier:ty PERSONA:id ENTREGA incienzo_expression:iexpr FINREGALO  //int id = 5|
+    {:
+        if (getType(id.toString(), false) != TypeEx.NULL) {
+            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
+        } else {
+            var expr = (Expresion)iexpr;
+            if (expr.getType() != Expresion.tipoFromString(ty.toString())) {
+                System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getType().toString() + " no valido para una variable de tipo " + ty.toString());
+            } else {
+                anadirSimbolo(new SymbolTObj("local", ty.toString(), id.toString()));
+            };
+        }
+    :}
     {:anadirSimbolo(new SymbolTObj("variable local", ty.toString(), id.toString()));:}
-    | LOCALCOLOCARREGALO gorro_navidad_type_specifier:ty PERSONA:id FINREGALO 
-    {:anadirSimbolo(new SymbolTObj("variable local", ty.toString(), id.toString()));:}
-    | PERSONA:id ENTREGA incienzo_expression FINREGALO  //id = 5|
+    | LOCALCOLOCARREGALO gorro_navidad_type_specifier:ty PERSONA:id FINREGALO
+    {:
+        if (getType(id.toString(), false) != TypeEx.NULL) {
+            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
+        }
+        else {
+            anadirSimbolo(new SymbolTObj("variable local", ty.toString(), id.toString()));
+        }
+    :} 
+    | PERSONA:id ENTREGA incienzo_expression:iexpr FINREGALO  //id = 5|
+    {:
+        var expr = (Expresion)iexpr;
+        var idType = getType(id.toString(), true);
+        if (idType != expr.getType()) {
+        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getType().toString() + " no valido para una variable de tipo " + idType.toString());
+        }
+        else {
+        
+        }
+    :}
     | estrella_assign_array FINREGALO        // int id[4]| ó int[4] ...|
 	| estrella_assign_array ENTREGA nochebuena_initializer FINREGALO  // int id[4] = {1,2,3,4}
+    {:
+    
+    :}
 	| estrella_assign_array ENTREGA incienzo_expression FINREGALO      //idAlreadyDeclared[2] = 2 ó idAlreadyDelcared[2] = ++idAlreadyDeclared[2]
-	;
+	{:
+
+    :}
+    ;
 
 //argumentos para definicion de funciones 
 pesebre_args ::=  pesebre_arg | pesebre_args CHIMENEA pesebre_arg| pesebre_args CHIMENEA error|error;
@@ -683,7 +708,7 @@ incienzo_expression ::=
     {:
         RESULT = iexpr;
     :}
-        | ABRECUENTO incienzo_expression: iexpr CIERRACUENTO        // ( expresion )
+    | ABRECUENTO incienzo_expression: iexpr CIERRACUENTO        // ( expresion )
     {:
         RESULT = iexpr;
     :}
@@ -811,7 +836,7 @@ bastoncillo_arithmetic_expr ::=
         Expresion aexpr = (Expresion)a;
         Expresion bexpr = (Expresion)b;
         ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
-        TypeEx resultType = validarTipado("~xz", aexpr, bexpr, arrayValidTypes);
+        TypeEx resultType = validarTipado("~", aexpr, bexpr, arrayValidTypes);
 
         switch(resultType){
             case INT:
