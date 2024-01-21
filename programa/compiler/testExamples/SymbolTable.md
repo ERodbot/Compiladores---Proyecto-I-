@@ -8,7 +8,11 @@
 | miChar | char | local |
 | miChar2 | char | local |
 | str1 | string | local |
+| in1 | int | local |
+| arr | char | variable local |
 | mibool | bool | local |
+| yuca | float | local |
+| in2 | int | local |
 
 ## miFunc
 
@@ -18,6 +22,12 @@
 | dif | int | argumento de funcion |
 | otra | char | argumento de funcion |
 | otra2 | char | argumento de funcion |
+| trt | int | variable local |
+| gestoDeSaludo | int | local |
+| i | int | variable local |
+| var | int | local |
+| k | int | variable local |
+| j | int | variable local |
 
 ## main
 
@@ -27,6 +37,7 @@
 | b1 | bool | variable local |
 | s1 | string | variable local |
 | bl0 | bool | local |
+| bl1 | bool | local |
 
 ## func3
 

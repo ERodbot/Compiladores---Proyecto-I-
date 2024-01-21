@@ -72,7 +72,6 @@ action code {:
     public TypeEx getType(String id, boolean isError){
        for(SymbolTObj sym : listaTablasSimbolos.get(currentHash).getSymbolTable()) {
             if (sym.getValor().equals(id)){
-                //System.out.println("Tipo encontrado para id: " + id);
                 return Expresion.tipoFromString(sym.getTipo()); }
         }
         if (isError){
@@ -246,8 +245,8 @@ precedence left TRUENO, RODOLFO; //resta
 precedence left JUGUETON, RELAMPAGO;  //division, multiplicacion
 precedence left CUPIDO, COMETA; // mod, exponente
 precedence left QUIEN, GRINCH; // Increment and decrement
-precedence left ALABASTRO, EVERGEEN;
-precedence left MINSTIX, UPATREE, OPENSLAE, MARY;
+precedence left ALABASTRO, MINSTIX, UPATREE, MARY;
+precedence left OPENSLAE, EVERGEEN;
 precedence left GASPAR;
 precedence left MELCHOR; 
 precedence left BALTASAR;
@@ -301,8 +300,8 @@ saco_function_definition_aux ::=  RECORRIDO:f NOEL MAINNAVIDAD ABRECUENTO CIERRA
                 } else {
                     RESULT = id.toString();
                     definirHash(id.toString());
-                    anadirSimbolo(new SymbolTObj("function", ty.toString(), id.toString()));
-                    addFunctionIdentifier(new FunctionIdentifier("function", Expresion.tipoFromString(id.toString()), false, new TypeEx[] {}));
+                    anadirSimbolo(new SymbolTObj("function", type, id.toString()));
+                    addFunctionIdentifier(new FunctionIdentifier(id.toString(), Expresion.tipoFromString(type), false, new TypeEx[] {}));
                 }
             }
         :}                                                         
@@ -319,7 +318,7 @@ saco_function_definition_aux ::=  RECORRIDO:f NOEL MAINNAVIDAD ABRECUENTO CIERRA
                     definirHash(id.toString());
                     RESULT = id.toString();
                     anadirSimbolo(new SymbolTObj("function", ty.toString(), id.toString()));
-                    addFunctionIdentifier(new FunctionIdentifier("function", Expresion.tipoFromString(id.toString()), false, new TypeEx[] {}));
+                    addFunctionIdentifier(new FunctionIdentifier(id.toString(), Expresion.tipoFromString(ty.toString()), false, new TypeEx[] {}));
                 }
             }
         :}                                                         
@@ -385,7 +384,7 @@ lazo_io_statement ::= NARRA ABRECUENTO reyes_magicos_list_expr:argsList CIERRACU
                 case FLOAT:
                     break;
                 default:
-                    System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + iexpr.getType().toString() + " no valido para print");
+                     System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + iexpr.getType().toString() + " no valido para print");
                     break;
             }
         }
@@ -395,9 +394,9 @@ lazo_io_statement ::= NARRA ABRECUENTO reyes_magicos_list_expr:argsList CIERRACU
     {:
         RESULT = new Expresion("null", TypeEx.NULL);
     :}
-    | ESCUCHA ABRECUENTO PERSONA:id CIERRACUENTO FINREGALO
+    | ESCUCHA ABRECUENTO incienzo_expression:iexpr CIERRACUENTO FINREGALO
     {:
-        var type = getType(id.toString(), true);
+        var type = ((Expresion)iexpr).getType();;
             switch (type){
             case INT:
                 RESULT = new Expresion("null", TypeEx.NULL);
@@ -406,22 +405,11 @@ lazo_io_statement ::= NARRA ABRECUENTO reyes_magicos_list_expr:argsList CIERRACU
                 RESULT = new Expresion("null", TypeEx.NULL);
                 break;
             default:
+                System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + type.toString() + " no valido para read");
                 break;
             } 
         RESULT = new Expresion("null", TypeEx.NULL);
-    :} 
-    | ESCUCHA ABRECUENTO decorativo_array_elem:elem CIERRACUENTO FINREGALO 
-    {:
-        var type = ((Expresion)elem).getType();
-        if (type == TypeEx.INT) {
-
-        }
-        else {
-            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + type.toString() + " no valido para read");
-        }
-        RESULT = new Expresion("null", TypeEx.NULL);
-    :}
-  ;
+    :};
 
 //llamada a funcion
 belen_function_call_expression ::= PERSONA:id ABRECUENTO reyes_magicos_list_expr:listArgs CIERRACUENTO 
@@ -654,7 +642,7 @@ nochebuena_initializer ::=  ABREREGALO reyes_magicos_list_expr:l CIERRAREGALO   
 //asignacion de arrays (parte izquierda)
 estrella_assign_array ::= LOCALCOLOCARREGALO:l gorro_navidad_type_specifier:ty PERSONA:id ABREEMPAQUE l_NOEL:l_int CIERRAEMPAQUE ENTREGA nochebuena_initializer:arrl //int id[4]
     {:
-        if (ty.toString() != "int" && ty.toString() != "char") {
+        if (!ty.toString().equals("int")  && !ty.toString().equals("char")) {
             System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + ty.toString() + " no valido para arreglo");
         }
         else {
@@ -686,7 +674,7 @@ estrella_assign_array ::= LOCALCOLOCARREGALO:l gorro_navidad_type_specifier:ty P
     :}
     | LOCALCOLOCARREGALO gorro_navidad_type_specifier:ty PERSONA:id ABREEMPAQUE l_NOEL:l_int CIERRAEMPAQUE 
     {:
-        if(ty.toString() != "int" && ty.toString() != "char"){
+        if(!ty.toString().equals("int")  && !ty.toString().equals("char")){
             System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + ty.toString() + " no valido para arreglo");
         }
         else {
@@ -768,7 +756,7 @@ candelabro_assignment_expression ::= LOCALCOLOCARREGALO:l gorro_navidad_type_spe
             System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Asignación mal formada.");
         }
         else {
-            
+
         }
     :}; // arr[4] = number
 
@@ -805,10 +793,6 @@ incienzo_expression ::=
     {:
         RESULT = iexpr;
     :}  
-    | belen_function_call_expression:iexpr           // llamada a function 
-    {:
-        RESULT = iexpr;
-    :}
     | ABRECUENTO incienzo_expression:iexpr CIERRACUENTO        // ( expresion )
     {:
         RESULT = iexpr;
@@ -817,51 +801,28 @@ incienzo_expression ::=
     {:
         RESULT = iexpr;
     :}
-    | galleta_logic_expr:iexpr                                 // operacion logica
-    {:
-        RESULT = iexpr;
-    :}
     | leche_relational_expr:iexpr                              // operacion relacional
     {:
         RESULT = iexpr;
     :}
-       ;
-
-//incremento o decremento con asignacion en arrays
-diciembre_operation_array ::= QUIEN decorativo_array_elem:arrElem
+    | galleta_logic_expr:iexpr                                 // operacion logica
     {:
-        Expresion arrElemExpr = (Expresion)arrElem;
-        var resultType = validarTipado("++", arrElemExpr, new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT)));
-        if (resultType == TypeEx.INT) {
-            RESULT = new Expresion(arrElemExpr.getValue().toString() + "++", TypeEx.INT);
-        }
-        else {
-            System.out.println("Error semántico: tipo de dato " + arrElemExpr.getType().toString() + " no es permitido para incremento. En la linea " + lex.getLine() + " columna " + lex.getColumn());
-            RESULT = new Expresion("null", TypeEx.NULL);
-        }
+        RESULT = iexpr;
     :}
-    | GRINCH decorativo_array_elem:arrElem
-        {:
-        Expresion arrElemExpr = (Expresion)arrElem;
-        var resultType = validarTipado("--", arrElemExpr, new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT)));
-        if (resultType == TypeEx.INT) {
-            RESULT = new Expresion(arrElemExpr.getValue().toString() + "--", TypeEx.INT);
-        }
-        else {
-            System.out.println("Error semántico: tipo de dato " + arrElemExpr.getType().toString() + " no es permitido para decremento. En la linea " + lex.getLine() + " columna " + lex.getColumn());
-            RESULT = new Expresion("null", TypeEx.NULL);
-        }
+    | belen_function_call_expression:iexpr           // llamada a function 
+    {:
+        RESULT = iexpr;
     :}
-    ; 
+    ;
 
 // Expresiones aritméticas
 bastoncillo_arithmetic_expr ::= 
-    incienzo_expression: a TRUENO incienzo_expression:b         // Resta 
+    incienzo_expression:a TRUENO incienzo_expression:b         // Resta 
     {:
-        Expresion aexpr = (Expresion)a;
-        Expresion bexpr = (Expresion)b;
-        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
-        TypeEx resultType = validarTipado("-", aexpr, bexpr, arrayValidTypes);
+        var aexpr = (Expresion)a;
+        var bexpr = (Expresion)b;
+        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
+        var resultType = validarTipado("-", aexpr, bexpr, arrayValidTypes);
 
         switch(resultType){
             case INT:
@@ -877,10 +838,10 @@ bastoncillo_arithmetic_expr ::=
     :}
     | incienzo_expression:a RODOLFO incienzo_expression:b                                     // Suma
     {:
-        Expresion aexpr = (Expresion)a;
-        Expresion bexpr = (Expresion)b;
-        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
-        TypeEx resultType = validarTipado("+", aexpr, bexpr, arrayValidTypes);
+        var aexpr = (Expresion)a;
+        var bexpr = (Expresion)b;
+        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
+        var resultType = validarTipado("+", aexpr, bexpr, arrayValidTypes);
 
         switch(resultType){
             case INT:
@@ -896,10 +857,10 @@ bastoncillo_arithmetic_expr ::=
     :}
     | incienzo_expression:a JUGUETON incienzo_expression:b                                  // División 
     {:
-        Expresion aexpr = (Expresion)a;
-        Expresion bexpr = (Expresion)b;
-        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
-        TypeEx resultType = validarTipado("/", aexpr, bexpr, arrayValidTypes);
+        var aexpr = (Expresion)a;
+        var bexpr = (Expresion)b;
+        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
+        var resultType = validarTipado("/", aexpr, bexpr, arrayValidTypes);
 
         switch(resultType){
             case INT:
@@ -915,10 +876,10 @@ bastoncillo_arithmetic_expr ::=
     :}
     | incienzo_expression:a RELAMPAGO incienzo_expression:b                                  // Multiplicación
     {:
-        Expresion aexpr = (Expresion)a;
-        Expresion bexpr = (Expresion)b;
-        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
-        TypeEx resultType = validarTipado("*", aexpr, bexpr, arrayValidTypes);
+        var aexpr = (Expresion)a;
+        var bexpr = (Expresion)b;
+        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
+        var resultType = validarTipado("*", aexpr, bexpr, arrayValidTypes);
 
         switch(resultType){
             case INT:
@@ -934,10 +895,10 @@ bastoncillo_arithmetic_expr ::=
     :}
     | incienzo_expression:a CUPIDO incienzo_expression:b                                   // Modulo
     {:
-        Expresion aexpr = (Expresion)a;
-        Expresion bexpr = (Expresion)b;
-        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
-        TypeEx resultType = validarTipado("~", aexpr, bexpr, arrayValidTypes);
+        var aexpr = (Expresion)a;
+        var bexpr = (Expresion)b;
+        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
+        var resultType = validarTipado("~", aexpr, bexpr, arrayValidTypes);
 
         switch(resultType){
             case INT:
@@ -953,10 +914,10 @@ bastoncillo_arithmetic_expr ::=
     :}
     | incienzo_expression:a COMETA incienzo_expression:b                                        //Exponente
     {:
-        Expresion aexpr = (Expresion)a;
-        Expresion bexpr = (Expresion)b;
-        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT)); 
-        TypeEx resultType = validarTipado("**", aexpr, bexpr, arrayValidTypes);
+        var aexpr = (Expresion)a;
+        var bexpr = (Expresion)b;
+        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT)); 
+        var resultType = validarTipado("**", aexpr, bexpr, arrayValidTypes);
 
         switch(resultType){
             case INT:
@@ -972,9 +933,9 @@ bastoncillo_arithmetic_expr ::=
     :}
     | TRUENO incienzo_expression:a
     {:
-        Expresion aexpr = (Expresion)a;
-        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT)); 
-        TypeEx resultType = validarTipado("-", aexpr, arrayValidTypes);
+        var aexpr = (Expresion)a;
+        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT)); 
+        var resultType = validarTipado("-", aexpr, arrayValidTypes);
 
         switch(resultType){
             case INT:
@@ -990,16 +951,16 @@ bastoncillo_arithmetic_expr ::=
     :}
     | QUIEN PERSONA:id                                                                                               // Incremento prefijo
     {:
-        TypeEx resultType = getType(id.toString(), false);
+        var resultType = getType(id.toString(), false);
         if (resultType == TypeEx.NULL) {
             RESULT = new Expresion("null", TypeEx.NULL);
         } else {
             switch(resultType){
                 case INT:
-                    RESULT = new Expresion(" ++ " + id.toString(), TypeEx.INT);
+                    RESULT = new Expresion( id.toString() + " ++ ", TypeEx.INT);
                     break;
                 case FLOAT:
-                    RESULT = new Expresion(" ++ " + id.toString(), TypeEx.FLOAT);
+                    RESULT = new Expresion(id.toString() + " ++ ", TypeEx.FLOAT);
                     break;
                 default:
                     System.out.println("Error semántico: no es posible implementar la operación sobre tipos de dato:" + resultType.toString() + ". Error en línea " + lex.getLine() + " columna: " + lex.getColumn());
@@ -1010,16 +971,16 @@ bastoncillo_arithmetic_expr ::=
     :}
     | GRINCH PERSONA:id                                                                                                   // Decremento prefijo
     {:
-        TypeEx resultType = getType(id.toString(), false);
+        var resultType = getType(id.toString(), false);
         if (resultType == TypeEx.NULL) {
             RESULT = new Expresion("null", TypeEx.NULL);
         } else {
             switch(resultType){
                 case INT:
-                    RESULT = new Expresion(" -- " + id.toString(), TypeEx.INT);
+                    RESULT = new Expresion(id.toString() + " -- ", TypeEx.INT);
                     break;
                 case FLOAT:
-                    RESULT = new Expresion(" -- " + id.toString(), TypeEx.FLOAT);
+                    RESULT = new Expresion(id.toString() + " -- ", TypeEx.FLOAT);
                     break;
                 default:
                     System.out.println("Error semántico: no es posible implementar la operación sobre tipos de dato:" + resultType.toString() + ". Error en línea " + lex.getLine() + " columna: " + lex.getColumn());
@@ -1031,53 +992,34 @@ bastoncillo_arithmetic_expr ::=
     | diciembre_operation_array                                                                                                                     // Decr o Incr con indice array
 	;
 
-// Expresiones lógicas
-galleta_logic_expr ::= 
-    incienzo_expression:a GASPAR incienzo_expression:b               // Y lógico
-    {:
-        Expresion aexpr = (Expresion)a;
-        Expresion bexpr = (Expresion)b;
-        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.BOOL));
-        TypeEx resultType = validarTipado(" ^ ", aexpr, bexpr, arrayValidTypes);
-        switch (resultType) {
-        case BOOL:
-            RESULT = new Expresion(aexpr.getValue().toString() + " ^ " + bexpr.getValue().toString(), TypeEx.BOOL);
-            break;
-        default:
+//incremento o decremento con asignacion en arrays
+diciembre_operation_array ::= GRINCH decorativo_array_elem:arrElem
+        {:
+        var arrElemExpr = (Expresion)arrElem;
+        var resultType = validarTipado("--", arrElemExpr, new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT)));
+        if (resultType == TypeEx.INT) {
+            RESULT = new Expresion(arrElemExpr.getValue().toString() + "--", TypeEx.INT);
+        }
+        else {
+            System.out.println("Error semántico: tipo de dato " + arrElemExpr.getType().toString() + " no es permitido para decremento. En la linea " + lex.getLine() + " columna " + lex.getColumn());
             RESULT = new Expresion("null", TypeEx.NULL);
-            break;
         }
     :}
-    | incienzo_expression:a MELCHOR incienzo_expression:b                               // O lógico
+    | QUIEN decorativo_array_elem:arrElem
     {:
-        Expresion aexpr = (Expresion)a;
-        Expresion bexpr = (Expresion)b;
-        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.BOOL));
-        TypeEx resultType = validarTipado(" # ", aexpr, bexpr, arrayValidTypes);
-        switch (resultType) {
-        case BOOL:
-            RESULT = new Expresion(aexpr.getValue().toString() + " # " + bexpr.getValue().toString(), TypeEx.BOOL);
-            break;
-        default:
+        var arrElemExpr = (Expresion)arrElem;
+        var resultType = validarTipado("++", arrElemExpr, new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT)));
+        if (resultType == TypeEx.INT) {
+            RESULT = new Expresion(arrElemExpr.getValue().toString() + "++", TypeEx.INT);
+        }
+        else {
+            System.out.println("Error semántico: tipo de dato " + arrElemExpr.getType().toString() + " no es permitido para incremento. En la linea " + lex.getLine() + " columna " + lex.getColumn());
             RESULT = new Expresion("null", TypeEx.NULL);
-            break;
         }
     :}
-    | BALTASAR incienzo_expression:a // Negación lógica                               // No lógico
-    {:
-        Expresion aexpr = (Expresion)a;
-        ArrayList<TypeEx> arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.BOOL));
-        TypeEx resultType = validarTipado(" ! ", aexpr, arrayValidTypes);
-        switch (resultType) {
-        case BOOL:
-            RESULT = new Expresion(" ! " + aexpr.getValue().toString(), TypeEx.BOOL);
-            break;
-        default:
-            RESULT = new Expresion("null", TypeEx.NULL);
-            break;
-        }
-    :}
-    ;
+    ; 
+
+
 
 // Expresiones relacionales
 leche_relational_expr ::= 
@@ -1088,35 +1030,16 @@ leche_relational_expr ::=
         var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT, TypeEx.BOOL));
         var resultType = validarTipado("==", aexpr, bexpr, arrayValidTypes);
         switch (resultType) {
-        case INT:
-        case BOOL: 
-            RESULT = new Expresion(aexpr.getValue().toString() + " == " + bexpr.getValue().toString(), TypeEx.BOOL);
-            break;
-        case FLOAT:
-            RESULT = new Expresion(aexpr.getValue().toString() + " == " + bexpr.getValue().toString(), TypeEx.BOOL);
-            break; 
-        default:
-            RESULT = new Expresion("null", TypeEx.NULL);
-            break;
-        };
-    :}
-    | incienzo_expression:a EVERGEEN incienzo_expression:b                              // No igual
-    {:
-        var aexpr = (Expresion)a;
-        var bexpr = (Expresion)b;
-        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT, TypeEx.BOOL));
-        var resultType = validarTipado("!=", aexpr, bexpr, arrayValidTypes);
-        switch (resultType) {
-        case INT:
-        case BOOL: 
-            RESULT = new Expresion(aexpr.getValue().toString() + " != " + bexpr.getValue().toString(), TypeEx.BOOL);
-            break;
-        case FLOAT:
-            RESULT = new Expresion(aexpr.getValue().toString() + " != " + bexpr.getValue().toString(), TypeEx.BOOL);
-            break; 
-        default:
-            RESULT = new Expresion("null", TypeEx.NULL);
-            break;
+            case INT:
+            case BOOL: 
+                RESULT = new Expresion(aexpr.getValue().toString() + " == " + bexpr.getValue().toString(), TypeEx.BOOL);
+                break;
+            case FLOAT:
+                RESULT = new Expresion(aexpr.getValue().toString() + " == " + bexpr.getValue().toString(), TypeEx.BOOL);
+                break; 
+            default:
+                RESULT = new Expresion("null", TypeEx.NULL);
+                break;
         };
     :}
     | incienzo_expression:a MINSTIX incienzo_expression:b                              // Menor que
@@ -1126,15 +1049,15 @@ leche_relational_expr ::=
         var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
         var resultType = validarTipado("<", aexpr, bexpr, arrayValidTypes);
         switch (resultType) {
-        case INT:
-            RESULT = new Expresion(aexpr.getValue().toString() + " < " + bexpr.getValue().toString(), TypeEx.BOOL);
-            break;
-        case FLOAT:
-            RESULT = new Expresion(aexpr.getValue().toString() + " < " + bexpr.getValue().toString(), TypeEx.BOOL);
-            break; 
-        default:
-            RESULT = new Expresion("null", TypeEx.NULL);
-            break;
+            case INT:
+                RESULT = new Expresion(aexpr.getValue().toString() + " < " + bexpr.getValue().toString(), TypeEx.BOOL);
+                break;
+            case FLOAT:
+                RESULT = new Expresion(aexpr.getValue().toString() + " < " + bexpr.getValue().toString(), TypeEx.BOOL);
+                break; 
+            default:
+                RESULT = new Expresion("null", TypeEx.NULL);
+                break;
         };
     :}
     | incienzo_expression:a UPATREE incienzo_expression:b                              // Mayor que
@@ -1149,24 +1072,6 @@ leche_relational_expr ::=
             break;
         case FLOAT:
             RESULT = new Expresion(aexpr.getValue().toString() + " > " + bexpr.getValue().toString(), TypeEx.BOOL);
-            break; 
-        default:
-            RESULT = new Expresion("null", TypeEx.NULL);
-            break;
-        };
-    :}
-    | incienzo_expression:a OPENSLAE incienzo_expression:b                              // Menor o igual
-    {:
-        var aexpr = (Expresion)a;
-        var bexpr = (Expresion)b;
-        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
-        var resultType = validarTipado("=<", aexpr, bexpr, arrayValidTypes);
-        switch (resultType) {
-        case INT:
-            RESULT = new Expresion(aexpr.getValue().toString() + " =<" + bexpr.getValue().toString(), TypeEx.BOOL);
-            break;
-        case FLOAT:
-            RESULT = new Expresion(aexpr.getValue().toString() + " =< " + bexpr.getValue().toString(), TypeEx.BOOL);
             break; 
         default:
             RESULT = new Expresion("null", TypeEx.NULL);
@@ -1191,6 +1096,89 @@ leche_relational_expr ::=
             break;
         };
     :}
+    | incienzo_expression:a OPENSLAE incienzo_expression:b                              // Menor o igual
+    {:
+        var aexpr = (Expresion)a;
+        var bexpr = (Expresion)b;
+        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT));
+        var resultType = validarTipado("=<", aexpr, bexpr, arrayValidTypes);
+        switch (resultType) {
+            case INT:
+                RESULT = new Expresion(aexpr.getValue().toString() + " =<" + bexpr.getValue().toString(), TypeEx.BOOL);
+                break;
+            case FLOAT:
+                RESULT = new Expresion(aexpr.getValue().toString() + " =< " + bexpr.getValue().toString(), TypeEx.BOOL);
+                break; 
+            default:
+                RESULT = new Expresion("null", TypeEx.NULL);
+                break;
+            };
+    :}
+    | incienzo_expression:a EVERGEEN incienzo_expression:b                              // No igual
+    {:
+        var aexpr = (Expresion)a;
+        var bexpr = (Expresion)b;
+        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.INT, TypeEx.FLOAT, TypeEx.BOOL));
+        var resultType = validarTipado("!=", aexpr, bexpr, arrayValidTypes);
+        switch (resultType) {
+            case INT:
+            case BOOL: 
+                RESULT = new Expresion(aexpr.getValue().toString() + " != " + bexpr.getValue().toString(), TypeEx.BOOL);
+                break;
+            case FLOAT:
+                RESULT = new Expresion(aexpr.getValue().toString() + " != " + bexpr.getValue().toString(), TypeEx.BOOL);
+                break; 
+            default:
+                RESULT = new Expresion("null", TypeEx.NULL);
+                break;
+        };
+    :}
     ;
 
 
+// Expresiones lógicas
+galleta_logic_expr ::= 
+    incienzo_expression:a GASPAR incienzo_expression:b               // Y lógico
+    {:
+        var aexpr = (Expresion)a;
+        var bexpr = (Expresion)b;
+        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.BOOL));
+        var resultType = validarTipado(" ^ ", aexpr, bexpr, arrayValidTypes);
+        switch (resultType) {
+            case BOOL:
+                RESULT = new Expresion(aexpr.getValue().toString() + " ^ " + bexpr.getValue().toString(), TypeEx.BOOL);
+                break;
+            default:
+                RESULT = new Expresion("null", TypeEx.NULL);
+                break;
+        }
+    :}
+    | incienzo_expression:a MELCHOR incienzo_expression:b                               // O lógico
+    {:
+        var aexpr = (Expresion)a;
+        var bexpr = (Expresion)b;
+        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.BOOL));
+        var resultType = validarTipado(" # ", aexpr, bexpr, arrayValidTypes);
+        switch (resultType) {
+        case BOOL:
+            RESULT = new Expresion(aexpr.getValue().toString() + " # " + bexpr.getValue().toString(), TypeEx.BOOL);
+            break;
+        default:
+            RESULT = new Expresion("null", TypeEx.NULL);
+            break;
+        }
+    :}
+    | BALTASAR incienzo_expression:a // Negación lógica                               // No lógico
+    {:
+        var aexpr = (Expresion)a;
+        var arrayValidTypes = new ArrayList<TypeEx>(Arrays.asList(TypeEx.BOOL));
+        var resultType = validarTipado(" ! ", aexpr, arrayValidTypes);
+        switch (resultType) {
+        case BOOL:
+            RESULT = new Expresion(" ! " + aexpr.getValue().toString(), TypeEx.BOOL);
+            break;
+        default:
+            RESULT = new Expresion("null", TypeEx.NULL);
+            break;
+        }
+    :};
