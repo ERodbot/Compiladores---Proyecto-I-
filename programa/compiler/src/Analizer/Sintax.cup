@@ -296,7 +296,7 @@ saco_function_definition_aux ::=  RECORRIDO:f NOEL MAINNAVIDAD ABRECUENTO CIERRA
                 System.out.println("Error semántico: la función no posee un tipo de retorno válido. Linea: " + lex.getLine() + "columna" + lex.getColumn());
             } else {
                 if (findFunction(id.toString()) != null) {
-                    System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
+                    System.out.println("Error semántico: No se pudo encontrar el id de la función. Linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
                 } else {
                     RESULT = id.toString();
                     definirHash(id.toString());
@@ -313,7 +313,7 @@ saco_function_definition_aux ::=  RECORRIDO:f NOEL MAINNAVIDAD ABRECUENTO CIERRA
                 System.out.println("Error semántico: la función no posee un tipo de retorno válido. Linea: " + lex.getLine() + "columna" + lex.getColumn());
             } else {
                 if (findFunction(id.toString()) != null) {
-                    System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
+                    System.out.println("Error semántico: en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " ya declarada");
                 } else {
                     definirHash(id.toString());
                     RESULT = id.toString();
@@ -384,8 +384,8 @@ lazo_io_statement ::= NARRA ABRECUENTO reyes_magicos_list_expr:argsList CIERRACU
                 case FLOAT:
                     break;
                 default:
-                     System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + iexpr.getType().toString() + " no valido para print");
-                    break;
+                     System.out.println("Error semántico."+"Tipo de dato " + iexpr.getType().toString() + " invalido. Linea " + lex.getLine() + " columna " + lex.getColumn() + ": ");
+                   break;
             }
         }
         RESULT = new Expresion("null", TypeEx.NULL);
@@ -405,7 +405,7 @@ lazo_io_statement ::= NARRA ABRECUENTO reyes_magicos_list_expr:argsList CIERRACU
                 RESULT = new Expresion("null", TypeEx.NULL);
                 break;
             default:
-                System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + type.toString() + " no valido para read");
+                System.out.println("Error semántico. Dato inválido para read. Linea " + lex.getLine() + "y columna " + lex.getColumn() + ". ");
                 break;
             } 
         RESULT = new Expresion("null", TypeEx.NULL);
@@ -417,7 +417,7 @@ belen_function_call_expression ::= PERSONA:id ABRECUENTO reyes_magicos_list_expr
         RESULT = new Expresion("null", TypeEx.NULL);
         var fidentifier = findFunction(id.toString());
         if (fidentifier == null){
-            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " no declarada todavía.");
+            System.out.println("Error semántico. "+ Funcion  id.toString() + " sin declarar. Linea " + lex.getLine() + "y  columna " + lex.getColumn() + ".");
         } else {
             var argsTypes = fidentifier.getTiposParametros();
             var expr_args = (ArrayList<Expresion>)listArgs;
@@ -425,13 +425,13 @@ belen_function_call_expression ::= PERSONA:id ABRECUENTO reyes_magicos_list_expr
 
             if (argsTypes.length != expr_args.size()) {
                 validTypes = false;
-                System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Numero de argumentos incorrecto para funcion " + id.toString());
+                System.out.println("Error semántico. Numero de argumentos invalido para funcion " + id.toString()+". Linea " + lex.getLine() + "y columna " + lex.getColumn()+". ");
             }
             else {
                 for (int i = 0; i < argsTypes.length; i++) {
                     if (argsTypes[i] != expr_args.get(i).getType()) {
                         validTypes = false;
-                        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de argumento " + (i+1) + " incorrecto para funcion " + id.toString());
+                        System.out.println("Error semántico. Tipo de argumento "  + (i+1) + " no valido para función " + id.toString()+". Linea " + lex.getLine() + "y columna " + lex.getColumn()+". ");
                         break;
                     }
                 }
@@ -446,11 +446,11 @@ belen_function_call_expression ::= PERSONA:id ABRECUENTO reyes_magicos_list_expr
         RESULT = new Expresion("null", TypeEx.NULL);
         var fidentifier = findFunction(id.toString());
         if (fidentifier == null) {
-            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " no declarada todavía.");
-        }
+            System.out.println("Error semántico. Funcion " + id.toString() + " sin declarar. Linea" + lex.getLine() + " y columna " + lex.getColumn());
+       }
         else {
             if (fidentifier.getTiposParametros().length != 0) {
-                System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Funcion " + id.toString() + " no tiene parametros");
+                System.out.println("Error semántico. Función"+ id.toString()+" sin parametros. Linea " + lex.getLine() + " y columna " + lex.getColumn()+". ");
             }
             else {            
                 RESULT = new Expresion("null", fidentifier.getTipoRetorno());
@@ -501,7 +501,7 @@ lapiz_papel_if_statement ::= ELFO
         var expr = (Expresion)iexpr;
         var branchActual = listaTablasSimbolos.get(currentHash).controlStackTop();
         if (expr.getType() != TypeEx.BOOL) {
-            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getType().toString() + " no valido para una expresion booleana");
+           System.out.println("Error semántico. Tipo de dato " + expr.getType().toString() + " no valido para una expresion booleana. Linea " + lex.getLine() + " y columna " + lex.getColumn() + ".");
         }
         else {
         }
@@ -521,7 +521,7 @@ tradicion_elif_statement ::=  HADA  ABRECUENTO incienzo_expression:iexpr CIERRAC
         var branchActual = listaTablasSimbolos.get(currentHash).controlStackTop();
         var expr = (Expresion)iexpr;
         if (expr.getType() != TypeEx.BOOL) {
-        System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getType().toString() + " no valido para una expresion booleana");
+        System.out.println("Error semántico. Tipo de dato " + expr.getType().toString() + " no valido para una expresion booleana. Linea " + lex.getLine() + " y columna " + lex.getColumn() + ".");
         }
         else {
         }
@@ -540,7 +540,7 @@ caramelo_iteration_statement ::= HACE
     {: 
         var expra = (Expresion)iexpra;
         if (expra.getType() != TypeEx.BOOL) {
-            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expra.getType().toString() + " no valido para una expresion booleana");
+            System.out.println("Error semántico "+ ". Tipo de dato " + expra.getType().toString() + " invalido para una expresion booleana. Linea" + lex.getLine() + " y columna " + lex.getColumn() + ": " );
         }
         else {
             var label = listaTablasSimbolos.get(currentHash).controlStackTop();
@@ -552,7 +552,7 @@ caramelo_iteration_statement ::= HACE
         var expr = (Expresion)iexpra;
         var tipoId = getType(id.toString(), true);
         if (tipoId != expr.getType()) {
-            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getType().toString() + " no valido para una variable de tipo " + tipoId.toString());
+            System.out.println("Error semántico. "+ "Tipo de dato " + expr.getType().toString() + " invalido para una variable de tipo " + tipoId.toString() +". Linea"+ lex.getLine() + "y columna " + lex.getColumn() + ". " );
         }
         var label = "for" + labelId;
         listaTablasSimbolos.get(currentHash).controlStackPush(label);
@@ -562,7 +562,7 @@ caramelo_iteration_statement ::= HACE
         var exprb = (Expresion)iexprb;
         var label = listaTablasSimbolos.get(currentHash).controlStackTop();
         if (exprb.getType() != TypeEx.BOOL) {
-            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + exprb.getType().toString() + " no valido para una expresion booleana");
+            System.out.println("Error semántico. Tipo de dato " + exprb.getType().toString() + " invalido para una expresion booleana" + lex.getLine() + " columna " + lex.getColumn() + ". " );
         }
         else {
 
@@ -585,7 +585,7 @@ calcetin_jump_statement ::= CORTA FINREGALO
     {: 
         var top = listaTablasSimbolos.get(currentHash).controlStackNonIfTop();
         if (top == null){
-            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Break fuera de estructura de control");
+            System.out.println("Error semántico. Break fuera de estructura de control. Linea"  + lex.getLine() + " columna " + lex.getColumn() + ". " );
         } 
     :}                                          //break
 	| ENVIA FINREGALO                           //return|
@@ -615,13 +615,13 @@ nochebuena_initializer ::=  ABREREGALO reyes_magicos_list_expr:l CIERRAREGALO   
 
         TypeEx tipo = arrL.get(0).getType();
         if (tipo != TypeEx.INT && tipo != TypeEx.CHAR) {
-            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + tipo.toString() + " no valido para arreglo");
+            System.out.println("Error semántico. Tipo de dato " + tipo.toString() + " invalido para arreglo. Linea" + lex.getLine() + " columna " + lex.getColumn() + ". ");
             RESULT = new Expresion("null", TypeEx.NULL);
             isValid = false;
         }
         for (Expresion iexpr : arrL) {
             if (iexpr.getType() != tipo) {
-                System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + iexpr.getType().toString() + " no valido para un literal de arreglo de tipo " + tipo.toString());
+                System.out.println("Error semántico. Tipo de dato " + iexpr.getType().toString() + " invalido para un literal de un arreglo de tipo " + tipo.toString()". Linea " + lex.getLine() + " columna " + lex.getColumn() + ". ");
                 RESULT = new Expresion("null", TypeEx.NULL);
                 isValid = false;  
                 break;
@@ -643,26 +643,26 @@ nochebuena_initializer ::=  ABREREGALO reyes_magicos_list_expr:l CIERRAREGALO   
 estrella_assign_array ::= LOCALCOLOCARREGALO:l gorro_navidad_type_specifier:ty PERSONA:id ABREEMPAQUE l_NOEL:l_int CIERRAEMPAQUE ENTREGA nochebuena_initializer:arrl //int id[4]
     {:
         if (!ty.toString().equals("int")  && !ty.toString().equals("char")) {
-            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + ty.toString() + " no valido para arreglo");
+            System.out.println("Error semántico. "+ "Tipo de dato " + ty.toString() + " invalido para un arreglo. Linea " + lex.getLine() + " y columna " + lex.getColumn() + ". " );
         }
         else {
             var earr = (Expresion)arrl;
             if (earr.getType() == TypeEx.NULL){
-                System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Literal de arreglo mal formado");
+                System.out.println("Error semántico.  Literal de arreglo mal formado. Linea " + lex.getLine() + " y columna " + lex.getColumn() + ". ");
             }
             else {
                 TypeEx tipo = Expresion.tipoFromString(ty.toString() + "[]");
                 if (earr.getType() != tipo){
-                    System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + earr.getType().toString() + " no valido para una variable de tipo " + tipo.toString());
+                    System.out.println("Error semántico. Tipo de dato " + earr.getType().toString() + " invalido para una variable de tipo " + tipo.toString()+ ". Linea " + lex.getLine() + "y columna " + lex.getColumn() + ". " );
                 }
                 else {
                     var arr = (ArrayList<Expresion>)earr.getValue();
                     if ((int)l_int != arr.size()) {
-                           System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + l_int + " no coincide con la longitud del literal de arreglo " + arr.size());
+                           System.out.println("Error semántico. Longitud de arreglo " + l_int + " no coincide con la longitud del literal de arreglo " + arr.size() +". Linea "+ lex.getLine() + " y columna " + lex.getColumn() + ". ");
                         }
                     else {
                         if (getType(id.toString(), false) != TypeEx.NULL) {
-                           System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
+                           System.out.println("Error semántico. Variable " + id.toString() + " doblemente declarada. Linea " + lex.getLine() + " y columna " + lex.getColumn() + ".");
                         }
                         else {
                             anadirSimbolo(new SymbolTObj("variable local", ty.toString(), id.toString()));
@@ -675,16 +675,16 @@ estrella_assign_array ::= LOCALCOLOCARREGALO:l gorro_navidad_type_specifier:ty P
     | LOCALCOLOCARREGALO gorro_navidad_type_specifier:ty PERSONA:id ABREEMPAQUE l_NOEL:l_int CIERRAEMPAQUE 
     {:
         if(!ty.toString().equals("int")  && !ty.toString().equals("char")){
-            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + ty.toString() + " no valido para arreglo");
+            System.out.println("Error semántico. Dato "+ ty.toString() +" invalido para el arreglo. Linea " + lex.getLine() + " y columna " + lex.getColumn() + ". ");
         }
         else {
             var i_arr = (int)l_int;
             if (i_arr <= 0) {
-                System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Longitud de arreglo " + i_arr + " no valida");
+                System.out.println("Error semántico. Longitud de arreglo invalida. Linea " + lex.getLine() + " y columna " + lex.getColumn() + ". ");
             }
             else {
                 if (getType(id.toString(), false) != TypeEx.NULL) {
-                    System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
+                    System.out.println("Error semántico. + Variable " + id.toString() + " doblemente declarada. Linea " + lex.getLine() + " y  columna " + lex.getColumn() + ". ");
                 }
                 else {
                     anadirSimbolo(new SymbolTObj("variable local", ty.toString(), id.toString()));
@@ -714,11 +714,11 @@ decorativo_array_elem ::=  PERSONA:id ABREEMPAQUE incienzo_expression:iexpr CIER
 candelabro_assignment_expression ::= LOCALCOLOCARREGALO:l gorro_navidad_type_specifier:ty PERSONA:id ENTREGA incienzo_expression:iexpr FINREGALO  //local int id = 5|
     {:
         if (getType(id.toString(), false) != TypeEx.NULL) {
-            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
+            System.out.println("Error semántico: + Variable " + id.toString() + " ya declarada. Linea " + lex.getLine() + " y columna " + lex.getColumn() + ". " );
         } else {
             var exprh = (Expresion)iexpr;
             if (exprh.getType() != Expresion.tipoFromString(ty.toString())) {
-                System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + exprh.getType().toString() + " no valido para una variable de tipo " + ty.toString());
+                System.out.println("Error semántico: Tipo de dato " + exprh.getType().toString() + " no valido para una variable de tipo " + ty.toString() +". Linea "+lex.getLine() + " y columna " + lex.getColumn() + ". " );
             } else {
                 anadirSimbolo(new SymbolTObj("local", ty.toString(), id.toString()));
             };
@@ -727,7 +727,7 @@ candelabro_assignment_expression ::= LOCALCOLOCARREGALO:l gorro_navidad_type_spe
     | LOCALCOLOCARREGALO gorro_navidad_type_specifier:ty PERSONA:id FINREGALO
     {:
         if (getType(id.toString(), false) != TypeEx.NULL) {
-            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Variable " + id.toString() + " ya declarada");
+            System.out.println("Error semántico. + Variable " + id.toString() + " doblemente declarada. Linea " + lex.getLine() + " y  columna " + lex.getColumn() + ". ");
         }
         else {
             anadirSimbolo(new SymbolTObj("variable local", ty.toString(), id.toString()));
@@ -738,7 +738,7 @@ candelabro_assignment_expression ::= LOCALCOLOCARREGALO:l gorro_navidad_type_spe
         var expr = (Expresion)iexpr;
         var idType = getType(id.toString(), true);
         if (idType != expr.getType()) {
-            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expr.getType().toString() + " no valido para una variable de tipo " + idType.toString());
+            System.out.println("Error semántico. Tipo de dato " + expr.getType().toString() + " invalido para una variable de tipo " + idType.toString() +". Linea " + lex.getLine() + " y columna " + lex.getColumn() + ". " );
         }
         else {
         
@@ -751,10 +751,10 @@ candelabro_assignment_expression ::= LOCALCOLOCARREGALO:l gorro_navidad_type_spe
         var expre = (Expresion)iexpr;
 
         if (expreaj.getType() != expre.getType()){
-            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Tipo de dato " + expre.getType().toString() + " no valido para una variable de tipo " + expreaj.getType().toString());
+            System.out.println("Error semántico. Tipo de dato " + expre.getType().toString() + " invalido para una variable de tipo " + expreaj.getType().toString()+". Linea " + lex.getLine() + " y columna " + lex.getColumn() + ". ");
         } else if (expreaj.getType() == TypeEx.NULL){
-            System.out.println("Error semántico en la linea " + lex.getLine() + " columna " + lex.getColumn() + ": " + "Asignación mal formada.");
-        }
+            System.out.println("Error semántico."+ "Asignación mal formada. Linea " + lex.getLine() + " y  columna " + lex.getColumn() + ". " );
+         }
         else {
 
         }
