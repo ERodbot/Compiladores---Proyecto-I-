@@ -417,7 +417,7 @@ belen_function_call_expression ::= PERSONA:id ABRECUENTO reyes_magicos_list_expr
         RESULT = new Expresion("null", TypeEx.NULL);
         var fidentifier = findFunction(id.toString());
         if (fidentifier == null){
-            System.out.println("Error semántico. "+ Funcion  id.toString() + " sin declarar. Linea " + lex.getLine() + "y  columna " + lex.getColumn() + ".");
+            System.out.println("Error semántico. "+  id.toString() + " sin declarar. Linea " + lex.getLine() + "y  columna " + lex.getColumn() + ".");
         } else {
             var argsTypes = fidentifier.getTiposParametros();
             var expr_args = (ArrayList<Expresion>)listArgs;
@@ -621,7 +621,7 @@ nochebuena_initializer ::=  ABREREGALO reyes_magicos_list_expr:l CIERRAREGALO   
         }
         for (Expresion iexpr : arrL) {
             if (iexpr.getType() != tipo) {
-                System.out.println("Error semántico. Tipo de dato " + iexpr.getType().toString() + " invalido para un literal de un arreglo de tipo " + tipo.toString()". Linea " + lex.getLine() + " columna " + lex.getColumn() + ". ");
+                System.out.println("Error semántico. Tipo de dato " + iexpr.getType().toString() + " invalido para un literal de un arreglo de tipo " + tipo.toString()+". Linea " + lex.getLine() + " columna " + lex.getColumn() + ". ");
                 RESULT = new Expresion("null", TypeEx.NULL);
                 isValid = false;  
                 break;
